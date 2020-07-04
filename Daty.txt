@@ -1,0 +1,13 @@
+13.10.2018 fire level up, poprawienie dmgTxt, ustawienie mapy, paralaxing Update, skrypt na zmianê postprocesingu w ainimacji.
+14.10.2018 player dash particle, liscie na mapie, poprawienie unikania.
+17.10.2018 poprawienie wygladu Loading Screen  
+20.10.2018 Level up holy, kilka poprawe z bloomem i zmiana muzyki
+27.10.2018 poprawienie barów. powolne ³adowanie.
+05.11.2018 Dodanie grafiki dlaa Chaoss new level. Ustawienie prefabow do leveli (bez sword prefab). Poprawienie walki. Ustawienie pobierania staminy. Dodawanie za poziomy skilli +1 do ich uzywania przy magii
+08.11.2018 Dodnie  dodatkowego info przy SKill UI oraz badash, stand, jump sspear
+12.11.2018 Grafiki jump throw, run spear
+18.11.2018 Grafiki Player_Dead_Spear  Wall_Slide_Spear Player_Climbing_Spear  Player_Stand_Attack3
+25.11.2018 Grafiki Player_Jump.Stand Run _ attack
+01.12.2018 Grafika Player_Run_Attack_Spear
+02.12.2018 Grafika Player Stand Throw, plyer_on knee, player charge Spear
+03.12.2018 Dodanie zmiany broni na w³ócznie

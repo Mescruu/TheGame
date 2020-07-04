@@ -1,0 +1,502 @@
+fileFormatVersion: 2
+guid: e82478794b9b2ed4db3c6c95eab51f73
+timeCreated: 1525540366
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Forest_Knight_0
+    21300002: Forest_Knight_1
+    21300004: Forest_Knight_2
+    21300006: Forest_Knight_3
+    21300008: Forest_Knight_4
+    21300010: Forest_Knight_5
+    21300012: Forest_Knight_6
+    21300014: Forest_Knight_7
+    21300016: Forest_Knight_8
+    21300018: Forest_Knight_9
+    21300020: Forest_Knight_10
+    21300022: Forest_Knight_11
+    21300024: Forest_Knight_12
+    21300026: Forest_Knight_13
+    21300028: Forest_Knight_14
+    21300030: Forest_Knight_15
+    21300032: Forest_Knight_16
+    21300034: Forest_Knight_17
+    21300036: Forest_Knight_18
+    21300038: Forest_Knight_19
+    21300040: Forest_Knight_20
+    21300042: Forest_Knight_21
+    21300044: Forest_Knight_22
+    21300046: Forest_Knight_23
+    21300048: Forest_Knight_24
+    21300050: Forest_Knight_25
+    21300052: Forest_Knight_26
+  externalObjects: {}
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Forest_Knight_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 400
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_1
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 400
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_2
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 400
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_4
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 300
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_5
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 300
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_6
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 300
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_7
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 300
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_8
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 300
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 200
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_10
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 200
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_11
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 200
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_12
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 200
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_13
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 200
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_14
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 200
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_15
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 200
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 100
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_17
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 100
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_18
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 100
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_19
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 100
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_20
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 100
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_21
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 100
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_22
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 100
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_23
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_24
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 0
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_25
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 0
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Forest_Knight_26
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 0
+        width: 135
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    outline: []
+    physicsShape: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
