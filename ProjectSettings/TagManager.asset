@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Ground
+  - Coin
+  - GameMaster
+  - Enemy
+  - AttackTrigger
+  - notCollisionWithPlayer
+  - Altar
+  - SoundHolder
+  - StartImage
+  - chest
+  - dataBase
+  - Shield
+  - DeathBomb
+  - StunBullet
+  - Settings
+  - PlayerGroundCheck
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Walls
+  - GroundWalls
+  - Enemy
+  - Player
+  - Loot
+  - NotCollisonWithPlayer
+  - FlyerEnemy
+  - PlayerAttack
+  - EnemyAttack
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - virtual camera
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: backgrounds
+    uniqueID: 172080283
+    locked: 0
+  - name: Gui
+    uniqueID: 987859581
+    locked: 0
