@@ -11,6 +11,7 @@ public class CutScene : MonoBehaviour {
     public ChangePostProcesingSetting changePost;
     // Use this for initialization
     void Start () {
+
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
         if(boxCollider2D!=null)
         {
@@ -27,7 +28,10 @@ public class CutScene : MonoBehaviour {
             Destroy(gameObject);
         }
 
-	}
+        Debug.Log(gameObject.name);
+        Debug.Log("EEEEEEEEEEE");
+
+    }
     void OnTriggerEnter2D(Collider2D col)
     {
         if (col.CompareTag("Player"))
