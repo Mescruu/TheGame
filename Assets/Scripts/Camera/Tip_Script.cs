@@ -19,49 +19,41 @@ public class Tip_Script : MonoBehaviour {
     // Use this for initialization
     void Start () 
 	{
-
 		nameOfTip = "TipNummber" + numberOfTip;
         //cantip = wczytanie czy tip byl uzyty;
         TipButton.SetActive(false);
-
     }
 
-    // Update is called once per frame
     void Update () 
 	{
-
+        //Wyswietlanie Tipu jezeli można
 		if (tipVisited&&cantip) 
-				{
-            TipButton.SetActive(true);
-            cantip = false;
-                }
+		{
+        TipButton.SetActive(true);
+        cantip = false;
+        }
 
 
 
     }
 	void OnTriggerEnter2D(Collider2D col) 
 	{
+        //Po wejsciu gracza do miejsca kolizji wyświetl przycisk tipu
 		if (col.gameObject.tag == "Player") 
 		{
-            tipVisited = true;
-
+                tipVisited = true;
                 if (textonTip.Length >= 20 && !addEnter)
                 {
                     textonTip = textonTip.Insert(textonTip.Length / 2, "\n");
                     addEnter = true;
                 }
-
-          //      tipText.text = textonTip;
-
-
-          
-			
-			
 		}
 	}
 	void OnTriggerExit2D(Collider2D col) 
 	{
-		if (col.gameObject.tag == "Player") 
+        //Po wyjśćiu gracza do miejsca kolizji zamknij przycisk tipu
+
+        if (col.gameObject.tag == "Player") 
 		{
 		
 			tipVisited=false;
@@ -71,17 +63,15 @@ public class Tip_Script : MonoBehaviour {
 	}
     public void Open()
     {
+        //Otwórz typ
 
-
-            TipButton.SetActive(false);
+        TipButton.SetActive(false);
             TipDesk.SetActive(true);
             //zapisac ze tip odwiedzony
-
     }
     public void Exit()
     {
-
+        //Wyłącz tip
         TipDesk.SetActive(false);
-
     }
 }
