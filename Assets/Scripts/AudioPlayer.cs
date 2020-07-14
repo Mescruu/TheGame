@@ -38,24 +38,6 @@ public class AudioPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        /*
-        if (tillAnimation)
-        {
-            if (this.anim.GetCurrentAnimatorStateInfo(0).IsName(animation.name))
-            {
-                audioSource.loop = true;
-            }
-            else
-            {
-                audioSource.Stop();
-                audioSource.loop = false;
-                audioSource.clip = null;
-                tillAnimation = false;
-            }
-        }
-
-        */
         if(TimeAnimation)
         {
             if(SoundTime>0)
@@ -69,6 +51,7 @@ public class AudioPlayer : MonoBehaviour
                 TimeAnimation = false;
             }
         }
+
         if(stopPlaying)
         {
             float StopTime = timeToStop;
@@ -106,16 +89,8 @@ public class AudioPlayer : MonoBehaviour
      
 
     }
-    /*
-    public void Play(AudioClip audioClip, bool tillAnimation)
-    {
-        this.audioSource.clip = audioClip;
-        audioSource.Play();
-        tillAnimation = true;
 
-    }
-    */
-    public void Play(AudioClip audioClip, float SoundTime)
+    public void Play(AudioClip audioClip, float SoundTime) //graj utwór przez jakiś czas
     {
         this.audioSource.clip = audioClip;
         this.SoundTime = SoundTime;
@@ -123,7 +98,7 @@ public class AudioPlayer : MonoBehaviour
         audioSource.Play();
 
     }
-    public void Play(AudioClip audioClip)
+    public void Play(AudioClip audioClip) //graj utwór
     {
         this.audioSource.clip = audioClip;
         JustPlay = true;
@@ -131,12 +106,12 @@ public class AudioPlayer : MonoBehaviour
         audioSource.Play();
 
     }
-    public void StopPlaying()
+    public void StopPlaying() //wyłacz utwór
     {
         timeToStop = smoothTime;
         stopPlaying = true;
     }
-    public void PlayOnce(AudioClip audioClip, float SoundTime)
+    public void PlayOnce(AudioClip audioClip, float SoundTime) //zagraj utwór
     {
             this.audioSource.clip = audioClip;
             this.audioSource.Play();
