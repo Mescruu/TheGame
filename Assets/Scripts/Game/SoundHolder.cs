@@ -17,28 +17,23 @@ public class SoundHolder : MonoBehaviour
     private GameObject gm;
     void Awake()
     {
-        
         DontDestroyOnLoad(gameObject);
         myAudio = gameObject.GetComponent<AudioSource>();
     }
     void Start()
     {
-      
-        myAudio.clip = playlist[IdSong];
+        myAudio.clip = playlist[IdSong]; //ustawienie utworu
         myAudio.Play();
         isloading = false;
         myAudio.volume = 0;
 
-        myAudio.volume = myAudio.volume + (Time.deltaTime / (smoothTime / 4f + 1));
-
-
-
+        myAudio.volume = myAudio.volume + (Time.deltaTime / (smoothTime / 4f + 1)); //zgłośnienie muzyki przy starcie
     }
     void Update()
 	{
        
 
-        if (isloading)
+        if (isloading) // w przypadku gdy jest ładowana gra, podczas zmiany utworów następuje zciszanie itd
         {
             gm = GameObject.FindGameObjectWithTag("GameMaster");
             if (gm == null)
@@ -80,9 +75,6 @@ public class SoundHolder : MonoBehaviour
 
                 }
             }
-
-           
-
         }
         else
         {
@@ -90,5 +82,4 @@ public class SoundHolder : MonoBehaviour
 
         }
     }
-
 }
