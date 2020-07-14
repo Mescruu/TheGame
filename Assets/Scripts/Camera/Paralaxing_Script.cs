@@ -4,59 +4,51 @@ using System.Collections;
 public class Paralaxing_Script : MonoBehaviour {
 
 
-	public Transform[] backgrounds;  //array list of all the back and foregrounds to be parallaxed
-	private float[] paralaxScales;  //propose for the cameras movement to move this backgrounds
-	public float smoothing = 1f;			//smooth to paralax
+	public Transform[] backgrounds;  //tablica wszystkich tylnych i pierwszych planów, które mają być branę pod uwagę paralaxy
+	private float[] paralaxScales;  //Czynnik określający ruch kamery
+	public float smoothing = 1f;			//""Gładkość paralaxy"
 
-	private Transform cam;				//reference to main camera transform
-	private Vector3 previousCamPos;    //the position of the camera in the previouse frame
+	private Transform cam;				//Odniesienie do kamery
+	private Vector3 previousCamPos;    //Pozycja poprzedniej pozycji kamery
 
 
-	//is called before Start(). 
+	//Wywoływane przed Start(). 
 	void Awake()
 	{
-		//set up camera the reference
+		//Ustawienie kamery
 		cam = Camera.main.transform;
-
 	}
-
-	// Use this for initialization
 
 	void Start () 
 	{
-	//the previouse frame had the current frame's camera position
+		// poprzednia klatka =  bieżącej pozycji kamery klatki
 		previousCamPos = cam.position;
 
-		//asiging coresponigng parallaxScales
+		// przypisywanie odpowiednich skal paralaksy
 		paralaxScales = new float[backgrounds.Length]; //dlugosc tla
 
 		for (int i = 0; i < backgrounds.Length; i++) 
-				{
-
 			paralaxScales[i] = backgrounds[i].position.z*1;
-
-				}
 	}
 	
-	// Update is called once per frame
 	void Update () 
 	{
-
-		//for each background
+		// dla każdego tła
 		for (int i = 0; i< backgrounds.Length; i++) {
-			//the parallax is the opposite of the camera movement because the previous frame multiplied by the scale
+			// paralaksa jest przeciwieństwem ruchu kamery, ponieważ poprzednia wartość pozycji jest pomnożona przez skalę
 			float parallax = (previousCamPos.x - cam.position.x) * paralaxScales[i];
 
-			//set a target x position which is the current position plus the parallax
+			// ustawia docelową pozycję x, która jest bieżącą pozycją plus wartość paralaksy
 			float backgroundTargetPosX = backgrounds[i].position.x + parallax;
 
-			//create a target position which is the background's current position with it's target x position
+			// utwórz pozycję docelową, która jest bieżącą pozycją tła z jego docelową pozycją x
 			Vector3 backgroundTargetPos = new Vector3(backgroundTargetPosX, backgrounds[i].position.y, backgrounds[i].position.z);
-			//fade between current position and the target position using lerp
+
+			// przenikanie między bieżącą pozycją a pozycją docelową za pomocą lerp  //Vector3.Lerp - Wartość interpolowana, równa a + (b - a) * t.
 			backgrounds[i].position = Vector3.Lerp(backgrounds[i].position,backgroundTargetPos, smoothing * Time.deltaTime);
-				}
-		//set the previousCamPos to the camera's position at the end of the frame
+		}
+
+		// ustaw previousCamPos (poprzednią wartość pozycji) w pozycji kamery na końcu klatki
 		previousCamPos = cam.position;
-	
 	}
 }
