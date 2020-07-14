@@ -3,47 +3,53 @@ using System.Collections;
 
 public class Destroy_obj : MonoBehaviour {
 
-	public float TimeToDestroy;
-	public GameObject ObjectToApper;
-	public bool shouldAppear;
-	private Camera_Following cam;
-	public bool shouldShakeCamera;
-	public float ShakeDur;
-	public float ShakePow;
-	public bool shouldShakeCameraOnStart;
-    private AudioSource audioSource;
+	public float TimeToDestroy; //Czas do zniszczenia obiektu
+	public GameObject ObjectToApper; //Jaki obiekt ma się pojawić po zniszczeniu
+	public bool shouldAppear;   //Czy taki obiekt wgl powinien się pojawić
+
+	private Camera_Following cam; //Kamera 
+	public bool shouldShakeCamera; //Trzęsienie się kamery
+	public float ShakeDur; //Czas trzęsienia
+	public float ShakePow; //Moc trzęsienia
+	public bool shouldShakeCameraOnStart; //Czy powinna się trząść kamera na poczatku
+
+    private AudioSource audioSource; //Dźwięk
     public AudioClip audioClip;
-    // Use this for initialization
+
     private ParticleSystem particle;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rgb2d;
     private Transform Player;
-    private float dist;
-    private float distCam;
-    public GameObject Shadow;
+
+    private float dist; //Dystans od gracza
+    private float distCam; //Dystans od kamery
+    public GameObject Shadow; //Cień
+
     void Start ()
     {
+        //Dołączenie do obiektu odpowiednich komponentów
         Player = GameObject.Find("Player").GetComponent<Transform>();
-
         rgb2d = gameObject.GetComponent<Rigidbody2D>();
-
         audioSource = gameObject.GetComponent<AudioSource>();
-        if(audioClip!=null)
+        cam = GameObject.Find("Main Camera").GetComponent<Camera_Following>();
+
+        if (audioClip!=null)
         {
             audioSource.clip = audioClip;
             audioSource.Play();
         }
-        cam = GameObject.Find("Main Camera").GetComponent<Camera_Following> ();
 
 		if (shouldShakeCameraOnStart) 
-			{
+		{
             cam.ShakeCamera(ShakePow, ShakeDur);
-			}
+		}
+
         if(gameObject.GetComponentInChildren<ParticleSystem>()!=null)
         {
             particle = gameObject.GetComponentInChildren<ParticleSystem>();
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         }
+
         if (Shadow != null)
         {
             Instantiate(Shadow, transform);
@@ -75,27 +81,11 @@ public class Destroy_obj : MonoBehaviour {
             {
                 audioSource.volume = 0;
             }
-
-           
         }
-        /*
-        if (Shadow != null)
-        {
-            float startAlpha = 1;
-            if (dist < 1000)
-            {
-                Shadow.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, startAlpha - (dist / 1000));
-            
-            }
-            else
-            {
-                Shadow.GetComponent<SpriteRenderer>().color = new Color(1,1,1,0);
-            }
-        }
-      */
 
+        //Zniszczenie obiektu z danym efektem
 		TimeToDestroy -= Time.deltaTime;
-			if(TimeToDestroy<=0)
+		if(TimeToDestroy<=0)
         {
             if (audioSource != null)
             {
@@ -106,22 +96,21 @@ public class Destroy_obj : MonoBehaviour {
 				cam.ShakeCamera(ShakePow,ShakeDur);
 			}
 
-
-            DestroyObj();
-
-
-            if (shouldAppear)
+            if (shouldAppear) //jeżeli coś ma się pojawić to w tym momencie
 			{
 			Instantiate (ObjectToApper, transform.position, transform.rotation);
-                shouldAppear = false;
-			}   
-		}
-	}
+            shouldAppear = false;
+			}
+
+            DestroyObj();
+        }
+    }
+
+    //Niszczenie obiektu i rzeczy z nich stricte powiązanych
     void DestroyObj()
     {
         if (particle != null)
         {
-
             float timetoDestroy = particle.startLifetime;
             particle.enableEmission = false;
             Destroy(gameObject, timetoDestroy);
