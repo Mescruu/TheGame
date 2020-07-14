@@ -9,16 +9,10 @@ public class Particle : MonoBehaviour {
     public GameObject particleObj;
     public Color32 color;
     public Transform transform;
-	// Use this for initialization
+
+    //Tworzenie cząstek na podstawie ustawionego koloru
 	void Start () {
         particleSystem = particleObj.GetComponent<ParticleSystem>();
         particleSystem.startColor = color;
     }
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
-
- 
 }
