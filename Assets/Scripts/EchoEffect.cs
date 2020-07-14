@@ -11,11 +11,14 @@ public class EchoEffect : MonoBehaviour {
     public bool MakeAnEcho;
     private Rigidbody2D rgb2d;
     public float echoBeginning=150f;
-    // Use this for initialization
+
+    public float EchoTime = 1f; // How long echo exist
+
+    // Skrypt służący do tworzenia echa/klonu obiektu
     void Start () {
-        DelayEchoCD = DelayEcho;
+       DelayEchoCD = DelayEcho;
        MakeAnEcho =false;
-        rgb2d = gameObject.GetComponent<Rigidbody2D>();
+       rgb2d = gameObject.GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
