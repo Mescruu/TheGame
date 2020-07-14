@@ -27,10 +27,16 @@ public class MainMenu : MonoBehaviour {
 
     public GameObject Setting;
 
+    public GameObject InfoDesk;
+    private bool infoDeskActive = false;
+
     public Saveing save;
 
     public Sprite spriteToFade;
-   
+
+    private KeyMenager keyMenager;
+
+
     void Start()
 	{
         anim.GetComponent<Image>().sprite = spriteToFade;
@@ -56,8 +62,14 @@ public class MainMenu : MonoBehaviour {
         Cursor.lockState = CursorLockMode.None;//Odblokowanie kursora myszy.
         Cursor.visible = true;//Pokazanie kursora.
 
+        infoDeskActive = false; //tablica z informacją o projekcie jest wyłączona
+        InfoDesk.SetActive(false);
+
+        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
+
+
     }
-     void Update()
+    void Update()
     {
         if(fade)
         {
@@ -75,6 +87,16 @@ public class MainMenu : MonoBehaviour {
              {
             continueGameUI.SetActive(false);
              }
+
+        if (Input.GetKeyDown(keyMenager.keys["Pause"]))
+        {
+            if (infoDeskActive)
+            {
+                infoDeskActive = false; //zamknięcie tablicy z informacjami o projekcie
+                InfoDesk.SetActive(false);
+            }
+
+        }
 
 
     }
@@ -108,11 +130,19 @@ public class MainMenu : MonoBehaviour {
     public void Options()
     {
         Setting.SetActive(true);
-	}
+
+    }
 	
     public void Credits()
     {
-        Debug.Log("Options");
+        Debug.Log("Credits");
+        InfoDesk.SetActive(true);
+        infoDeskActive = true;
+    }
+
+    public void Reset()
+    {
+        Debug.Log("Reset");
         if (File.Exists(Application.persistentDataPath + "/Record.data"))
         {
             File.Delete(Application.persistentDataPath + "/Record.data");
@@ -127,10 +157,8 @@ public class MainMenu : MonoBehaviour {
                 Debug.Log("delete" + "/ChestRecord" + i + ".data");
             }
         }
-
-     
-
     }
+
     public void Quit()
     {
         Debug.Log("Quit_sure");
@@ -172,5 +200,11 @@ public class MainMenu : MonoBehaviour {
 
 
     }
+
+    public void CreditsExit()
+    {
+        InfoDesk.SetActive(false);
+    }
+
 }
 

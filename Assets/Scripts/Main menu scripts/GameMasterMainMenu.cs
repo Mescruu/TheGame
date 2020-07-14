@@ -4,28 +4,18 @@ using UnityEngine.UI;
 
 public class GameMasterMainMenu : MonoBehaviour {
 
-
 	public Text LevelText1_1;
 	public Text LevelText1_2;
 	public Text LevelText1_3;
 	
-	
 	public Text LevelText2_1;
 
-
 	public int levels;
-	// Use this for initialization
-	void Start()
-	{
 
-	}
-	
 	// Update is called once per frame
 	void Update () {
 
 		levels = PlayerPrefs.GetInt ("HighLeveL") - 1;
-
-
 
 						if (levels >= 1) {
 								LevelText1_1.text = ("Level 1");
@@ -48,15 +38,12 @@ public class GameMasterMainMenu : MonoBehaviour {
 						}
 
 
-
 						if (levels >= 4) {
 
 								LevelText2_1.text = ("BOSS");
 						} else {
 								LevelText2_1.text = ("BLOKED");
 						}
-
-					
 				
 	}
 }

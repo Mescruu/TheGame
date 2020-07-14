@@ -64,8 +64,8 @@ public class Pause_Menu : MonoBehaviour
             
         }
 
-
     }
+
     public void Resume()
     {
         gm.ChangeToZero = true;
