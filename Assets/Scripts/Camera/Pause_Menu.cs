@@ -8,7 +8,6 @@ public class Pause_Menu : MonoBehaviour
     public GameObject PauseUI;
 
     private Game_Master gm;
-    private Saving_Script saving_cs;
 
     public bool can_save;
     public bool change;
@@ -23,7 +22,6 @@ public class Pause_Menu : MonoBehaviour
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
 
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-        saving_cs = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Saving_Script>();
 
         PauseUI.SetActive(false);
         paused = false;
