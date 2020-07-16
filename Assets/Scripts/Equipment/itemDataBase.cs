@@ -56,7 +56,7 @@ public class itemDataBase : MonoBehaviour
     public int BootsSlotItemID;
     public Transform MainBootsSlot;
 
-    public void Update()
+    public void Update() 
     {
         if (MainSecondWeaponSlot.childCount>0)
         {
@@ -68,9 +68,8 @@ public class itemDataBase : MonoBehaviour
         }
     }
 
-    public void Instantiate()
+    public void Instantiate() //Tworzenie obiektów w eq
     {
-
         //Load main eq
         for(int i=0;i<AmuletsCount.Length;i++)
         {
@@ -92,7 +91,6 @@ public class itemDataBase : MonoBehaviour
                 }
             }
         }
-
 
         for (int i = 0; i < Main_Weapons.Length; i++)
         {
@@ -172,13 +170,9 @@ public class itemDataBase : MonoBehaviour
         {
             Instantiate(Boots[BootsSlotItemID], MainBootsSlot);
         }
-
-
-        //load rest;
-
     }
 
-    public void checkQuantity()
+    public void checkQuantity() //sprawdzanie ilości 
     {
         Debug.Log("checkQuantity");
         for (int i = 0; i < Main_Weapons.Length; i++)
@@ -192,9 +186,6 @@ public class itemDataBase : MonoBehaviour
             TasksCount[i] = 0;
 
         }
-      //  Debug.Log("0 na kazdy ilosc przedmiotow");
-
-
 
         if (AmuletSlot.childCount > 0)
         {
@@ -355,8 +346,6 @@ public class itemDataBase : MonoBehaviour
             }
         }
     }
-    
-
 }
 
 
