@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class ParticleDisappear : MonoBehaviour {
 
-    //"Disappear when parent sprite renderer's alpha is equal zero"
+    //Cząsteczki znikają, gdy alfa komponentu renderującego  rysunek rodzica jest równy zero
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    // Update is called once per frame
+    void Update ()
     {
         if(gameObject.GetComponentInParent<SpriteRenderer>().color.a==0)
         {
