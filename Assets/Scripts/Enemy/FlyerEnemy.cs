@@ -4,18 +4,22 @@ using System.Collections;
 public class FlyerEnemy : MonoBehaviour {
 
 
+    //Grawitacja przeciwnika
     public float Gravity;
 
+    //Czy przeciwnik wybucha
     public bool boom;
+    //Wybuch obiektu
+    public GameObject Boom;
 
-	public bool attack;
+    public bool attack;
 
+    //Czy potrzebuje ziemi by umrzeć
 	public bool NeedGroundToDie;
-
+    //Czy dotknął ziemi
 	private bool grounded;
 
-	public GameObject Boom;
-
+    //Zmienne dotyczace poruszania się i jej specyfikacji
     public bool StopMove;
     public float normalMoveSpeed;
     public float normalMoveSpeedBasic;
@@ -24,7 +28,6 @@ public class FlyerEnemy : MonoBehaviour {
     public float acceleration;
     public float accelerationBasic;
     public float Speed;
-
 
     public bool canGoOut;
 
@@ -36,6 +39,7 @@ public class FlyerEnemy : MonoBehaviour {
     public float runningTime;
     public float runningTimeCDBasic;
 
+    //Zmienne dotyczace walki
     public float AttackRadius;
 	public bool shouldattack;
     public bool StopToAttack;
@@ -49,20 +53,17 @@ public class FlyerEnemy : MonoBehaviour {
     public bool canAttack;
 
 
-    public float PlayerRange;
-
-	public LayerMask playerLayer;
+    public float PlayerRange; //Zasięg w którym widzi gracza
+	public LayerMask playerLayer; //W jakiej wartswie jest gracz
 
 	public bool facingAway;
 	public bool followOnLookAway;
 
 	public bool moveRight;
 
-
-
-
 	public bool playerInRange;
 
+    //Zmienne obiektów o danych skryptach
     private Player_Controller player;
     public Animator anim;
     private Game_Master gm;
@@ -74,97 +75,71 @@ public class FlyerEnemy : MonoBehaviour {
     public float attackSoundTime=0.4f;
     public int ChanceToRunOutWhileAttacking;
 
-    private bool Active;
+    private bool Active; //Czy przeciwnik jest aktywny (porusza się)
     public float ActiveRange;
 
     // Use this for initialization
     void Start () {
-
 		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<Player_Controller> ();
-
-
-		timetorun=timetorunCD;
-
 		anim = gameObject.GetComponent<Animator> ();
-
-		goOut=false;
-
-		gm = GameObject.FindGameObjectWithTag ("GameMaster").GetComponent<Game_Master> ();
-
+        gm = GameObject.FindGameObjectWithTag ("GameMaster").GetComponent<Game_Master> ();
         enemy = gameObject.GetComponent<Enemy>();
-
         rgb2 = gameObject.GetComponent<Rigidbody2D>();
-
         audioPlayer = gameObject.GetComponent<AudioPlayer>();
 
+        goOut = false;
+        timetorun = timetorunCD;
+    }
 
-	}
-
-    // Update is called once per frame
     void Update() {
 
-
+        //Wartości zależne od poziomu trudności
         AttackBreakCD = AttackBreakCDBasic * (1f - ((gm.difficultLevel - 1) * 2f) / 10f);
-
-
         normalMoveSpeed = normalMoveSpeedBasic + (acceleration / (7 - gm.difficultLevel));
         acceleration = accelerationBasic + accelerationBasic * gm.difficultLevel / 10f;
         runningTimeCD = runningTimeCDBasic+(runningTimeCDBasic * 2 / gm.difficultLevel)/5f;
 
+        //Sprawdzenie czy obiekt jest aktywny
         Active = Physics2D.OverlapCircle(transform.position, ActiveRange, playerLayer);
 
         if(Active && player.curHP>0)
         {
-
-       
-
-        if (StopMove)
-        {
-            Speed = 0;
-        }
-        if (!StopMove)
-        {
-            if (Speed < normalMoveSpeed)
-            {
-                Speed += Time.deltaTime * acceleration;
+             if (!StopMove)
+             {
+                if (Speed < normalMoveSpeed)
+                {
+                    Speed += Time.deltaTime * acceleration;
+                }
+                else
+                {
+                    Speed = normalMoveSpeed;
+                 }
             }
             else
             {
-                Speed = normalMoveSpeed;
+                Speed = 0;
             }
-        }
 
-        if (enemy.StunEnemy)
-        {
-            StopMove = true;
+            if (enemy.StunEnemy) //jezeli obiekt zostanie zestunowany
+            {
+                 StopMove = true;
+            } else {
 
-        } else {
-
-      
-
-            if (!goOut && playerInRange && enemy.CurrentHp > 0) {
-
+                if (!goOut && playerInRange && enemy.CurrentHp > 0) {
                 transform.position = Vector3.MoveTowards(transform.position, player.transform.position, Speed * Time.deltaTime);
-
                 runningTime = runningTimeCD;
+                 }
 
-            }
-
-            if(canGoOut)
+            if(canGoOut) //jezeli moze się wycofać
             {
                 if (!attacking && goOut && playerInRange && enemy.CurrentHp > 0)
                 {
-
                     runningTime -= Time.deltaTime;
-
-
                     transform.position = Vector3.MoveTowards(transform.position, GoOutPoint.transform.position, Speed * Time.deltaTime);
-
                 }
                 if (!attacking && runningTime > 0 && playerInRange)
                 {
                     goOut = true;
-
                 }
                 if (timetorun >= 0)
                 {
@@ -182,17 +157,12 @@ public class FlyerEnemy : MonoBehaviour {
                 }   
             }
         
-
-
+            //Poruszanie się wzgledem gracza
             if (player.transform.position.x < transform.position.x) {
-
                 moveRight = false;
-
             }
             if (player.transform.position.x > transform.position.x) {
-
                 moveRight = true;
-
             }
 
             playerInRange = Physics2D.OverlapCircle(transform.position, PlayerRange, playerLayer);
@@ -219,6 +189,7 @@ public class FlyerEnemy : MonoBehaviour {
                 StopMove = false;
             }
 
+            //Walka
             if (AttackBreak > 0)
             {
                 AttackBreak -= Time.deltaTime;
@@ -226,7 +197,6 @@ public class FlyerEnemy : MonoBehaviour {
             if (attacking && enemy.CurrentHp>0)
             {
                 AttackBreak = AttackBreakCD;
-
 
                 if (AttackDuration > 0 && !goOut)
                 {
@@ -240,12 +210,10 @@ public class FlyerEnemy : MonoBehaviour {
                             runningTime = runningTimeCD;
                         }
                     }
-
                     if (audioPlayer.CanPlay)
                     {
                         audioPlayer.PlayOnce(AttackSound[(int)Random.Range(0, AttackSound.Length)], attackSoundTime);
                     }
-
                     AttackDuration -= Time.deltaTime;
                 }
                 else
@@ -253,21 +221,14 @@ public class FlyerEnemy : MonoBehaviour {
                     AttackBreak = AttackBreakCD;
                     attacking = false;
                 }
-
             }
             else
             {
                 anim.SetBool("Attack", false);
                 AttackDuration = AttackDurationCD;
-
             }
 
-
-
-
-
-
-
+            //W razie jezeli przeciwnik się odwrócił plecami
             if ((player.transform.position.x < transform.position.x && player.transform.localScale.x < 0) || (player.transform.position.x > transform.position.x && player.transform.localScale.x > 0)) {
                 facingAway = true;
             } else {
@@ -284,61 +245,40 @@ public class FlyerEnemy : MonoBehaviour {
                 if (enemy.CurrentHp > 0) {
                     transform.localScale = new Vector3(-1f, 1f, 1f); //zmiana kierunków
                 }
-
             } else {
                 if (enemy.CurrentHp > 0) {
                     transform.localScale = new Vector3(1f, 1f, 1f); //zmiana kierunków
                 }
-
             }
-
         }
 
-
-
         grounded = enemy.Grounded;
-
-    
-            anim.SetBool("Grounded", grounded);
+        anim.SetBool("Grounded", grounded);
         
-
-
-      
-
         }
         else
         {
             anim.SetBool("Attack", false);
-
         }
 
-
+        //jezeli obiekt ma mniej niż 0 hp
         if (enemy.CurrentHp <= 0)
         {
-
             moveSpeed = 0;
             rgb2.constraints = RigidbodyConstraints2D.FreezePositionX;
             rgb2.mass = 20;
             rgb2.gravityScale = Gravity;
 
-            if (boom)
+            if (boom) //wybucha jezeli boom = true
             {
-
-
                 Instantiate(Boom, transform.position, transform.rotation);
                 enemy.NeededGroundToDie = false;
                 enemy.Destroy();
-
             }
-
         }
-
     }
-            void OnDrawGizmosSelected()
-            {
-
-                Gizmos.DrawSphere (transform.position, PlayerRange);//rysowanie kolka
-   
-            }
-
+     void OnDrawGizmosSelected() //rysowanie kolka zasięgu gracza
+     {
+      Gizmos.DrawSphere (transform.position, PlayerRange);
+     }
 }
