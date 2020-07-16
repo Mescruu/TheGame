@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnterAnim : MonoBehaviour {
 
+    //Zmienne dotyczace cząsteczek animacji itd
     private Animation anim;
     public AnimationClip animationClip;
     public AudioClip[] clip;
@@ -11,18 +12,17 @@ public class EnterAnim : MonoBehaviour {
     public ParticleSystem particle;
     private ParticleSystem instantiateParticle;
     public bool ParticleFollow;
-	// Use this for initialization
+
 	void Start () {
         ParticleFollow = false;
         anim = gameObject.GetComponent<Animation>();
-        if (anim != null)
-        {
-            anim.clip = animationClip;
-        }
+            if (anim != null)
+            {
+                anim.clip = animationClip;
+            }
         audioSource = gameObject.GetComponent<AudioSource>();
         }
 
-    // Update is called once per frame
     void OnTriggerEnter2D(Collider2D col)
     {
 
@@ -59,9 +59,7 @@ public class EnterAnim : MonoBehaviour {
         {
             if (col.gameObject.tag == "Player")
             {
-
-                Debug.Log("PlayerEnter");
-
+                Debug.Log("PlayerEnter to animation trigger");
                 if (Mathf.Abs(col.gameObject.GetComponent<Rigidbody2D>().velocity.x) < 0.1f && Mathf.Abs(col.gameObject.GetComponent<Rigidbody2D>().velocity.y) < 0.1f)
                 {
                     Debug.Log("Gracz sie nie poruszza");
@@ -77,7 +75,6 @@ public class EnterAnim : MonoBehaviour {
                 else
                 {
                     Debug.Log("Gracz sie poruszza");
-
                     if (audioSource != null)
                     {
                         if (!audioSource.isPlaying)
@@ -85,17 +82,14 @@ public class EnterAnim : MonoBehaviour {
                             audioSource.clip = clip[(int)Random.Range(0, clip.Length)];
                             audioSource.Play();
                         }
-
                     }
                     if (particle != null)
                     {
                         instantiateParticle.enableEmission = true;
                     }
                 }
-
             }
         }
-       
     }
     void OnTriggerExit2D(Collider2D col)
     {
