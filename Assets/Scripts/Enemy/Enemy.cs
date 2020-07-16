@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-
-
-
+    //ilosc expa za pokonanie
     public int Exp;
-
+    
+    //loot jaki wypada z przeciwnika
     public GameObject Loot;
 
+    //słabości i odporność na typ obrażeń
     public DmgType[] dmgTypeSensitive;
     public DmgType[] dmgTypeHardness;
 
@@ -24,19 +24,23 @@ public class Enemy : MonoBehaviour
     public bool Dead;
     private bool DieOnce;
 
+    //Animator i krew
     private Animator anim;
     public GameObject blood;
     public GameObject bloodBack;
 
+    //Stun obiektu
     public bool StunEnemy;
     public GameObject StunStar;
     private float StunTime;
 
+    //Klątwa
     public bool CurseEnemy;
     public GameObject CurseParticle;
     private float CurseTime;
     private int MeanOfDeath; // 0 podatny // 1  obojetny //2 odporny
 
+    //Płomień - podpalenie
     public bool BurnEnemy;
     public GameObject BurnParticle;
     private float BurnTime;
@@ -54,16 +58,19 @@ public class Enemy : MonoBehaviour
     public Color BurnColor;
     public AudioSource audioSource;
 
+    //Wspolczynnik odporności
     public float MeeleDefendFactor;
     private float MeeleDefendFactorVariable;
     public float MagicDefendFactor;
     private float MagicDefendFactorVariable;
 
+    //Obrona obiektu
     public bool defend;
     public GameObject defendParticle;
     public Transform DefendPoint;
     private Rigidbody2D rgb2;
 
+    //Zauważenie gracza
     public bool turnAround;
 
     public bool noticePlayer;
@@ -77,6 +84,7 @@ public class Enemy : MonoBehaviour
     private float focusOnPlayerTime;
     public GameObject PdBullet;
 
+    //Nietykalność
     private float invulnerableTimeBasic = 0.2f;
     private float invulnerableTimeCD;
     private float invulnerableTime;
@@ -87,10 +95,9 @@ public class Enemy : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //Zainicjowanie początkowych wartości i dodanie komponentów
         getHurt = false;
-
         timeToDieCD = TimeToDead;
-
         noticePlayer = false;
 
         if (audioSource == null)
@@ -98,6 +105,10 @@ public class Enemy : MonoBehaviour
             audioSource = gameObject.GetComponentInChildren<AudioSource>();
         }
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
+        rgb2 = gameObject.GetComponent<Rigidbody2D>();
+        playertck = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
         defend = false;
         StunEnemy = false;
         CurseEnemy = false;
@@ -107,11 +118,8 @@ public class Enemy : MonoBehaviour
         MeanOfDeath = 1;
         MeanOfBurn = 1;
         DieOnce = true;
-        rgb2 = gameObject.GetComponent<Rigidbody2D>();
-        playertck = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
-
+        //Ustalenie w jakim stopniu i na co podatny jest obiekt
         for (int i = 0; i < dmgTypeSensitive.Length; i++)
         {
             if (dmgTypeSensitive[i] == DmgType.Chaos)
@@ -122,8 +130,9 @@ public class Enemy : MonoBehaviour
             {
                 MeanOfBurn = 0;
             }
-
         }
+
+        //Ustalenie w jakim stopniu i na co odporny jest obiekt
         for (int i = 0; i < dmgTypeHardness.Length; i++)
         {
             if (dmgTypeHardness[i] == DmgType.Chaos)
@@ -138,11 +147,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //Zauważanie gracza
         focusOnPlayerTimeCd = focusOnPlayerTimeBasic + (focusOnPlayerTimeBasic * gm.difficultLevel) / 5f;
-
         noticePlayerCheck = Physics2D.OverlapArea(NoticePlayerPos1.position, NoticePlayerPos2.position, playerMask);
 
         if(noticePlayerCheck)
@@ -161,6 +169,7 @@ public class Enemy : MonoBehaviour
                 noticePlayer = false;
             }
         }
+        //Otrzymywanie obrażeń
         if (getHurt)
         {
             if (invulnerableTime > 0)
@@ -172,13 +181,13 @@ public class Enemy : MonoBehaviour
                 getHurt = false;
             }
         }
+
+        //W razie śmierci
         if (CurrentHp <= 0)
         {
             StunEnemy = false;
             CurseEnemy = false;
-
             Dead = true;
-
 
             if (BurnEnemy)
             {
@@ -187,11 +196,9 @@ public class Enemy : MonoBehaviour
                     BurnParticle.transform.GetChild(i).GetComponent<ParticleSystem>().enableEmission = false;
                 }
             }
-           
                 Destroy();
-
         }
-        else
+        else // Jeżeli obiekt żyje
         {
             if (defend)
             {
@@ -232,20 +239,16 @@ public class Enemy : MonoBehaviour
             }
             if (CurseEnemy)
             {
-               
                 spriteRenderer.color = curseColor;
-
                 CurseTime -= Time.deltaTime;
 
                 if (MeanOfDeath == 1)
                 {
                     CurrentHp -= (Time.deltaTime * gm.PlayerDeathLevel * gm.PlayerMagic) / 5f;
-
                 }
                 if (MeanOfDeath == 0)
                 {
                     CurrentHp -= (Time.deltaTime * gm.PlayerDeathLevel * gm.PlayerMagic) * 2 / 5f;
-
                 }
                 if (MeanOfDeath == 2)
                 {
@@ -260,7 +263,7 @@ public class Enemy : MonoBehaviour
                     }
                 }
 
-                    if (CurseTime > 0.5f && CurrentHp>0)
+                if (CurseTime > 0.5f && CurrentHp>0)
                 {
                     for (int k = 0; k < BurnParticle.transform.childCount; k++)
                     {
@@ -269,10 +272,8 @@ public class Enemy : MonoBehaviour
                     }
                 }
 
-
                 if (CurseTime <= 0)
                 {
-                 
                     CurseEnemy = false;
                 }
             }
@@ -281,13 +282,14 @@ public class Enemy : MonoBehaviour
                 CurseParticle.SetActive(false);
             }
         }
-
     }
-    public void CheckYourBack()
+
+    public void CheckYourBack() //Funkcja odpowiadająca za wywołanie obrotu obiektu
     {
         turnAround = true;
     }
 
+    //Otrzymywanie obrażeń
     public void getDmg(float Dmg, DmgType[] dmgType, float[] percentageDistribution)
     {
         if (!getHurt)
@@ -307,10 +309,9 @@ public class Enemy : MonoBehaviour
 
                     if (dmgType[i] == dmgTypeSensitive[j])
                     {
-                        int Critic;
+                    int Critic;
                     Critic = Random.Range(0, CriticRange);
                     float wounds;
-
                     
                         if (dmgType[i] == DmgType.Meele)
                         {
@@ -342,8 +343,6 @@ public class Enemy : MonoBehaviour
                                 CurrentHp -= wounds;
                                 gm.dmgTxtController.CreateDmgTxt(wounds.ToString(), transform, dmgType[i], false, false);
                             }
-
-                        
                         }
                         dmgTaken = true;
                     }
@@ -360,6 +359,7 @@ public class Enemy : MonoBehaviour
                         }
                     }
                 }
+
                 for (int j = 0; j < dmgTypeHardness.Length; j++)
                 {
                     int Critic;
@@ -467,17 +467,14 @@ public class Enemy : MonoBehaviour
                         }
                     }
                 }
-                
             }
         }
     }
+    //Gdy przeciwnik płonie
     public void Burning()
     {
-
-
         spriteRenderer.color = BurnColor;
         BurnParticle.SetActive(true);
-
         BurnTime -= Time.deltaTime;
 
         if (MeanOfBurn == 1)
@@ -503,19 +500,18 @@ public class Enemy : MonoBehaviour
             }
         }
        
-            if (BurnTime <= 0 || CurrentHp<=0)
+         if (BurnTime <= 0 || CurrentHp<=0)
         {
-
-
             BurnEnemy = false;
         }
     }
 
+    //Niszczenie obiektu
     public void Destroy()
     {
         anim.SetBool("Die", true);
 
-        if (DieOnce)
+        if (DieOnce) //gdy przeciwnik umiera od razu i nie potrzebuje zadnych dodatkowych czynników
         {
             GameObject expBullet =  Instantiate(PdBullet, transform.position, transform.rotation);
             expBullet.GetComponent<PdBullet>().expPoints= Exp;
@@ -532,14 +528,13 @@ public class Enemy : MonoBehaviour
             DieOnce = false;
         }
 
-        if(NeededGroundToDie)
+        if(NeededGroundToDie) // w przypadku gdy potrzebuje spaść na ziemie by umrzeć
         {
             if(Grounded)
             {
                 TimeToDead -= Time.deltaTime;
             }
             rgb2.velocity = new Vector3(rgb2.velocity.x,0);
-
         }
         else
         {
@@ -557,13 +552,15 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        //Wejście w kolizje z stunbullet ( stunowanie obiektu)
         if (col.gameObject.tag == StunBulletTag)
         {
             StunEnemy = true;
             StunTime = (gm.PlayerWhiteLevel * playertck.basicStunTime + (gm.PlayerMagic * playertck.basicStunTime / 100f));
             StunStar.SetActive(true);
-
         }
+
+        //Wejście w kolizje z DeathBomb (Klątwa)
         if (col.gameObject.tag == DeathBombTag)
         {
             CurseEnemy = true;
@@ -571,5 +568,4 @@ public class Enemy : MonoBehaviour
             CurseParticle.SetActive(true);
         }
     }
-
 }
