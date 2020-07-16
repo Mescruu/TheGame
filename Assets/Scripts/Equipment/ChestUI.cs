@@ -4,11 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ChestUI : MonoBehaviour {
     
+    //Pozycje slotów
     public Vector3[] EqPosition;
     public Vector3[] ChPosition;
-    public GameObject[] Slots;
-    public bool ChestOpen;
+
+    public GameObject[] Slots; //Sloty
+
+    public bool ChestOpen;//czy skrzynia jest otworzona
     public GameObject ChestObj;
+
+    //Teksty
     public Text GoldTxt;
     public Text RunesTxt;
     public Text HpTxt;
@@ -19,7 +24,7 @@ public class ChestUI : MonoBehaviour {
     public Text magicTxt;
     public Text agilityTxt;
 
-
+    //Odwołania
     public Game_Master gm;
     private KeyMenager keyMenager;
     private CanvasEkwipunek eq;
@@ -33,7 +38,6 @@ public class ChestUI : MonoBehaviour {
         CloseChest();
     }
 
-    // Update is called once per frame
     void Update ()
     {
         if (Input.GetKeyDown(keyMenager.keys["Equipment"])||Input.GetKeyDown(keyMenager.keys["Pause"]))
@@ -47,7 +51,8 @@ public class ChestUI : MonoBehaviour {
             }
         }
 
-            attackTxt.text = gm.PlayerAttack.ToString();
+        //wyswietlenie statystyk i posiadanych rzeczy wielokrotnego użytku
+        attackTxt.text = gm.PlayerAttack.ToString();
         armorTxt.text = gm.PlayerArmor.ToString();
         magicTxt.text = gm.PlayerMagic.ToString();
         agilityTxt.text = gm.PlayerSpeed.ToString();
@@ -59,7 +64,7 @@ public class ChestUI : MonoBehaviour {
 
 
     }
-    public void OpenChest()
+    public void OpenChest() //Przerzucenie pozycji slotów
     {
         if (ChestObj.active == false)
         {
@@ -76,10 +81,10 @@ public class ChestUI : MonoBehaviour {
             gm.active_menu = 3;
             background.SetActive(true);
             gm.Chest_Open = true;
-
         }
     }
-    public void CloseChest()
+
+    public void CloseChest() //Przerzucenie pozycji slotów
     {
         Slots[0].transform.localPosition = EqPosition[0];
         Slots[1].transform.localPosition = EqPosition[1];
@@ -91,6 +96,5 @@ public class ChestUI : MonoBehaviour {
         DropPlaceChest.SetActive(false);
         background.SetActive(false);
         gm.SetChestBool(false);
-
     }
 }
