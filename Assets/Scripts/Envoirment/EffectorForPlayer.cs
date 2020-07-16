@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class EffectorForPlayer : MonoBehaviour {
 
+    //Różnie traktująca gracza plaforma by gracz
     public PlatformEffector2D effector2D;
     private Player_Controller player;
 
     [Tooltip("The half height of the player in transform scale")]
     public float HalfPlayer;
-	// Use this for initialization
-	void Start () {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
-
+	void Start ()
+    {
+    player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
     }
 
-    // Update is called once per frame
     void Update () {
-
         if(player.transform.position.y- HalfPlayer < transform.position.y)
         {
             effector2D.surfaceArc = 0;
@@ -26,7 +24,5 @@ public class EffectorForPlayer : MonoBehaviour {
         {
             effector2D.surfaceArc = 180;
         }
-
     }
-
 }
