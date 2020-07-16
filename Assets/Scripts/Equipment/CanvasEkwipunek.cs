@@ -2,23 +2,17 @@
 using UnityEngine.UI;
 using System.Collections;
 
-/**
- * Skrypt odpowiedzialny za pokazanie/ukrycie płutna ekwipunku.
- * 
- * @author Hubert Paluch.
- * MViRe - na potrzeby kursu UNITY3D v5.
- * mvire.com 
- */
 public class CanvasEkwipunek : MonoBehaviour {
 
-	/** Obiekt (płutno) ekwipunku.*/
+	//Obiekt (płutno) ekwipunku
 	public GameObject ekwipunek;
-    private Game_Master gm;
-    private KeyMenager keyMenager;
+
+    //Poszczegolne kategorie (która z nich jest włączona)
     public bool Amor_Cat;
     public bool Rest_Cat;
     public bool Weapon_Cat;
 
+    //Poszczegolne kategorie (Obiekt)
     public GameObject Amor_CatUI;
     public GameObject Rest_CatUI;
     public GameObject Weapon_CatUI;
@@ -31,11 +25,12 @@ public class CanvasEkwipunek : MonoBehaviour {
 
     private bool Change;
 
-    public GameObject NotesUI;
-    public GameObject StatsUI;
-    public GameObject StatsUIChest;
+    public GameObject NotesUI; //UI notesu
+    public GameObject StatsUI; //UI statystyk
+    public GameObject StatsUIChest; //UI skrzyni
     public int[] status;
 
+    //Teksty
     public Text attackTxt;
     public Text armorTxt;
     public Text magicTxt;
@@ -47,13 +42,16 @@ public class CanvasEkwipunek : MonoBehaviour {
     public Text HpTxt;
     public Text MpTxt;
 
+    //Przyciski
     public GameObject ButtonHp;
     public GameObject ButtonMana;
     public GameObject ButtonHpHide;
     public GameObject ButtonManaHide;
 
+   //Komponenty
     private AudioSource audioSource;
 
+    //Transferowanie obiektów
     private ElementEq item;
     public GameObject TransferGui;
     public Text StayAmount;
@@ -63,7 +61,11 @@ public class CanvasEkwipunek : MonoBehaviour {
     private bool accept;
     private GameObject transfer_drop_place;
     private int amountToTransfer;
-    // Use this for initialization
+
+    //Obiekty potrzebne temu skryptowi
+    private Game_Master gm;
+    private KeyMenager keyMenager;
+
     void Start ()
     {
         waitForDecision = false;
@@ -72,34 +74,31 @@ public class CanvasEkwipunek : MonoBehaviour {
         Armor();
         NoteNumber = 0;
         Change = true;
-            keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
-        gm = GameObject.Find("gameMaster").GetComponent<Game_Master>();
-        audioSource=gameObject.GetComponent<AudioSource>();
 
         NotesUI.SetActive(false);
         StatsUI.SetActive(false);
         accept = false;
 
-
         RefreshNotes();
+
+        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
+        gm = GameObject.Find("gameMaster").GetComponent<Game_Master>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
    
-    // Update is called once per frame
     void Update ()
     {
 
-        if (waitForDecision)
+        if (waitForDecision) //Tranferiwanie obiektów
         {
             StayAmount.text = ((int)slider.maxValue - (int)slider.value).ToString();
             TransferAmount.text = ((int)slider.value).ToString();
-
             if (accept)
             {
                 transfer_drop_place.GetComponent<DropPlace>().TransferKnives(item, amountToTransfer);
                 amountToTransfer = 0;
                 item = null;
                 waitForDecision = false;
-
             }
         }
         else
@@ -124,10 +123,9 @@ public class CanvasEkwipunek : MonoBehaviour {
             gm.ChangeToZero = true;
             ekwipunek.SetActive(false);//Ukrycie/pokazanie ekwipunku.	
             StatsUI.SetActive(false);
-
         }
 
-        if (Change)
+        if (Change) //Zmiana notatki
         {
             for(int i=0;i< noteObj.Length;i++)
             {
@@ -143,7 +141,6 @@ public class CanvasEkwipunek : MonoBehaviour {
             Change = false;
         }
 
-
         if(Amor_Cat)
         {
             Active[1].SetActive(true);
@@ -153,6 +150,7 @@ public class CanvasEkwipunek : MonoBehaviour {
             Active[1].SetActive(false);
 
         }
+
         if (Weapon_Cat)
         {
             Active[0].SetActive(true);
@@ -163,6 +161,7 @@ public class CanvasEkwipunek : MonoBehaviour {
             Active[0].SetActive(false);
 
         }
+
         if (Rest_Cat)
         {
             Active[2].SetActive(true);
@@ -174,6 +173,7 @@ public class CanvasEkwipunek : MonoBehaviour {
 
         }
 
+        //Wyświetlenie statystyk i posiadanych przedmiotów wielekrotnego użytku
         attackTxt.text = gm.PlayerAttack.ToString();
         armorTxt.text = gm.PlayerArmor.ToString();
         magicTxt.text = gm.PlayerMagic.ToString();
@@ -183,23 +183,22 @@ public class CanvasEkwipunek : MonoBehaviour {
         RunesTxt.text = gm.runes.ToString();
         HpTxt.text = gm.hp_potion.ToString();
         MpTxt.text = gm.mana_potion.ToString();
+
+        //Przyciski umożliwiające wykorzystanie obiektów
         if(gm.hp_potion>0)
         {
             ButtonHp.SetActive(true);
             ButtonHpHide.SetActive(false);
-
         }
         else
         {
             ButtonHp.SetActive(false);
             ButtonHpHide.SetActive(true);
-
         }
         if (gm.mana_potion > 0)
         {
             ButtonMana.SetActive(true);
             ButtonManaHide.SetActive(false);
-
         }
         else
         {
@@ -207,7 +206,7 @@ public class CanvasEkwipunek : MonoBehaviour {
             ButtonManaHide.SetActive(true);
         }
     }
-    public void RefreshNotes()
+    public void RefreshNotes() //Odświeżenie notatek
     {
         for (int i = 0; i < noteObj.Length; i++)
         {
@@ -343,6 +342,7 @@ public class CanvasEkwipunek : MonoBehaviour {
     {
         ekwipunek.SetActive(true); //Ukrycie/pokazanie ekwipunku.		
     }
+    //Przełozenie obiektu
     public void Transfer(ElementEq d, GameObject drop_place)
     {
         item = d;
@@ -357,9 +357,10 @@ public class CanvasEkwipunek : MonoBehaviour {
         waitForDecision = false;
         accept = false;
     }
+
+    //zgodzenie się na przetransferowanie obiektu
     public void Accept()
     {
-        
         TransferGui.SetActive(false);
         amountToTransfer = (int)slider.value;
         if (amountToTransfer > slider.maxValue)
@@ -382,7 +383,5 @@ public class CanvasEkwipunek : MonoBehaviour {
                 accept = true;
             }
         }
-       
-        
     }
 }
