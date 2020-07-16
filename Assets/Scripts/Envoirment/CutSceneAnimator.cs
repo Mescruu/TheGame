@@ -6,15 +6,11 @@ public class CutSceneAnimator : MonoBehaviour {
 
     public bool setActive;
     public GameObject Obj;
-
-	// Use this for initialization
-	
-	// Update is called once per frame
+    //skrypt odpowiadjący za aktywację i dezaktywację obiektu
 	void Update () {
         if (setActive)
         {
             Obj.SetActive(true);
-
         }
         else
         {
