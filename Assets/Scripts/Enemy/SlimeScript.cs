@@ -6,7 +6,7 @@ public class SlimeScript : MonoBehaviour
 
 
 
-    //
+    //Poruszanie się - wartości
     public bool StopMove;
 
     public bool NormalMove;
@@ -22,10 +22,9 @@ public class SlimeScript : MonoBehaviour
 
     public bool turnAround;
 
-
-
     public bool moveRight;
 
+    //Atak z ziemi
     public bool CanGroundAttack;
     public bool shouldGroundAttack;
     public Transform GroundAttackCheck1;
@@ -42,6 +41,7 @@ public class SlimeScript : MonoBehaviour
     public Transform GroundAttackPosition;
     private bool groundAttacking;
 
+    //Obrona obiektu
     public bool CanDefend;
     public bool ShouldDefend;
     private bool Defending;
@@ -64,7 +64,7 @@ public class SlimeScript : MonoBehaviour
 
 
 
-
+    //Walka
     public bool StopToAttack;
     public float AttackBreakCD;
     private float AttackBreak;
@@ -78,10 +78,11 @@ public class SlimeScript : MonoBehaviour
     public Transform attack1;
     public Transform attack2;
 
-
+    //Aktywność
     public float ActiveRange;
     private bool Active;
 
+    //Poruszanie się
     public LayerMask Walls;
     private bool hittingWall;
     public Transform wallCheck2;
@@ -99,6 +100,7 @@ public class SlimeScript : MonoBehaviour
     public Transform backProtecting1;
     public Transform backProtecting2;
 
+    //Komponenty
     private Rigidbody2D rgb2d;
     private GameObject target;
     private Player_Controller player;
@@ -115,6 +117,7 @@ public class SlimeScript : MonoBehaviour
 
     void Start()
     {
+       //Początkowe wartości
         if (CanDefend)
         {
             ShouldDefend = false;
@@ -132,15 +135,11 @@ public class SlimeScript : MonoBehaviour
         AttackBreak = AttackBreakCD;
         attacking = false;
 
+        //Dołączenie komponentów
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
         anim = gameObject.GetComponent<Animator>();
-
         enemy = gameObject.GetComponent<Enemy>();
         audioPlayer = gameObject.GetComponent<AudioPlayer>();
-
-
-
         target = GameObject.FindGameObjectWithTag("Player");
         player = target.GetComponent<Player_Controller>();
         rgb2d = gameObject.GetComponent<Rigidbody2D>();
@@ -150,6 +149,7 @@ public class SlimeScript : MonoBehaviour
     void Update()
 
     {
+        //Poruszanie się i wyliczanie zmiennych na podstawie poziomu trudności
         currentMoveSpeed = Mathf.Abs(rgb2d.velocity.x);
 
         Active = Physics2D.OverlapCircle(transform.position, ActiveRange, maskPlayer);
@@ -163,11 +163,8 @@ public class SlimeScript : MonoBehaviour
         normalMoveSpeed = normalMoveSpeedBasic + (acceleration / (7 - gm.difficultLevel));
         acceleration = accelerationBasic + accelerationBasic * gm.difficultLevel / 10f;
 
-        if (Active && player.curHP>0)
+        if (Active && player.curHP>0) //Jeżeli obiekt jest aktywny i gracz ma więcej niż 0 hp
         {
-
-
-
             if (StopMove)
             {
                 Speed = 0;
@@ -183,15 +180,7 @@ public class SlimeScript : MonoBehaviour
                     Speed = normalMoveSpeed;
                 }
             }
-
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-            //GroundAttack//
-
-
+            //Atak z ziemi//
 
             shouldattack = Physics2D.OverlapArea(attack1.position, attack2.position, maskPlayer);
 
@@ -200,51 +189,36 @@ public class SlimeScript : MonoBehaviour
                 shouldGroundAttack = Physics2D.OverlapArea(GroundAttackCheck1.position, GroundAttackCheck2.position, maskPlayer);
             }
             targetBehind = Physics2D.OverlapArea(backProtecting1.position, backProtecting2.position, maskPlayer);
-
-
-
-
             grounded = enemy.Grounded;
 
 
-            //movement
+            //Poruszanie się
             Edge = Physics2D.OverlapCircle(EdgeCheck.position, EdgeRadius, Walls);
-
             hittingWall = Physics2D.OverlapArea(wallCheck1.position, wallCheck2.position, Walls);
-
-
             if (!enemy.Dead && !enemy.StunEnemy)
             {
-
                 if (hittingWall || !Edge)
                 {
                     moveRight = !moveRight;
                 }
-
                 if (grounded)
                 {
                     if (moveRight)
                     {
-
                         transform.localScale = new Vector3(1f, 1f, 1f); //zmiana kierunków
-
                         rgb2d.velocity = new Vector2(Speed, rgb2d.velocity.y);
-
                     }
                     else
                     {
                         transform.localScale = new Vector3(-1f, 1f, 1f); //zmiana kierunków
                         rgb2d.velocity = new Vector2(-Speed, rgb2d.velocity.y);
-
                     }
                     if (turnAround)
                     {
-
                         if (targetBehind && target.transform.position.x + 4 < transform.position.x)
                         {
                             moveRight = false;
                         }
-
                         if (targetBehind && target.transform.position.x - 4 > transform.position.x + 2)
                         {
                             moveRight = true;
@@ -260,7 +234,6 @@ public class SlimeScript : MonoBehaviour
                         {
                             attacking = true;
                         }
-
                     }
 
                     if (StopToAttack && !CanGroundAttack && AttackBreak <= 0 && !Defending)
@@ -268,6 +241,7 @@ public class SlimeScript : MonoBehaviour
                         StopMove = false;
                     }
 
+                    //Atakowanie
                     if (AttackBreak > 0)
                     {
                         AttackBreak -= Time.deltaTime;
@@ -276,7 +250,6 @@ public class SlimeScript : MonoBehaviour
                     {
                         AttackBreak = AttackBreakCD;
 
-
                         if (AttackDuration > 0 && !groundAttacking)
                         {
                             anim.SetBool("Attack", true);
@@ -284,7 +257,6 @@ public class SlimeScript : MonoBehaviour
                             {
                                 audioPlayer.PlayOnce(AttackSound[(int)Random.Range(0, AttackSound.Length)], attackSoundTime);
                             }
-
                             AttackDuration -= Time.deltaTime;
                         }
                         else
@@ -292,21 +264,18 @@ public class SlimeScript : MonoBehaviour
                             AttackBreak = AttackBreakCD;
                             attacking = false;
                         }
-
                     }
                     else
                     {
                         anim.SetBool("Attack", false);
                         AttackDuration = AttackDurationCD;
-
                     }
-
                 }
+
+                //Defensywa obiektu
                 if (CanDefend)
                 {
                     PlayerCloseRange = Physics2D.OverlapArea(CloseRange1.position, CloseRange2.position, maskPlayer);
-
-
                     if (Physics2D.OverlapArea(DefendCheck1.position, DefendCheck2.position, DefendLayerFastStuff))
                     {
                         if (Response)
@@ -327,7 +296,6 @@ public class SlimeScript : MonoBehaviour
                                 Response = true;
                             }
                         }
-
                     }
                     if (Physics2D.OverlapArea(DefendCheck1.position, DefendCheck2.position, DefendLayerLowStuff))
                     {
@@ -337,16 +305,13 @@ public class SlimeScript : MonoBehaviour
                     {
                         ShouldDefend = false;
                     }
-
                     if (ShouldDefend)
                     {
-
                         if (DefendTimeBreak <= 0 && !attacking && !groundAttacking)
                         {
                             Defending = true;
                             StopMove = true;
                         }
-
                     }
 
                     if (DefendTimeBreak > 0)
@@ -354,21 +319,17 @@ public class SlimeScript : MonoBehaviour
                         if (PlayerCloseRange)
                         {
                             DefendTimeBreak -= Time.deltaTime;
-
                         }
                         else
                         {
                             DefendTimeBreak -= Time.deltaTime * 10f;
-
                         }
-
                     }
+
                     if (Defending)
                     {
                         enemy.defend = true;
                         DefendTimeBreak = DefendTimeBreakCD;
-
-
                         if (DefendTime > 0 && !groundAttacking)
                         {
                             anim.SetBool("Defend", true);
@@ -376,7 +337,6 @@ public class SlimeScript : MonoBehaviour
                             {
                                 audioPlayer.PlayOnce(Defendound, DefendTime);
                             }
-
                             DefendTime -= Time.deltaTime;
                         }
                         else
@@ -390,29 +350,24 @@ public class SlimeScript : MonoBehaviour
                         anim.SetBool("Defend", false);
                         DefendTime = DefendTimeCD;
                         enemy.defend = false;
-
                     }
-
                 }
 
+
+                //Atak z ziemi
                 if (CanGroundAttack)
                 {
                     if (!attacking && !groundAttacking && !Defending)
                     {
                         StopMove = false;
                     }
-
                     if (shouldGroundAttack && !attacking && GroundAttackBreak <= 0)
                     {
-
                         if (GroundAttackBreak <= 0)
                         {
                             groundAttacking = true;
                         }
-
                     }
-
-
 
                     if (GroundAttackBreak > 0)
                     {
@@ -421,8 +376,6 @@ public class SlimeScript : MonoBehaviour
                     }
                     if (groundAttacking)
                     {
-
-
                         if (GroundAttackDuration > 0)
                         {
                             anim.SetBool("GroundAttack", true);
@@ -446,40 +399,33 @@ public class SlimeScript : MonoBehaviour
                             AttackBreak = AttackBreakCD;
                             groundAttacking = false;
                         }
-
                     }
                     else
                     {
                         anim.SetBool("GroundAttack", false);
                         GroundAttackDuration = GroundAttackDurationCd;
-
                     }
-
                 }
             }
-
-
         }
-        else
+        else //zatrzymanie animacji 
         {
             anim.SetBool("Attack", false);
             anim.SetBool("GroundAttack", false);
             anim.SetBool("Defend", false);
-
             rgb2d.velocity = new Vector2(0, rgb2d.velocity.y);
         }
     }
+
+    //Rysowanie okręgów
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0.5f, 0.1f, 0.5f, 0.5f);
         Gizmos.DrawSphere(transform.position, ActiveRange);//rysowanie kolka
-
  
         Gizmos.color = new Color(0.7f, 0.6f, 0.5f, 0.2f);
         Gizmos.DrawSphere(EdgeCheck.position, EdgeRadius);//rysowanie kolka
-
     }
-
 }
 
 
