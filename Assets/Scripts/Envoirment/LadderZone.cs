@@ -2,24 +2,14 @@
 using System.Collections;
 
 public class LadderZone : MonoBehaviour {
-
 	private Player_Controller player;
-	
-	
-	
 	void Start () {
-		
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
-		
 	}
-	// Update is called once per frame
-	
-	// Update is called once per frame
-	void OnTriggerEnter2D(Collider2D col) {
+	void OnTriggerEnter2D(Collider2D col) { //gracz wchodzi na drabine
 		
 		if (col.CompareTag ("Player")) {
 			Debug.Log("LadderOn");
-
             if (player.grounded)
             {
                 player.onLadder = false;
@@ -28,13 +18,10 @@ public class LadderZone : MonoBehaviour {
             {
                 player.onLadder = true;
             }
-
         }
-		
 	}
-    void OnTriggerStay2D(Collider2D col)
+    void OnTriggerStay2D(Collider2D col) //gracz jest w miejscu gdzie jest drabina
     {
-
         if (col.CompareTag("Player"))
         {
             Debug.Log("LadderOn");
@@ -46,17 +33,12 @@ public class LadderZone : MonoBehaviour {
             {
                 player.onLadder = true;
             }
-
         }
-
     }
-    void OnTriggerExit2D(Collider2D col) {
-		
+    void OnTriggerExit2D(Collider2D col) { //gracz zszedł z drabiny
 		if (col.CompareTag ("Player")) {
 			Debug.Log("LadderOff");
 			player.onLadder = false;
-
 		}
-		
 	}
 }
