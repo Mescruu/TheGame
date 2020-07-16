@@ -9,6 +9,7 @@ public class SorcererScrpit : MonoBehaviour
 
     public bool StopMove;
 
+    //Zmienne dot poruszania się
     public float acceleration;
     public float accelerationBasic;
 
@@ -25,42 +26,39 @@ public class SorcererScrpit : MonoBehaviour
     public bool CanAppearObj;
     public bool HaveToStopToAppearObj;
 
-
+    //Odwracanie się za graczem jezeli jest za plecami
     public bool CanTurnAround;
+
+    //Odwracanie się za graczem
     public bool CanBetterTurnAround;
 
-    public bool CanTeleport;
-    public bool CanAppearMonster;
-    public bool HaveToStopToAppearMonster;
+    public bool CanTeleport; //Teleportacja obiektu
+    public bool CanAppearMonster; //Tworzenie dodatkowych przeciwników
+    public bool HaveToStopToAppearMonster; //Musi się zatrzymać żeby tworzyć dodatkowych przeciwników
 
-    public float RunAwayRange;
-    public float playerCloseRadius;
-    public float EdgeCheckRadius;
+    public float RunAwayRange;  //pole ucieczki
+    public float playerCloseRadius; //sprawdzanie czy gracz jest blisko
+    public float EdgeCheckRadius; //sprawdzanie czy jest krawędź 
 
-
-    public bool HaveToStopToAttack;
+    public bool HaveToStopToAttack; //czy musi się zatrzymać żeby zaatakować
 
     //Transform
-
-
-    public Transform wallCheck1;
+    //punkty sprawdzające położenie względem innych obiektów
+    public Transform wallCheck1; 
     public Transform wallCheck2;
 
     public Transform backProtecting1;
     public Transform backProtecting2;
 
-
     public Transform EdgeCheck;
     public Transform playerBack;
 
-
-    //shooting object
+    //Pociski wystrzeliwane przez obiekt
     public GameObject granade;
     public GameObject bullet;
-    public Transform firePos;
+    public Transform firePos; //skąd obiekt strzela
 
-
-    //Attack
+    //Czasy ataku
     private bool attackOnce;
 
     public bool StopToAttack;
@@ -75,11 +73,10 @@ public class SorcererScrpit : MonoBehaviour
     public Transform attack1;
     public Transform attack2;
 
-    ///
-  
+    //Czy obiekt "czaruje"
     public bool Spelling;
 
-    //MonsterAppear//
+    //Tworzenie dodatokwych przeciwników//
     public GameObject AppearMonster;
     public float CanMonsterAppearRadius;
     public Transform[] AppearMonsterPoint;
@@ -95,7 +92,7 @@ public class SorcererScrpit : MonoBehaviour
     public float AppearMonsterDurationCD;
     private float AppearMonsterDuration;
 
-    //ObjectAppear//
+    //Pojawianie się obiektów//
     public GameObject AppearObject;
     public Transform CanObjectAppearCheck;
     public float CanObjectAppearRadius;
@@ -111,14 +108,7 @@ public class SorcererScrpit : MonoBehaviour
     private Enemy enemy;
     private Rigidbody2D rgb2;
 
-
-
-    //layers
-    public LayerMask maskPlayer;
-    public LayerMask Walls;
-    public LayerMask whatIsWall;
-
-    //Checks
+    //Boolean określający pozycję i możliwości obiektu
     private bool Active;
     private bool NotatEdge;
     private bool playerClose;
@@ -128,6 +118,11 @@ public class SorcererScrpit : MonoBehaviour
     private bool turnAround;
     private bool targetBehind;
     public float PlayerRange;
+
+    //Warstwy
+    public LayerMask maskPlayer;
+    public LayerMask Walls;
+    public LayerMask whatIsWall;
 
     public AudioClip[] AttackSound;
     public float attackSoundTime;
@@ -142,47 +137,35 @@ public class SorcererScrpit : MonoBehaviour
     {
         attackOnce = true;
 
-
         enemy = gameObject.GetComponent<Enemy>();
-
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
         anim = gameObject.GetComponent<Animator>();
-
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
-
         rgb2 = gameObject.GetComponent<Rigidbody2D>();
-
         audioPlayer = gameObject.GetComponent<AudioPlayer>();
-
-
     }
 
     void Update()
     {
 
+        //Poruszanie się i wyliczanie zmiennych na podstawie poziomu trudności
         AttackBreakCD = AttackBreakCDBasic * (1f - ((gm.difficultLevel - 1) * 2f) / 10f);
         AppearMonsterBreakCD = AppearMonsterBreakCDBasic * (1f - ((gm.difficultLevel - 1) * 2f) / 10f);
 
-
         normalMoveSpeed = normalMoveSpeedBasic + (acceleration / (7 - gm.difficultLevel));
         acceleration = accelerationBasic + accelerationBasic * gm.difficultLevel / 10f;
-
         runAwaySpeed= runAwaySpeedBasic + (acceleration / (7 - gm.difficultLevel));
 
+        anim.SetFloat("Speed", rgb2.velocity.x);
 
         Active = Physics2D.OverlapCircle(transform.position, PlayerRange, maskPlayer);
 
-        anim.SetFloat("Speed",rgb2.velocity.x);
-
-        if (enemy.StunEnemy || enemy.CurrentHp < 0)
+        if (enemy.StunEnemy || enemy.CurrentHp < 0) //zamrożenie akcji obiektu
         {
-
             rgb2.velocity = new Vector2(0, rgb2.velocity.y);
             rgb2.constraints = RigidbodyConstraints2D.FreezePositionX;
-
         }
-        else if(Active && enemy.CurrentHp>0 && player.curHP>0)
+        else if(Active && enemy.CurrentHp>0 && player.curHP>0)  //Jeżeli obiekt jest aktywny i gracz ma więcej niż 0 hp
         {
             if (enemy.turnAround)
             {
@@ -191,12 +174,8 @@ public class SorcererScrpit : MonoBehaviour
               enemy.turnAround = false;
             }
 
-         
-
-
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+            //Sprawdzanie pozycji względem innych obiektów
             targetBehind = Physics2D.OverlapArea(backProtecting1.position, backProtecting2.position, maskPlayer);
             playerClose = Physics2D.OverlapCircle(transform.position, playerCloseRadius, maskPlayer);
             NotatEdge = Physics2D.OverlapCircle(EdgeCheck.position, EdgeCheckRadius, whatIsWall);
@@ -210,12 +189,12 @@ public class SorcererScrpit : MonoBehaviour
             }
 
 
+            //Poruszanie się
             if (StopMove)
             {
                 rgb2.constraints = RigidbodyConstraints2D.FreezePositionX;
                 Speed = 0;
                 rgb2.constraints = RigidbodyConstraints2D.FreezeRotation;
-
             }
             if (!StopMove)
             {
@@ -244,10 +223,7 @@ public class SorcererScrpit : MonoBehaviour
                         Speed = normalMoveSpeed;
                     }
                 }
-             
             }
-
-
 
             if (enemy.Grounded)
             {
@@ -255,49 +231,36 @@ public class SorcererScrpit : MonoBehaviour
                 {
                     if (!attacking || !HaveToStopToAttack)
                     {
-
                         if (!Spelling)
                         {
                             StopMove = false;
                         }
                     }
-
                     if (moveRight)
                     {
-
                         transform.localScale = new Vector3(1f, 1f, 1f); //zmiana kierunków
-
                         rgb2.velocity = new Vector2(Speed, rgb2.velocity.y);
-
                     }
                     else
                     {
                         transform.localScale = new Vector3(-1f, 1f, 1f); //zmiana kierunków
                         rgb2.velocity = new Vector2(-Speed, rgb2.velocity.y);
-
                     }
                 }
                 if (canRunAway == true)
                 {
-
                     ableToRunAway = Physics2D.OverlapCircle(transform.position, RunAwayRange, maskPlayer);
-
                     if(ableToRunAway)
                     {
-                   //     Debug.Log(Mathf.Abs(player.transform.position.x - transform.position.x));
-
-
                         if (Mathf.Abs(player.transform.position.x-transform.position.x)<RunAwayRange+10f && Mathf.Abs(player.transform.position.x - transform.position.x) > RunAwayRange - 10f)
                         { 
                            RunAwayStopMove = true;
-                            RunAway = false;
-
+                           RunAway = false;
                         }
                         else
-                            {
-                                RunAwayStopMove = false;
+                        {
+                            RunAwayStopMove = false;
                             RunAway = true;
-
                         }
                     }
                     else
@@ -325,28 +288,25 @@ public class SorcererScrpit : MonoBehaviour
                             rgb2.velocity = new Vector2(Speed, rgb2.velocity.y);
 
                         }
-
                     }
-
-
                 }
 
-
+                //Odwracanie się za graczem jezeli jest za plecami
                 if (CanTurnAround)
                 {
-
                     if (targetBehind && player.transform.position.x + 4 < transform.position.x)
                     {
                         moveRight = false;
                         Speed = 0;
                     }
-
                     if (targetBehind && player.transform.position.x - 4 > transform.position.x + 2)
                     {
                         moveRight = true;
                         Speed = 0;
                     }
                 }
+
+                //Odwracanie się
                 if (CanBetterTurnAround)
                 {
                     turnAround = false;
@@ -362,14 +322,10 @@ public class SorcererScrpit : MonoBehaviour
                             moveRight = true;
                         }
                     }
-                 
                 }
 
 
-                /////ATTTACKKKKING///
-
-
-
+                /////Atakowanie///
                 if (shouldattack)
                 {
                     if (StopToAttack)
@@ -380,14 +336,11 @@ public class SorcererScrpit : MonoBehaviour
                     {
                         attacking = true;
                     }
-
                 }
-
                 if (StopToAttack && !Spelling && AttackBreak <= 0)
                 {
                     AttackingStopMove = false;
                 }
-
                 if (AttackBreak > 0)
                 {
                     AttackBreak -= Time.deltaTime;
@@ -395,8 +348,6 @@ public class SorcererScrpit : MonoBehaviour
                 if (attacking)
                 {
                     AttackBreak = AttackBreakCD;
-
-
                     if (AttackDuration > 0 &&!Spelling)
                     {
                         anim.SetBool("Attack", true);
@@ -410,12 +361,10 @@ public class SorcererScrpit : MonoBehaviour
                             Instantiate(granade, firePos.position, transform.rotation);
                             attackOnce = false;
                         }
-
                         if (audioPlayer.CanPlay)
                         {
                             audioPlayer.PlayOnce(AttackSound[(int)Random.Range(0, AttackSound.Length)], attackSoundTime);
                         }
-
                         AttackDuration -= Time.deltaTime;
                     }
                     else
@@ -424,18 +373,14 @@ public class SorcererScrpit : MonoBehaviour
                         AttackBreak = AttackBreakCD;
                         attacking = false;
                     }
-
                 }
                 else
                 {
                     anim.SetBool("Attack", false);
                     AttackDuration = AttackDurationCD;
-
                 }
 
-
-                ///sppeeellinng
-
+                //Czarowanie
                 if(CanAppearMonster)
                 {
                     for(int i=0;i<AppearMonsterPoint.Length;i++)
@@ -452,14 +397,12 @@ public class SorcererScrpit : MonoBehaviour
                         {
                             Spelling = true;
                         }
-
                     }
 
                     if (stoptoSpelling && !attacking && AppearMonsterBreak <= 0)
                     {
                         SpellingStopMove = false;
                     }
-
                     if (AppearMonsterBreak > 0)
                     {
                         AppearMonsterBreak -= Time.deltaTime;
@@ -467,8 +410,6 @@ public class SorcererScrpit : MonoBehaviour
                     if (Spelling)
                     {
                         AppearMonsterBreak = AppearMonsterBreakCD;
-
-
                         if (AppearMonsterDuration > 0 && !attacking)
                         {
                             anim.SetBool("Magic", true);
@@ -480,12 +421,10 @@ public class SorcererScrpit : MonoBehaviour
                                 }
                                 attackOnce = false;
                             }
-
                             if (audioPlayer.CanPlay)
                             {
                                 audioPlayer.PlayOnce(AttackSound[(int)Random.Range(0, AttackSound.Length)], attackSoundTime);
                             }
-
                             AppearMonsterDuration -= Time.deltaTime;
                         }
                         else
@@ -494,20 +433,13 @@ public class SorcererScrpit : MonoBehaviour
                             AppearMonsterBreak = AppearMonsterBreakCD;
                             Spelling = false;
                         }
-
                     }
                     else
                     {
                         anim.SetBool("Magic", false);
                         AppearMonsterDuration = AppearMonsterDurationCD;
-
                     }
-
                 }
-                
-
-            
-
         }
 
             if(AttackingStopMove || RunAwayStopMove || SpellingStopMove)
@@ -518,17 +450,14 @@ public class SorcererScrpit : MonoBehaviour
             {
                 StopMove = false;
             }
-
             if (enemy.CurrentHp <= 0)
             {
                 anim.SetBool("Die", true);
-
                 Speed = 0;
             }
-
         }
-
     }
+    //Rysowanie okręgów
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0.5f,0.1f,0.5f,0.5f);
@@ -542,5 +471,3 @@ public class SorcererScrpit : MonoBehaviour
 
     }
 }
-
-    // Update is called once per frame
