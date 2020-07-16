@@ -97,13 +97,10 @@ public class MainMenu : MonoBehaviour {
             }
 
         }
-
-
     }
 
 
-
-	public void NewGame()
+	public void NewGame() //wczytanie nowej gry
 	{
         if (LastLevel > 2)
         {
@@ -115,22 +112,19 @@ public class MainMenu : MonoBehaviour {
             fade = true;
             Debug.Log("new game");
 		}
-       
     }
 
-	public void Continue()
+	public void Continue() //kontynuowanie rozgrywki
 	{
         Debug.Log("Play");
         gotolevel = LastLevel;
         fade = true;
         Debug.Log("new game");
-
     }
 
     public void Options()
     {
         Setting.SetActive(true);
-
     }
 	
     public void Credits()
@@ -175,14 +169,9 @@ public class MainMenu : MonoBehaviour {
     public void StartSure()
 	{
 		if (LastLevel > 2)
-                {
-						NewGameUI.SetActive (true);
-				}
-         else 
-				{
-			
-				}
-
+         {
+		    NewGameUI.SetActive (true);
+		}
 	}
 
 	public void StartNewGame()
@@ -197,14 +186,11 @@ public class MainMenu : MonoBehaviour {
     {
         Debug.Log("quit game");
         Application.Quit();
-
-
     }
 
     public void CreditsExit()
     {
         InfoDesk.SetActive(false);
     }
-
 }
 
