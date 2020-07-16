@@ -2,19 +2,12 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-/**
- * Skrypt odpowiedzialny za obsługę odebrania upuszczonego obiektu. 
- * 
- * @author Hubert Paluch.
- * MViRe - na potrzeby kursu UNITY3D v5.
- * mvire.com 
- */
+
 public class DropPlace : MonoBehaviour, IDropHandler
 {
-
     public EqElementType elementTyp;
 
-    /** Obiekt ekwipunku.*/
+    //Obiekt ekwipunku
     public GameObject Rest_Eq;
     public GameObject Weapon_Eq;
     public GameObject Defend_Eq;
@@ -23,33 +16,29 @@ public class DropPlace : MonoBehaviour, IDropHandler
 
     public bool ChestPlace;
 
-
     public AudioClip audioClip;
     private AudioSource audioSource;
-    /** Maksymalna ilość elementów w obiekcie. */
+
+    //Maksymalna ilość elementów w obiekcie
     public int maksElement;
 
-    /** Obiekt transform bieżącego elementu.*/
+    //Obiekt transform bieżącego elementu.
     private Transform trans;
     private itemDataBase itd;
     public itemDataBaseChest itdch;  //Nalezy uzupelnic reczznie zeby nie probowac pobieraac tego elementu kiedy to nie jest potrzebne;
-
 
     private ElementEq child;
     private Game_Master gm;
     private CanvasEkwipunek eq;
 
-    // Use this for initialization
     void Start()
     {
         trans = GetComponent<Transform>();
         itd = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<itemDataBase>();
-
-        if (gameObject.name == "Chest")
+        if (gameObject.name == "Chest") //items data base chest
         {
             itdch = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<itemDataBaseChest>();
         }
-
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
         eq = GameObject.Find("Equipment").GetComponent<CanvasEkwipunek>();
 
@@ -58,9 +47,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
         audioSource.clip = audioClip;
     }
 
-    /**
-	 * Metoda wykrywająca zdarzenie upuszczenia obiektu.
-	 */
+	 //Metoda wykrywająca zdarzenie upuszczenia obiektu.
     public void OnDrop(PointerEventData eventData)
     {
         ElementEq d = eventData.pointerDrag.GetComponent<ElementEq>();
@@ -81,7 +68,6 @@ public class DropPlace : MonoBehaviour, IDropHandler
                         {
                             Debug.Log("Pomiedz skrzynia a nie skrzynia");
                             eq.Transfer(d, gameObject);
-
                         }
                         else
                         {
@@ -93,13 +79,12 @@ public class DropPlace : MonoBehaviour, IDropHandler
                 else
                 {
                     Debug.Log("Albo nie noze, albo tych nozy jest 1 sztuka");
-
                     Transfer(d);
                 }
             }
         }
     }
-    public void TransferKnives(ElementEq d, int amountToTransfer)
+    public void TransferKnives(ElementEq d, int amountToTransfer) //PRzerzucanie noży (obiektów o większej niż 1 liczbie w jednym
     {
         if (d != null)
         {
@@ -114,15 +99,12 @@ public class DropPlace : MonoBehaviour, IDropHandler
                 if (trans.childCount < maksElement)
                 {
                     Debug.Log("Slot jest wolny, wiec usuwam z przedmiotu przezucanego ilosc, i tworze nowy przedmiot w dsecond wweapon slot.");
-
-
                     d.Count-=amountToTransfer;
                     GameObject knives = Instantiate(itd.Secon_Weapons[d.Id], transform) as GameObject;
                     knives.GetComponent<ElementEq>().Count =amountToTransfer;
                 }
                 else
                 {//Slot nie jest pusty i osiągnięto maksymalną ilość elementów.
-
                     //Pobieram obecny element slotu.
                     Transform elem = transform.GetChild(0);
                     ElementEq element = gameObject.GetComponentInChildren<ElementEq>();
@@ -130,7 +112,6 @@ public class DropPlace : MonoBehaviour, IDropHandler
                     //Obecny element slotu przerzucam do ekwipunku poprzez ustawienie rodzica.
                     if (d.prevParent ==  Weapon_Eq.transform)
                     {
-                            
                         if (element.Id == d.Id && element.elementTyp == EqElementType.Second_Weapon)
                         {
                             if (d.Count - amountToTransfer <= 0)
@@ -154,7 +135,6 @@ public class DropPlace : MonoBehaviour, IDropHandler
                                     d.Count -= amountToTransfer;
                                     GameObject knives = Instantiate(itd.Secon_Weapons[d.Id], transform) as GameObject;
                                     knives.GetComponent<ElementEq>().Count = amountToTransfer;
-
                                     bool sameknife = false;
                                     for (int i = 0; i < d.prevParent.childCount; i++)
                                     {
@@ -186,13 +166,10 @@ public class DropPlace : MonoBehaviour, IDropHandler
                                 elem.SetParent(d.prevParent);
                                 d.setRodzic(trans);
                             }
-
                         }
-
                     }
-                    else
+                    else //nie jest brany z "reki"
                     {
-
                         if (element.Id == d.Id && element.elementTyp == EqElementType.Second_Weapon)
                         {
                             if (d.Count - amountToTransfer <= 0)
@@ -216,8 +193,6 @@ public class DropPlace : MonoBehaviour, IDropHandler
                                     d.Count -= amountToTransfer;
                                     GameObject knives = Instantiate(itd.Secon_Weapons[d.Id], transform) as GameObject;
                                     knives.GetComponent<ElementEq>().Count = amountToTransfer;
-
-
                                     bool sameknife = false;
                                     for (int i = 0; i < Chest_Eq.transform.childCount; i++)
                                     {
@@ -243,7 +218,6 @@ public class DropPlace : MonoBehaviour, IDropHandler
                             {
                                 Debug.Log("Calosc przezucam, calosc wraca");
                                 d.setRodzic(trans);
-
                                 bool sameknife = false;
                                 for (int i = 0; i < Chest_Eq.transform.childCount; i++)
                                 {
@@ -259,17 +233,15 @@ public class DropPlace : MonoBehaviour, IDropHandler
                                 {
                                     elem.SetParent(Chest_Eq.transform);
                                 }
-
                             }
                         }
                     }
                 }
-                audioSource.Play();
+                audioSource.Play(); //zagranie dzwieku
             }
             else
             {
-
-                if (elementTyp == EqElementType.Weapons)
+                if (elementTyp == EqElementType.Weapons) //jezeli jest to bron
                 {
                     bool sameknife = false;
                     for (int i = 0; i < Weapon_Eq.transform.childCount; i++)
@@ -296,7 +268,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
                     }
                 }
 
-                if (elementTyp == EqElementType.Chest)
+                if (elementTyp == EqElementType.Chest) //jezeli jest to element ze skrzyni
                 {
                     bool sameknife = false;
                     for (int i = 0; i < Chest_Eq.transform.childCount; i++)
@@ -326,7 +298,6 @@ public class DropPlace : MonoBehaviour, IDropHandler
                 }
                 eq.PlayBag();
             }
-
         }
 
         if (d.Count <= 0)
@@ -346,9 +317,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
      {
         if (d != null)
         {
-
             Debug.Log("Transfer");
-
             if (elementTyp == d.elementTyp)
             {
                 Debug.Log(trans.childCount);
@@ -356,12 +325,9 @@ public class DropPlace : MonoBehaviour, IDropHandler
                 if (trans.childCount < maksElement)
                 {
                     d.setRodzic(trans);
-
                 }
                 else
                 {//Slot nie jest pusty i osiągnięto maksymalną ilość elementów.
-
-                   
                     //Pobieram obecny element slotu.
                     Transform elem = transform.GetChild(0);
                     ElementEq element = gameObject.GetComponentInChildren<ElementEq>();
@@ -378,9 +344,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
                         {
                             if (d.elementTyp == EqElementType.Armor || d.elementTyp == EqElementType.Legs || d.elementTyp == EqElementType.Boots)
                             {
-
                                 elem.SetParent(Defend_Eq.transform);
-
                             }
                             if (d.elementTyp == EqElementType.Second_Weapon)
                             {
@@ -420,19 +384,13 @@ public class DropPlace : MonoBehaviour, IDropHandler
                         }
                         element.setPrevParent();
                         //Umieszczam nowy element w slocie poprzez ustawienie rodzica.
-
                         d.setRodzic(trans);
                     }
-                        
-
                 }
-
                 audioSource.Play();
-
             }
             else
             {
-
                 if (elementTyp == EqElementType.Weapons || elementTyp == EqElementType.Rest || elementTyp == EqElementType.Defend)
                 {//Jeżeli typy się nie zgadzają to sprawdź 
                  //czy czasem nie ekwipunek, bo tu można dodać wszystko.
@@ -485,45 +443,12 @@ public class DropPlace : MonoBehaviour, IDropHandler
                 }
                 eq.PlayBag();
             }
-
         }
-
         gm.RefreshEqStats();
         gm.RefreshEqStats();
         itd.checkQuantity();
         itdch.checkQuantity();
-
         Debug.Log("odswiezam, statystyki broni itd.");
-
-}
-    //fromEq==true  z ekwipunku do slotu, fromEq==false  z slotu do ekwipunku, //zamiana 
-    void Set(ElementEq d, bool fromEq)
-    {
-        if (!fromEq)
-        {
-        }
-
-
     }
-
-    void SetChest(ElementEq d, bool fromChest)
-    {
-        
-
-    }
-
-
-    void SetChestEqTransfer(ElementEq d, bool fromEq)
-    {
-        
-
-        eq.PlayBag();
-
-
-
-    }
-
-
-
 }
 
