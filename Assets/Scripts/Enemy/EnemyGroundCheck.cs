@@ -7,30 +7,24 @@ public class EnemyGroundCheck : MonoBehaviour {
     private Enemy enemy;
     // Use this for initialization
     void Start () {
-
-	    enemy = gameObject.GetComponentInParent<Enemy>();
-
+	    enemy = gameObject.GetComponentInParent<Enemy>(); //przyłaczenie skryptu Enemy
     }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other) //Sprawdzenie czy obiekt styka się z ziemią
     {
         if (other.tag == "Ground")
         {
             enemy.Grounded = true;
         }
     }
-    void OnTriggerStay2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other) //Sorawdzenie czy obiekt wciąż styka się z ziemią
     {
         if (other.tag == "Ground")
         {
             enemy.Grounded = true;
         }
     }
-    void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit2D(Collider2D other) //sprawdzenie czy obiekt nie dotyka już ziemi
     {
         if (other.tag == "Ground")
         {
