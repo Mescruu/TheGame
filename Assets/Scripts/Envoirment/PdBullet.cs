@@ -8,35 +8,25 @@ public class PdBullet : MonoBehaviour {
     private GameObject player;
     public float moveSpeed;
 
-    public LayerMask playerLayer;
+    public LayerMask playerLayer; //warstaw gracza
     private Animator anim;
     public ParticleSystem particle;
     private Game_Master gm;
-    public int expPoints;
-    // Use this for initialization
+    public int expPoints; //ilosc expa
+
     void Start()
     {
-
-
         player = GameObject.FindGameObjectWithTag("Player");
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
-
-
-
     }
 
-    // Update is called once per frame
     void Update()
-
     {
-        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, moveSpeed* Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, moveSpeed* Time.deltaTime); //poruszanie się kuli exp
     }
     void OnTriggerEnter2D(Collider2D col)
     {
-
-
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.tag == "Player") //kula dotarła do gracza
         {
             gm.exp += expPoints;
             Instantiate(particle, transform.position, transform.rotation);
