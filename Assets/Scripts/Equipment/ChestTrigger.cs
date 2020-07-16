@@ -5,29 +5,33 @@ using UnityEngine.UI;
 
 public class ChestTrigger : MonoBehaviour {
 
+    //Odwołania
     public ChestUI chestUI;
     private KeyMenager keyMenager;
     private Animator anim;
-    public GameObject desk;
-    public Text BackPicInputText;
-    public bool visited;
+
+    public bool visited; //Czy skrzynia została odwiedzona
     public GameObject particle;
     public AudioClip[] audio;
     public AudioSource audioSource;
 
+    //Podpowiedzi
+    public GameObject desk;
+    public Text BackPicInputText;
+
+    //Czas na wyłaczenie odpowiedzi
     private bool Exit;
     private float ExitTimeCd = 1f;
     private float ExitTime;
 
-    // Use this for initialization
     void Start () {
+        //Początkowe ustawienia
         anim = gameObject.GetComponent<Animator>();
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
         desk.SetActive(false);
         audioSource = gameObject.GetComponent<AudioSource>();
         particle.SetActive(false);
         Debug.Log("setActive particle system false");
-
         if (visited == false)
         {
             anim.SetBool("NoVisited", false);
@@ -36,11 +40,9 @@ public class ChestTrigger : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-
         if (Exit)
         {
             desk.GetComponent<Animator>().SetBool("disappear", true);
-
             ExitTime -= Time.deltaTime;
             if (ExitTime < 0)
             {
@@ -67,7 +69,6 @@ public class ChestTrigger : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-
             if (chestUI)
             {
                 desk.SetActive(true);
@@ -78,23 +79,15 @@ public class ChestTrigger : MonoBehaviour {
                 anim.SetBool("NoVisited", true);
                 particle.SetActive(true);
             }
-
             anim.SetBool("Open", true);
-          
-
         }
-     
-
-
         if (col.CompareTag("Player"))
         {
             if (Input.GetKeyDown(keyMenager.keys["Action"]))
             {
-
                 chestUI.OpenChest();
                 visited = true;
                 anim.SetBool("NoVisited", false);
-
                 if (particle.active)
                 {
                     particle.SetActive(false);
@@ -103,10 +96,8 @@ public class ChestTrigger : MonoBehaviour {
         }
     }
 
-    void OnTriggerExit2D(Collider2D col)
+    void OnTriggerExit2D(Collider2D col) 
     {
-     
-
         if (col.CompareTag("Player"))
         {
             Exit = true;
@@ -119,7 +110,5 @@ public class ChestTrigger : MonoBehaviour {
             audioSource.clip = audio[1];
             audioSource.Play();
         }
- 
-
     }
 }
