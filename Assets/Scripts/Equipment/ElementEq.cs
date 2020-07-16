@@ -3,27 +3,22 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-/**
- * Skrypt odpowiedzialny za obsługę przeciągania elementu ekwipunku. 
- * 
- * @author Hubert Paluch.
- * MViRe - na potrzeby kursu UNITY3D v5.
- * mvire.com 
- */
+
 public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
 
-	/** Obiekt transform rodzica.*/
+	// Obiekt transform rodzica.
 	private Transform rodzicEq;
 	/** Obiekt transform bieżącego elementu.*/
 	private Transform trans;
 
-	/** Typ elementu.*/
+	// Typ elementu.
 	public EqElementType elementTyp = EqElementType.Main_Weapon;
     public int Count;
     public int Id;
     public GameObject CountLook;
     public Text text;
 
+    //Statystyki obiektu
     public int attack;
     public int armor;
     public int magic;
@@ -39,19 +34,15 @@ public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public RectTransform ItemShadow;
 
-    // Use this for initialization
     void Start ()
     {
-        onDrag = false;
+        onDrag = false; //czy obiekt jest przeciągany
 		trans = GetComponent<Transform> ();
-       
         prevParent = trans.parent;
         rodzicEq = trans.parent;
         ItemShadow.anchoredPosition = new Vector3(0, 0);
         gm = GameObject.Find("gameMaster").GetComponent<Game_Master>();
-
         ItemShadow.anchoredPosition = new Vector2(0, 0);
-
         if (elementTyp == EqElementType.Second_Weapon)
         {
             if (Count > 1)
@@ -63,13 +54,11 @@ public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             {
                 CountLook.SetActive(false);
             }
-          
         }
         else
         {
             CountLook.SetActive(false);
         }
-
     }
 
     void Update()
@@ -97,9 +86,7 @@ public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         ItemShadow.anchoredPosition = new Vector2(0, 0);
 
     }
-    /**
-	 * Metoda wywoływana w chwili rozpoczęcia przeciągania.
-	 */
+    //Metoda wywoływana w chwili rozpoczęcia przeciągania.
     public void OnBeginDrag(PointerEventData eventData)
     {
 		//Debug.Log ("OnBeginDrag");
@@ -111,6 +98,7 @@ public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		//Włączamy wykrywanie kursora myszy popbrzez wyłaczenie blokady promienia.
 		GetComponent<CanvasGroup>().blocksRaycasts = false;
 
+        //Wyświetlenie nowych statystyk
         gm.PlayerAttack = attack;
         gm.PlayerArmor = armor;
         gm.PlayerMagic = magic;
@@ -120,9 +108,7 @@ public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     }
 
-    /**
-	 * Metoda wywoływana w czasie przeciągania elementu.
-	 */
+    //Metoda wywoływana w czasie przeciągania elementu.
     public void OnDrag(PointerEventData eventData){
 		//Debug.Log ("OnDrag");		
 		//Aktualizujemy pozycję elementu o aktualną pozycję kursora.
@@ -137,7 +123,6 @@ public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         //spowoduje to jego ustawienie/posortowanie w ekwipunku.
         trans.SetParent(rodzicEq);
 
-
         //Wyłączamy wykrywanie kursora myszy popbrzez właczenie blokady promienia.
         Debug.Log("GetComponent<CanvasGroup>().blocksRaycasts = true;");
         if(show)
@@ -149,8 +134,6 @@ public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             gm.RefreshEqStats();
         }
         ItemShadow.anchoredPosition = new Vector2(0, 0);
-
-
         prevParent = trans.parent;
     }
 
@@ -163,6 +146,5 @@ public class ElementEq : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		rodzicEq = trans;
         gameObject.transform.parent = trans;
         prevParent = transform.parent;    //noze z tego  korzystaja, bo one po przeniesieniu (OnEndDrag) nie zmieniaja rodzica chyba, ze jest to 1 noz.
-
     }
 }
