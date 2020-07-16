@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SunDew : MonoBehaviour
 {
-
+    //Zmienne określające atakowanie
     public float AttackBreakCDBasic;
     public float AttackBreakCD;
     private float AttackBreak;
@@ -24,6 +24,7 @@ public class SunDew : MonoBehaviour
     public float ActiveRange;
     private bool Active;
 
+    //Komponenty
     private Rigidbody2D rgb2d;
     private GameObject target;
     private Player_Controller player;
@@ -35,39 +36,30 @@ public class SunDew : MonoBehaviour
     public AudioClip[] AttackSound;
     public AudioClip Defendound;
 
+    //Warstwa gracza
     public LayerMask maskPlayer;
 
+    //Co robi obiekt
     private bool groundAttacking = false;
     private bool Defending = false;
 
-    // Use this for initialization
     void Start()
     {
-
-
+        //Dołączenie komponentów
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
         anim = gameObject.GetComponent<Animator>();
-
         enemy = gameObject.GetComponent<Enemy>();
         audioPlayer = gameObject.GetComponent<AudioPlayer>();
-
-
-
         target = GameObject.FindGameObjectWithTag("Player");
         player = target.GetComponent<Player_Controller>();
         rgb2d = gameObject.GetComponent<Rigidbody2D>();
-
-
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //Atakowanie
         AttackBreakCD = AttackBreakCDBasic * (1f - ((gm.difficultLevel - 1) * 2f) / 10f);
         Active = Physics2D.OverlapCircle(transform.position, ActiveRange, maskPlayer);
-
-
 
         if (Active && player.curHP>0)
         {
@@ -76,7 +68,6 @@ public class SunDew : MonoBehaviour
 
             if (enemy.CurrentHp > 0)
             {
-
                 if (shouldattack_right || shouldattack_left)
                 {
                     if (AttackBreak <= 0 && !groundAttacking && !Defending && !attacking)
@@ -91,8 +82,6 @@ public class SunDew : MonoBehaviour
                 if (attacking)
                 {
                     AttackBreak = AttackBreakCD;
-
-
                     if (AttackDuration > 0 && !groundAttacking)
                     {
                         if (shouldattack_left)
@@ -107,7 +96,6 @@ public class SunDew : MonoBehaviour
                         {
                             audioPlayer.PlayOnce(AttackSound[(int)Random.Range(0, AttackSound.Length)], attackSoundTime);
                         }
-
                         AttackDuration -= Time.deltaTime;
                     }
                     else
@@ -115,13 +103,11 @@ public class SunDew : MonoBehaviour
                         AttackBreak = AttackBreakCD;
                         attacking = false;
                     }
-
                 }
                 else
                 {
                     anim.SetBool("AttackingLeft", false);
                     anim.SetBool("AttackingRight", false);
-
                     AttackDuration = AttackDurationCD;
                 }
             }
@@ -132,7 +118,5 @@ public class SunDew : MonoBehaviour
             anim.SetBool("AttackingLeft", false);
             anim.SetBool("AttackingRight", false);
         }
-
-
     }
 }
