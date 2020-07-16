@@ -5,7 +5,6 @@ public class AltarScript : MonoBehaviour
 {
     private float AltarTime;
     public float AltarTimeCD;
-
     public bool altaring;
 
     public bool Enter;
@@ -29,7 +28,6 @@ public class AltarScript : MonoBehaviour
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
         AltarTime = AltarTimeCD;
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
     }
 
     // Update is called once per frame
@@ -37,7 +35,7 @@ public class AltarScript : MonoBehaviour
     {
         PlayerNear = Physics2D.OverlapCircle(transform.position, ActiveRange, playerMask);
 
-        if(PlayerNear)
+        if(PlayerNear) // jezeli gracz jest blisko pojawiają się cząsteczki
         {
             for (int i = 0; i < particle.Length; i++)
             {
@@ -50,23 +48,21 @@ public class AltarScript : MonoBehaviour
             {
             particle[i].enableEmission = false;
             }
-
         }
+
+        //uruchomienie pomnika
         if (Enter && Input.GetKey(keyMenager.keys["Action"])&&!altaring)
         {
             Debug.Log("Altar Action");
             altaring = true;
             AltarTime = AltarTimeCD;
             player.onKnee = true;
-
-
         }
-        if (altaring)
+        if (altaring) //gracz uruchomił pomnik
         {
             if(AltarTime>0)
             {
-                    AltarTime -= Time.deltaTime;
-
+                AltarTime -= Time.deltaTime;
                 if(player.onKnee)
                 {
                     if (AltarTime <= AltarTimeCD / 2 && MakeItOnce)
@@ -81,13 +77,10 @@ public class AltarScript : MonoBehaviour
                         gm.dmgTxtController.CreateHealTxt(count.ToString(), player.transform, MpColor, false);
                     }
                 }
-                   
-                
             }
             else
             {
                 player.onKnee = false;
-
                 altaring = false;
                 AltarTime = AltarTimeCD;
             }
@@ -96,22 +89,18 @@ public class AltarScript : MonoBehaviour
         {
             MakeItOnce = true;
         }
-      
     }
 
-    void OnTriggerEnter2D(Collider2D col)
+    void OnTriggerEnter2D(Collider2D col) //gracz znalazl się w kolizji
     {
-
-
         if (col.gameObject.tag == "Player")
         {
             Enter = true;
 
         }
     }
-    void OnTriggerExit2D(Collider2D col)
+    void OnTriggerExit2D(Collider2D col) //gracz wyszedł z kolizji
     {
-
 
         if (col.gameObject.tag == "Player")
         {
@@ -119,10 +108,9 @@ public class AltarScript : MonoBehaviour
 
         }
     }
-    void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected() //rysowanie okręgów
     {
         Gizmos.color = new Color(0.1f, 1f, 0.1f,0.7f);
         Gizmos.DrawSphere(transform.position, ActiveRange);//rysowanie kolka
-
     }
-    }
+}
