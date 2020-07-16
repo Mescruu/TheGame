@@ -30,10 +30,7 @@ public class itemDataBaseChest : MonoBehaviour
     public int[] ArmorsCount;
 
 
-
-
-
-    public void Instantiate()
+    public void Instantiate() //Tworzenie obiektów w skrzyni
     {
 
         //Load main eq
@@ -58,7 +55,6 @@ public class itemDataBaseChest : MonoBehaviour
                 }
             }
         }
-
 
         for (int i = 0; i < Main_Weapons.Length; i++)
         {
@@ -116,7 +112,7 @@ public class itemDataBaseChest : MonoBehaviour
 
     }
 
-    public void checkQuantity()
+    public void checkQuantity() //dodawnie do skrzyni
     {
         for (int i = 0; i < Main_Weapons.Length; i++)
         {
@@ -137,17 +133,14 @@ public class itemDataBaseChest : MonoBehaviour
                 Chest.GetChild(i).GetComponent<CanvasGroup>().blocksRaycasts = true;
                 Chest.GetChild(i).GetComponent<ElementEq>().setPrevParent();
 
-
                 for (int j = 0; j < Main_Weapons.Length; j++)
                 {
                     if (Chest.GetChild(i).GetComponent<ElementEq>().elementTyp == EqElementType.Main_Weapon&& Chest.GetChild(i).GetComponent<ElementEq>().Id == Main_Weapons[j].GetComponent<ElementEq>().Id)
                     {
                    //     Debug.Log(Chest.GetChild(i).GetComponent<ElementEq>().elementTyp.ToString() + "NA PEWNO TAKI SAM TYP"+ EqElementType.Main_Weapon.ToString());
-
                     //    Debug.Log("NA PEWNO TAKI SAM TYP");
                         Main_WeaponCount[j] += Chest.GetChild(i).GetComponent<ElementEq>().Count;
                     //    Debug.Log("dODAAJE " + Chest.GetChild(i).GetComponent<ElementEq>().Count +" DO MIECZA Z " + Chest.GetChild(i).name);
-
                     }
                     if (Chest.GetChild(i).GetComponent<ElementEq>().Id == Secon_Weapons[j].GetComponent<ElementEq>().Id && Chest.GetChild(i).GetComponent<ElementEq>().elementTyp == EqElementType.Second_Weapon)
                      {
@@ -155,44 +148,34 @@ public class itemDataBaseChest : MonoBehaviour
                    //     Debug.Log("dODAAJE " + Chest.GetChild(i).GetComponent<ElementEq>().Count + " DO SECON WEAPON Z " + Chest.GetChild(i).name);
                     }
 
-
                     if (Chest.GetChild(i).GetComponent<ElementEq>().Id == Amulets[j].GetComponent<ElementEq>().Id && Chest.GetChild(i).GetComponent<ElementEq>().elementTyp == EqElementType.Amulet)
                     {
                         AmuletsCount[j] += Chest.GetChild(i).GetComponent<ElementEq>().Count;
                    //     Debug.Log("dODAAJE " + Chest.GetChild(i).GetComponent<ElementEq>().Count + " DO AMULETU Z " + Chest.GetChild(i).name);
-
                     }
-
 
                     if (Chest.GetChild(i).GetComponent<ElementEq>().Id == Armors[j].GetComponent<ElementEq>().Id && Chest.GetChild(i).GetComponent<ElementEq>().elementTyp == EqElementType.Armor)
                     {
                         ArmorsCount[j] += Chest.GetChild(i).GetComponent<ElementEq>().Count;
                    //     Debug.Log("dODAAJE " + Chest.GetChild(i).GetComponent<ElementEq>().Count + " DO PANCERZ Z " + Chest.GetChild(i).name);
-
                     }
-
 
                     if (Chest.GetChild(i).GetComponent<ElementEq>().Id == Tasks[j].GetComponent<ElementEq>().Id && Chest.GetChild(i).GetComponent<ElementEq>().elementTyp == EqElementType.Task_Item)
                     {
                         TasksCount[j] += Chest.GetChild(i).GetComponent<ElementEq>().Count;
                    //     Debug.Log("dODAAJE " + Chest.GetChild(i).GetComponent<ElementEq>().Count + " DO TASK Z " + Chest.GetChild(i).name);
-
                     }
-
 
                     if (Chest.GetChild(i).GetComponent<ElementEq>().Id == Legs[j].GetComponent<ElementEq>().Id && Chest.GetChild(i).GetComponent<ElementEq>().elementTyp == EqElementType.Legs)
                     {
                         LegsCount[j] += Chest.GetChild(i).GetComponent<ElementEq>().Count;
                     //    Debug.Log("dODAAJE " + Chest.GetChild(i).GetComponent<ElementEq>().Count + " DO NOGAWIC Z " + Chest.GetChild(i).name);
-
                     }
-
 
                     if (Chest.GetChild(i).GetComponent<ElementEq>().Id == Boots[j].GetComponent<ElementEq>().Id && Chest.GetChild(i).GetComponent<ElementEq>().elementTyp == EqElementType.Boots)
                     {
                         BootsCount[j] += Chest.GetChild(i).GetComponent<ElementEq>().Count;
                  //       Debug.Log("dODAAJE " + Chest.GetChild(i).GetComponent<ElementEq>().Count + " DO BUTOW Z " + Chest.GetChild(i).name);
-
                     }
                 }
             }
