@@ -3,7 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Read : MonoBehaviour {
-	public bool Reading;
+	public bool Reading;//czy gracz czyta
+
+    //Obiekty dotyczace ksiązki
 	public GameObject BackPicInputText;
     public Text textToRead;
 	public GameObject BookUI;
@@ -18,33 +20,30 @@ public class Read : MonoBehaviour {
     public GameObject NextButton;
     private KeyMenager keyMenager;
 
+    //Wyłaczenie podpowiedzi
     private bool ExitDesk;
     private float ExitTimeCd = 1f;
     private float ExitTime;
 
-    // Use this for initialization
     void Start () 
 	{
-		
+        //Począatkowe ustawienia
 		BackPicInputText.SetActive (false);
 		BookUI.SetActive (false);
 		Reading = false;
-        gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
         OpenedPage = 1;
         refresh = true;
-        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
 
+        gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
+        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
     }
     void Update()
     {
+        text.text = (OpenedPage + "/" + Pages.Length); //wyswietlanie liczby stron
 
-        text.text = (OpenedPage + "/" + Pages.Length);
-
-
-        if (ExitDesk)
+        if (ExitDesk) //znikanie podpowiedzi
         {
             BackPicInputText.GetComponent<Animator>().SetBool("disappear", true);
-
             ExitTime -= Time.deltaTime;
             if (ExitTime < 0)
             {
@@ -57,8 +56,7 @@ public class Read : MonoBehaviour {
             ExitTime = 0;
         }
 
-
-
+        //odpowiednie przyciski
         if (OpenedPage==Pages.Length)
         {
             NextButton.SetActive(false);
@@ -92,16 +90,16 @@ public class Read : MonoBehaviour {
             refresh = false;
         }
 
-        
-            if (Input.GetKeyDown(keyMenager.keys["Pause"]) && Reading)
-            {
-                BookUI.SetActive(false);
-                gm.ChangeToZero = true;
-                Reading = !Reading;
-            }
+        if (Input.GetKeyDown(keyMenager.keys["Pause"]) && Reading) //gracz kończy czytać
+        {
+           BookUI.SetActive(false);
+           gm.ChangeToZero = true;
+           Reading = !Reading;
+        }
         
 
     }
+    //przeskakiwanie miedzy stronami
     public void NextPage()
     {
         OpenedPage++;
@@ -111,50 +109,38 @@ public class Read : MonoBehaviour {
     {
         OpenedPage--;
         refresh = true;
-
     }
-
 
     void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.CompareTag ("Player"))
-                {
-
+        {
             BackPicInputText.SetActive(true);
             textToRead.text = "[" + keyMenager.keys["Action"] + "] To Read";
             ExitDesk = false;
         }
-		
 	}
 	
-	void OnTriggerStay2D(Collider2D col)
+	void OnTriggerStay2D(Collider2D col) //gracz zaczyna czytać
 	{
-		
 		if (col.CompareTag ("Player"))
         {
-						if (!Reading)
-                         {
-						BackPicInputText.SetActive (true);									
-						    if (Input.GetKeyDown(keyMenager.keys["Action"])&&gm.dead==false) 
-						    {
-				              if (gm.active_menu == 0)
-                             {
-                             BookUI.SetActive(true);
-                             gm.active_menu = 6;
-                             Reading = !Reading;
-                             }		
-						    }
-				        }
-			            
+			if (!Reading)
+             {
+			BackPicInputText.SetActive (true);									
+				if (Input.GetKeyDown(keyMenager.keys["Action"])&&gm.dead==false) 
+				{
+				   if (gm.active_menu == 0)
+                    {
+                        BookUI.SetActive(true);
+                        gm.active_menu = 6;
+                        Reading = !Reading;
+                    }		
+				}
+			}
 		}
-
-				
-				
-			
-			
-			
 	}
-	void OnTriggerExit2D(Collider2D col)
+	void OnTriggerExit2D(Collider2D col) //gracz wychodzi z kolizji umożliwiającej czytanie
 	{		
 		if(col.CompareTag("Player"))
 		{
@@ -167,13 +153,9 @@ public class Read : MonoBehaviour {
 		
 	}
 	
-	
-	
-	public void Exit()
+	public void Exit() //wyłaczenie UI książki
 	{
 		Reading = false;
 		BookUI.SetActive(false);
-
 	}
-	
 }
