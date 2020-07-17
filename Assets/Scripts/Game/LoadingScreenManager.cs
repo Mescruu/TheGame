@@ -7,29 +7,29 @@ public class LoadingScreenManager : MonoBehaviour
 {
 
 
-    [Header("Loading Visuals")]
+    [Header("Loading Visuals")] //wizualizacje podczas ładowania
     public Image loadingIcon;
     public Image loadingDoneIcon;
     public Text loadingText;
     public Image progressBar;
     public Image fadeOverlay;
 
-    [Header("Timing Settings")]
+    [Header("Timing Settings")] //ustawienie czasu zanim zacznie się ładować
     public float waitOnLoadEnd = 0.25f;
     public float fadeDuration = 0.25f;
     public float FakeLoadingDuration = 1f;
 
-    [Header("Loading Settings")]
-    public LoadSceneMode loadSceneMode = LoadSceneMode.Single;
-    public ThreadPriority loadThreadPriority;
+    [Header("Loading Settings")] //ładowanie sceny
+    public LoadSceneMode loadSceneMode = LoadSceneMode.Single; //wybranie typ ładowanej sceny
+    public ThreadPriority loadThreadPriority; //priorytet wątków. Niższy priorytet oznacza, że operacja w tle będzie wykonywana rzadziej i zajmie mniej czasu, ale będzie postępować wolniej.
 
     [Header("Other")]
-    // If loading additive, link to the cameras audio listener, to avoid multiple active audio listeners
-    public AudioListener audioListener;
+    public AudioListener audioListener; //odtwarzacz
 
     AsyncOperation operation;
     Scene currentScene;
 
+    //animacje
     public Animator anim;
     public Animator ParticleAnim;
     public Animator fadeAnim;
@@ -38,7 +38,7 @@ public class LoadingScreenManager : MonoBehaviour
     public SoundHolder soundholder;
     public KeyMenager KeyMenager;
     public static int sceneToLoad = -1;
-    // IMPORTANT! This is the build index of your loading scene. You need to change this to match your actual scene index
+    //Indeks sceny ładowania. 
     static int loadingSceneIndex = 2;
     public int[] StageBorders;
     public GameObject[] LoadingPics;
@@ -55,14 +55,12 @@ public class LoadingScreenManager : MonoBehaviour
                 {
                     LoadingPics[0].SetActive(true);  //ustawia obrazek stage'a z ktorego laduje
                 }
-
             }
             Destroy(soundholder.gameObject);
-            Destroy(KeyMenager.gameObject);
+            Destroy(KeyMenager.gameObject); //jezeli ładuje menu to usuwa keyMenager i soundholder ponieważ te dwie rzeczy są załadowane w menu zawsze
         }
 
-
-        if (sceneToLoad >= StageBorders[0] && sceneToLoad < StageBorders[1])       //zalezne od Stage;
+        if (sceneToLoad >= StageBorders[0] && sceneToLoad < StageBorders[1])       //zalezne od Stage zmienia utwory;
         {
             soundholder.IdSong = 1;
 
@@ -84,26 +82,21 @@ public class LoadingScreenManager : MonoBehaviour
         }
        
     }
-    public static void LoadScene(int levelNum, int FromScene)
+    public static void LoadScene(int levelNum, int FromScene) //ładowanie sceny
     {
         FromSceneIndex = FromScene;
         Application.backgroundLoadingPriority = ThreadPriority.High;
         sceneToLoad = levelNum;
         SceneManager.LoadScene(loadingSceneIndex);
-
-
     }
 
     void Start()
     {
         soundholder = GameObject.Find("SoundHolder").GetComponent<SoundHolder>();
         KeyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
-
         soundholder.isloading = true;
-   
 
-
-        if (PlayerPrefs.HasKey("beforeBorders0"))
+        if (PlayerPrefs.HasKey("beforeBorders0")) //sprawdza czy została przekroczona granica stage'ow
         {
             prevBorders[0] = PlayerPrefs.GetInt("beforeBorders0");
             prevBorders[1] = PlayerPrefs.GetInt("beforeBorders1");
@@ -112,13 +105,12 @@ public class LoadingScreenManager : MonoBehaviour
         {
             prevBorders[0] = 0;
             prevBorders[1] = 0;
-
         }
 
             StageInfo();
 
      Cursor.lockState = CursorLockMode.Locked; //Zablokowanie kursora myszy.
-      Cursor.visible = false;//Ukrycie kursora.
+     Cursor.visible = false;//Ukrycie kursora.
 
         if (sceneToLoad < 0)
             return;
@@ -126,32 +118,26 @@ public class LoadingScreenManager : MonoBehaviour
         currentScene = SceneManager.GetActiveScene();
         StartCoroutine(LoadAsync(sceneToLoad, anim));
 
-
         Debug.Log("Loading....");
-
-
     }
 
     private IEnumerator LoadAsync(int levelNum, Animator anim)
     {
+        ShowLoadingVisuals(); //wyswietlenie wizualizacji sceny
 
-
-        ShowLoadingVisuals();
-
-        yield return new WaitForSeconds(FakeLoadingDuration);
-
+        yield return new WaitForSeconds(FakeLoadingDuration); //czekanie aż zacznie się ładować
         yield return null;
 
         StartOperation(levelNum);
 
         float lastProgress = 0f;
 
-        // operation does not auto-activate scene, so it's stuck at 0.9
+        // operacja nie aktywuje automatycznie sceny, więc utknęła na 0,9
         while (DoneLoading() == false)
         {
             yield return null;
 
-            if (Mathf.Approximately(operation.progress, lastProgress) == false)
+            if (Mathf.Approximately(operation.progress, lastProgress) == false) //progressbar
             {
                 progressBar.fillAmount = operation.progress;
                 lastProgress = operation.progress;
@@ -161,7 +147,7 @@ public class LoadingScreenManager : MonoBehaviour
         if (loadSceneMode == LoadSceneMode.Additive)
             audioListener.enabled = false;
 
-        ShowCompletionVisuals();
+        ShowCompletionVisuals();  //pokaż zakonczenie ładowania
 
         yield return new WaitForSeconds(waitOnLoadEnd);
 
@@ -172,13 +158,9 @@ public class LoadingScreenManager : MonoBehaviour
             fadeAnim.SetBool("FadeOut", true);
 
         }
-
         yield return new WaitForSeconds(fadeDuration);
 
-
-
-       
-        soundholder.isloading = false;
+        soundholder.isloading = false; //kończenie łądowania dla soundholdera
 
         if (loadSceneMode == LoadSceneMode.Additive)
             SceneManager.UnloadScene(currentScene.name);
@@ -190,11 +172,10 @@ public class LoadingScreenManager : MonoBehaviour
 
     }
 
-    private void StartOperation(int levelNum)
+    private void StartOperation(int levelNum) //ładowanie w tle następnego poziomu
     {
         Application.backgroundLoadingPriority = loadThreadPriority;
         operation = SceneManager.LoadSceneAsync(levelNum, loadSceneMode);
-
 
         if (loadSceneMode == LoadSceneMode.Single)
             operation.allowSceneActivation = false;
@@ -205,8 +186,7 @@ public class LoadingScreenManager : MonoBehaviour
       return (loadSceneMode == LoadSceneMode.Additive && operation.isDone) || (loadSceneMode == LoadSceneMode.Single && operation.progress >= 0.9f);
     }
 
-
-    void ShowLoadingVisuals()
+    void ShowLoadingVisuals() //wyswietlenie paska ładowania itd
     {
         loadingIcon.gameObject.SetActive(true);
         loadingDoneIcon.gameObject.SetActive(false);
@@ -216,9 +196,8 @@ public class LoadingScreenManager : MonoBehaviour
 
     }
 
-    void ShowCompletionVisuals()
+    void ShowCompletionVisuals() //pokazanie, że ładowanie się zakończyło
     {
-     
         loadingIcon.gameObject.SetActive(false);
         loadingDoneIcon.gameObject.SetActive(true);
 
@@ -226,7 +205,5 @@ public class LoadingScreenManager : MonoBehaviour
         loadingText.text = "DONE";
         anim.SetBool("FadeOut", true);
         ParticleAnim.SetBool("FadeOut", true);
-    
     }
-
 }
