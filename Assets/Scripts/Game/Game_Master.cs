@@ -4,15 +4,13 @@ using UnityEngine.UI;
 
 public class Game_Master : MonoBehaviour {
 
-
-
-    public static Game_Master instance = null;
-    public int LevelId;
+  //  public static Game_Master instance = null;
+    public int LevelId; //poziom w którym jest gracz
     
-    public float MinY;
-    public int difficultLevel;
+    public float MinY; //poziom Y po którym gracz zostanie zabity
+    public int difficultLevel; //poziom trudności
 
-    //Player stats
+    //Statystyki gracza
     public int exp;
     public int PDPoint;
     public int SkillPDPoint;
@@ -44,7 +42,7 @@ public class Game_Master : MonoBehaviour {
 
     public int powerLevel;
 
-    //Player Elements
+    //Żywioły gracza - poziomy i czego używa
     public int Element;
     public float[] NeededManaFire;
     public float[] NeededManaElect;
@@ -62,6 +60,7 @@ public class Game_Master : MonoBehaviour {
     public float ChaosUsedMana;
     public float SwordUsedStamina;
 
+    //Efekty na graczu
     public bool Player_Burn;
     public bool Player_Poisoned;
     public bool Player_Defend;
@@ -70,10 +69,9 @@ public class Game_Master : MonoBehaviour {
     public GameObject[] Effect;
     //1 fire, 2 elect, 3 chaos, 4 Ankh 
     //bosses
-    public int ForestBoss;
+    public int ForestBoss; //zmienna sprawdzająca, czy boss zostal zabity czy nie
 
     //basiceq
-
     public int gold = 0;
     public int runes = 0;
 
@@ -88,12 +86,10 @@ public class Game_Master : MonoBehaviour {
     public int[] note;
 
     //informatory 
-    
     public GameObject YouGetBoard;
     public Text YouGet;
     public float timeToShow;
     //czas i menu rozne
-
     public bool CanMove;
 
     public bool CanUseMenu;
@@ -128,7 +124,7 @@ public class Game_Master : MonoBehaviour {
   
 
 
-    //koszty ruchu
+    //koszty ruchu zalezne są od poziomu gracza
 
     public float BasicBackDashCost;
     public float BasicJumpSpecialAttackCost;
@@ -146,7 +142,7 @@ public class Game_Master : MonoBehaviour {
     public float AttackRunCost;
     public float JumpCost;
 
-    // drzwi 
+    // drzwi do kolejnych przejść
     public Transform[] Enters;
     public int DoorID;
 
@@ -156,17 +152,19 @@ public class Game_Master : MonoBehaviour {
     public bool saving;
     public bool dead;
     public bool awake;
+    //wykorzystywane skrypty
     private LoadTargetScript loadScript;
     private KeyMenager keyMenager;
     public itemDataBaseChest itemDataBaseChest;
     private PlayerAttack playerAtckScript;
+
+    //wyswietlane efekty przy zdobywaniu poziomu
     public GameObject NewLevel;
     public GameObject NewLevelFire;
     public GameObject NewLevelElect;
     public GameObject NewLevelChaos;
     public GameObject NewLevelAnkh;
     public GameObject NewLevelSword;
-
 
     private bool NewLevelInstantiate;
     private float NewLevelTimer;
@@ -185,7 +183,7 @@ public class Game_Master : MonoBehaviour {
    
     void Start()
     {
-
+        //początkowe wartości
         PlayerFighting = false;
         ChangeToZero = true;
         YouGetBoard.SetActive(false);
@@ -196,7 +194,6 @@ public class Game_Master : MonoBehaviour {
         DeadScreenImage.SetActive(false);
 
         NewLevelInstantiate = false;
-     
 
         // data = gameObject.GetComponent<itemDataBase>();
         awake = true;
@@ -216,14 +213,13 @@ public class Game_Master : MonoBehaviour {
 
         loadScript = gameObject.GetComponent<LoadTargetScript>();
 
-
         itd = gameObject.GetComponent<itemDataBase>();
         Debug.Log("itd nie jest null");
 
         save.Load();
         itemDataBaseChest = gameObject.GetComponent<itemDataBaseChest>();
 
-        if (itemDataBaseChest != null)
+        if (itemDataBaseChest != null) //jezeli znajduje się skrzynia na planszy
         {
             Debug.Log("itemDataBaseChest nie jest null");
             save.ChestLoad(LevelId);
@@ -233,16 +229,13 @@ public class Game_Master : MonoBehaviour {
 
         soundHolder.isloading = false;
 
-        if (PlayerPrefs.HasKey("difficultLevel"))
+        if (PlayerPrefs.HasKey("difficultLevel")) //załadowanie poziomu trudności
         {
             difficultLevel = PlayerPrefs.GetInt("difficultLevel");
         }
-        settings.load();
-
+        settings.load(); //załadowanie ustawień
 
         exp_Slider = GameObject.Find("SkillUI").GetComponent<Exp_Slider>();
-
-
 
     }
     void Update()
@@ -253,6 +246,7 @@ public class Game_Master : MonoBehaviour {
             difficultLevel = settings.qualityindex;
         }
         
+        //progi punktowe
         if (PlayerLevel == 0)
         {
             nextLevel = 50f;
@@ -261,11 +255,12 @@ public class Game_Master : MonoBehaviour {
         {
             nextLevel = 75f;
         }
-        if (PlayerLevel > 1)
+        if (PlayerLevel > 1) //obliczanie progów punktowych
         {
             nextLevel = PlayerLevel * PlayerLevel * PlayerLevel * 10f - PlayerLevel * PlayerLevel * 20f + 100f;
         }
 
+        //ile pozostało do nastepnego poziomu i jakie punkty należy przyznać graczowi
         if (nextLevel>0)
         {
             if (nextLevel <= exp)
@@ -285,6 +280,7 @@ public class Game_Master : MonoBehaviour {
             }
         }
 
+        //przyznanie poziomu
         if (NewLevelInstantiate)
         {
             NewLevelTimer = 0;
@@ -304,8 +300,7 @@ public class Game_Master : MonoBehaviour {
             }
         }
 
-
-
+        //obliczenie ilości noży w ekwipunktu
         if (Secon_Weapon_Slot.transform.childCount>0)
         {
             ElementEq Second_Weapon = Secon_Weapon_Slot.GetComponentInChildren<ElementEq>();
@@ -337,9 +332,9 @@ public class Game_Master : MonoBehaviour {
             }
             save.Save();
         }
+        //przeskakiwanie miedzy poziomami
         if (loadScene == true && saving == false)
         {
-
             player.blockMove = true;
             ScreenImage.SetActive(true);
             ScreenImage.GetComponent<Animator>().SetBool("FadeOut", true);
@@ -355,25 +350,19 @@ public class Game_Master : MonoBehaviour {
                 loadScript.LoadScreenNum(SceneIdToLoad, Application.loadedLevel);
             }
         }
-        if (ChangeToZero)
+
+        if (PlayerSpeed == 0) //obliczanie kosztów ruchów
         {
-            active_menu = 0;
-            ChangeToZero = false;
+            BackDashCost = BasicBackDashCost;
+            JumpDownSpecialAttackCost = BasicJumpDownSpecialAttackCost;
+            JumpSpecialAttackCost = BasicJumpSpecialAttackCost;
+            RunSpecialAttackCost = BasicRunSpecialAttackCost;
+            AttackCost = BasicAttackCost;
+            AttackRunCost = BasicAttackRunCost;
+            JumpCost = BasicJumpCost;
         }
-
-            if (PlayerSpeed == 0) 
-            {
-                BackDashCost = BasicBackDashCost;
-                JumpDownSpecialAttackCost = BasicJumpDownSpecialAttackCost;
-                JumpSpecialAttackCost = BasicJumpSpecialAttackCost;
-                RunSpecialAttackCost = BasicRunSpecialAttackCost;
-                AttackCost = BasicAttackCost;
-                AttackRunCost = BasicAttackRunCost;
-                JumpCost = BasicJumpCost;
-
-            }
-            else
-             {
+        else
+        {
             BackDashCost = BasicBackDashCost - (5 * PlayerSpeed);
             JumpDownSpecialAttackCost = BasicJumpDownSpecialAttackCost - (2 * (PlayerSpeed + PlayerSwordStaminaLevel));
             JumpSpecialAttackCost = BasicJumpSpecialAttackCost - (2 * (PlayerSpeed + PlayerSwordStaminaLevel));
@@ -383,52 +372,36 @@ public class Game_Master : MonoBehaviour {
             AttackRunCost = BasicAttackRunCost - (2 * (PlayerSpeed + PlayerSwordStaminaLevel)); 
             JumpCost = BasicJumpCost - (5 * PlayerSpeed); 
 
-            }
-
-     
+        }
 
         if (BackDashCost <= 5) 
-            {
-                BackDashCost=5f;
-            }
-            if (JumpDownSpecialAttackCost <= 10) 
-            {
-                JumpDownSpecialAttackCost=10;
-            }
-            if (JumpSpecialAttackCost <= 15) 
-            {
-                JumpSpecialAttackCost= 15;
-            }
-            if (RunSpecialAttackCost <= 20) 
-            {
-                RunSpecialAttackCost= 20;
-            }
+            BackDashCost=5f;
 
-            if (AttackCost <= 1)
-            {
+        if (JumpDownSpecialAttackCost <= 10) 
+            JumpDownSpecialAttackCost=10;
+
+         if (JumpSpecialAttackCost <= 15) 
+            JumpSpecialAttackCost= 15;
+
+         if (RunSpecialAttackCost <= 20) 
+             RunSpecialAttackCost= 20;
+
+         if (AttackCost <= 1)
             AttackCost = 1;
-            }
-            if (AttackRunCost <= 5)
-            {
+
+         if (AttackRunCost <= 5)
             AttackRunCost = 5f;
-            }              
-            if(JumpCost <= 5)
-            {
+
+         if(JumpCost <= 5)
             JumpCost = 5f;
-            }
-        /*
-                if (playerAttack.DeathMode)
-                {
-                    BackDashCost = 0;
-                    JumpDownSpecialAttackCost = 0;
-                    JumpSpecialAttackCost = 0;
-                    RunSpecialAttackCost = 0;
 
-                }
+        //zatrzymanie czasu
+        if (ChangeToZero)
+        {
+            active_menu = 0;
+            ChangeToZero = false;
+        }
 
-        */
-
-    
         if (active_menu == 0)
         {
             Time.timeScale = 1;
@@ -442,15 +415,13 @@ public class Game_Master : MonoBehaviour {
         }
         else
         {
-
             Time.timeScale = 0;
             //player.CanMove = false;
             Cursor.lockState = CursorLockMode.None;//Odblokowanie kursora myszy.
             Cursor.visible = true;//Pokazanie kursora.
-
-
         }
 
+        //wyswietlanie podpowiedzi
         if(timeToShow<1f)
         {
             YouGetBoard.GetComponent<Animator>().SetBool("disappear", true);
@@ -467,14 +438,17 @@ public class Game_Master : MonoBehaviour {
         }
 
     }
+    //dodawanie graczowi hp
     public void AddHp()
     {
         player.curHP += 100 + 100 * difficultLevel / 10f ;
     }
+    //dodawanie graczowi mp
     public void AddMana()
     {
         player.curMana += 100 + 100 * difficultLevel / 10f ;
     }
+    //wyswietlenie informacji
     public void Info(string Text)
     {
         float time = 10f;
@@ -489,9 +463,9 @@ public class Game_Master : MonoBehaviour {
         {
             YouGetBoard.SetActive(false);
         }
-
-
     }
+
+    //obliczanie statystyk gracza
     public void RefreshEqStats()
     {
         PlayerAttack = PlayerStatsAttack;
@@ -554,7 +528,6 @@ public class Game_Master : MonoBehaviour {
             PlayerMagic += itd.MainBootsSlot.GetComponentInChildren<ElementEq>().magic;
             PlayerSpeed += itd.MainBootsSlot.GetComponentInChildren<ElementEq>().agility;
         }
-        
         eq.StatsText.text = "S  t a  t s";
 
         if (PlayerMagic <= 0)
@@ -575,13 +548,12 @@ public class Game_Master : MonoBehaviour {
                 NeededManaAnkh[i] = NeededManaAnkhBasic[i] - (NeededManaAnkhBasic[i] * (PlayerMagic + PlayerWhiteManaLevel) / 100);
                 NeededManaChaos[i] = NeededManaChaosBasic[i] - (NeededManaChaosBasic[i] * (PlayerMagic + PlayerDeathManaLevel) / 100);
                 NeededManaElect[i] = NeededManaElectBasic[i] - (NeededManaElectBasic[i] * (PlayerMagic + PlayerElectManaLevel) / 100);
-
             }
         }
-
         player.SetNumbers(PlayerSpeed,PlayerMagic, PlayerArmor);
-
     }
+
+    //statystyki przedmiotu
     public bool ShowWeaponStats()
     {
         eq.StatsText.text = "item stats";
@@ -609,7 +581,6 @@ public class Game_Master : MonoBehaviour {
                 return true;
             }
         }
-      
     }
     public void CloseWeaponStats()
     {
@@ -621,8 +592,8 @@ public class Game_Master : MonoBehaviour {
         {
             eq.StatsUIChest.SetActive(false);
         }
-
-        }
+   }
+    //ustawienie pozycji gracza ze wzgledu na przejście z poziomu
     public void SetPlayerPlace()
     {
         for (int i = 0; i < Enters.Length; i++)
@@ -632,31 +603,24 @@ public class Game_Master : MonoBehaviour {
                 player.transform.position = Enters[i].position;
             }
         }
-
     }
+    //rozpoczecie gry
     public void GameStart()
     {
         ScreenImage.SetActive(true);
-
         StartTime -= Time.deltaTime;
-
-
 
         if (StartTime <= 0)
         {
             active_menu = 0;
-
             ScreenImage.SetActive(false);
-
-          //  player.CanMove = true;
             awake = false;
         }
-
     }
+
+    //zakończenie gry
     public void GameEnd()
     {
-      //  player.CanMove = false;
-
         deadTime -= Time.deltaTime;
             Time.timeScale = 0.5f;
 
@@ -670,18 +634,21 @@ public class Game_Master : MonoBehaviour {
                     Application.LoadLevel(Application.loadedLevel);
                 }
             }
-      
     }
+
+    //sprawdzenie czy skrzynia jest otwarta
     public  void SetChestBool(bool open)
     {
        Chest_Open=open;
   
     }
+    //wyswietlenie informacji
     public void ShowInfo(float timeToShow, string txt)
     {
         YouGet.text = txt;
         this.timeToShow = timeToShow;
     }
+    //usunięcie noża
     public void ThrowKnife()
     {
         ElementEq Second_Weapon = Secon_Weapon_Slot.GetComponentInChildren<ElementEq>();
@@ -694,6 +661,7 @@ public class Game_Master : MonoBehaviour {
             }
         }
     }
+    //dodanie noża
     public void AddKnife(GameObject Knife)
     {
         ElementEq Second_Weapon = Secon_Weapon_Slot.GetComponentInChildren<ElementEq>();
@@ -708,9 +676,6 @@ public class Game_Master : MonoBehaviour {
                 Debug.Log("added to pocket when there is some knives in that type");
             }
         }
-
-    
-
         if (eq.Weapon_CatUI.transform.childCount > 0 && add == false)
         {
 
@@ -731,9 +696,7 @@ public class Game_Master : MonoBehaviour {
                         }
                     }
                 }
-
             }
-          
         }
 
         if (Secon_Weapon_Slot.transform.childCount == 0 && add == false)
@@ -763,14 +726,11 @@ public class Game_Master : MonoBehaviour {
         }
         if(add==false)
         {
-           
                 ShowInfo(3, "there is no space");
-       
         }
-
         RefreshEqStats();
-
     }
+    //event otrzymania poziomu
     public void MakeAnEvent(int element,float points)  //0 sword, 1 fire, 2 chaos, 3 ankh, 4 elect
     {
     if(element==0)
@@ -778,28 +738,25 @@ public class Game_Master : MonoBehaviour {
             PlayerSwordStaminaLevel += 1;
           //  GameObject particle = Instantiate(NewLevelSword, PlayerNewLevelTransform.position, transform.rotation);
           //  particle.GetComponent<LevelUp>().target = PlayerNewLevelTransform;
-
             SwordUsedStamina = points;
         }
     else
         {
             if (element==1)
             {
-            PlayerFireManaLevel += 1;
+                PlayerFireManaLevel += 1;
                 GameObject particle = Instantiate(NewLevelFire, PlayerNewLevelTransform.position, transform.rotation);
                 particle.GetComponent<LevelUp>().target = PlayerNewLevelTransform;
-
                 FireUsedMana = points;
-
             }
             if (element == 4)
             {
-            PlayerElectManaLevel += 1;
+                PlayerElectManaLevel += 1;
                 GameObject particle = Instantiate(NewLevelElect, PlayerNewLevelTransform.position, transform.rotation);
                 particle.GetComponent<LevelUp>().target = PlayerNewLevelTransform;
 
                 ElectUsedMana = points;
-              }
+            }
             if (element == 2)
             {
             PlayerDeathManaLevel += 1;
@@ -817,9 +774,8 @@ public class Game_Master : MonoBehaviour {
                 AnkhUsedMana = points;
             }
         }
-
     }
-
+    //Sprawdzenie czy gracz walczy
     public void CheckFighting()
     {
         bool checkPlayerFight = false;
@@ -841,10 +797,12 @@ public class Game_Master : MonoBehaviour {
             PlayerFighting = false;
         }
     }
+    //efekty zatrucia itd
     public void AddEffect(int effectNumber)  //0 fire, 1 poisoned, 2 deaathmode, 3 shiield, 4 sword stun
     {
         Instantiate(Effect[effectNumber], EffectSlot);
     }
+    //animator postaci ze względu na noszoną broń
     public void ChangePlayerAnimatorLayer(int LayerNumber) //0 sword, 1 spear, 2 axe
     {
         if (LayerNumber == 0)
@@ -867,7 +825,5 @@ public class Game_Master : MonoBehaviour {
             player.GetComponent<Animator>().SetLayerWeight(1, 0);
             player.GetComponent<Animator>().SetLayerWeight(2, 1);
         }
-
     }
-
 }
