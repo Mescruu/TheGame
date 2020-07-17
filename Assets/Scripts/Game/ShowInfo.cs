@@ -3,9 +3,6 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-
-
-
 public class ShowInfo : MonoBehaviour
 {
     public GameObject InfoDesk;
@@ -36,8 +33,6 @@ public class ShowInfo : MonoBehaviour
     }
     void Update()
     {
-
-
         if (isOver)
         {
             animator.SetBool("Show", true);
@@ -51,14 +46,7 @@ public class ShowInfo : MonoBehaviour
             InfoDesk.SetActive(false);
             Debug.Log("paterny wylaczone");
         }
-
-
-
     }
-
-
-    // Update is called once per frame
-
 
     public void WhenMouseOver()
     {
@@ -106,6 +94,4 @@ public class ShowInfo : MonoBehaviour
         isOver = false;
         Debug.Log("Mouse exit");
     }
-
-
 }
