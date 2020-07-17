@@ -5,18 +5,10 @@ using System; //Serializable.
 using System.Runtime.Serialization.Formatters.Binary;//Serializes i deserializes obiektu lub cały wykres z połączonych obiektów w formacie binarnym.
 using System.IO;//Do operacji na plikach (czytanie, pisanie do pliku).
 
-/**
- * Skrypt odpowiedzialny za wyświetlenie komunikatu i przechodzenie pomiędzy
- * poziomami.
- * 
- * @author Hubert Paluch.
- * MViRe - na potrzeby kursu UNITY3D v5.
- * mvire.com 
- */
 public class Saveing : MonoBehaviour
 {
 
-    /** Zmienna przechowuje obiekt transform racza.*/
+    //odwołania
     private Player_Controller player;
     public Game_Master gameMaster;
     public itemDataBase idb;
@@ -24,24 +16,20 @@ public class Saveing : MonoBehaviour
 
     public bool notmenu = true;
     public int LastLevel;
-    // Use this for initialization
-    void Start()
+
+    void Start() //pobierz komponenty, bądź załaduj menu
     {
         if (notmenu)
         {
             gameMaster = gameObject.GetComponent<Game_Master>();
             idb = gameObject.GetComponent<itemDataBase>();
-
         }
         else
         {
             LoadMenu();
         }
-
-
     }
 
-    // Update is called once per frame
     void Update()
     {
         //Szybki zapis.
@@ -57,12 +45,10 @@ public class Saveing : MonoBehaviour
         }
     }
 
-    /**
-    * Metoda zapisuje stan gry do pliku.
-    */
+   //Zapisanie stanu gry do pliku
     public void Save()
     {
-        gameMaster.saving = true;
+        gameMaster.saving = true; //gra jest zapisywana
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
         idb = gameObject.GetComponent<itemDataBase>();
@@ -80,6 +66,7 @@ public class Saveing : MonoBehaviour
 
         gmdata.SceneId = Application.loadedLevel; //Pobieram id poziomu
 
+        //zapisanie odpowiednich danych o graczu
         gmdata.exp = gameMaster.exp;
         gmdata.PDPoint = gameMaster.PDPoint;
         gmdata.PDSkillPoint = gameMaster.SkillPDPoint;
@@ -113,6 +100,7 @@ public class Saveing : MonoBehaviour
         gmdata.ChaosUsedMana = gameMaster.ChaosUsedMana;
         gmdata.SwordUsedStamina = gameMaster.SwordUsedStamina;
 
+        //zapisanie dokąd gracz przeszedł i jego danych
         gmdata.DoorID = gameMaster.DoorID;
         gmdata.LevelId = gameMaster.LevelId;
         gmdata.Element = gameMaster.Element;
@@ -125,6 +113,7 @@ public class Saveing : MonoBehaviour
         gmdata.Hp = player.curHP;
         gmdata.Mana = player.curMana;
         gmdata.Stamina = player.curStamina;
+        //zapisanie notatek gracza
         for (int i = 0; i < gameMaster.note.Length; i++)
         {
             gmdata.notes[i] = gameMaster.note[i];
@@ -159,7 +148,7 @@ public class Saveing : MonoBehaviour
             gmdata.LegsCount[i] = idb.LegsCount[i];
         }
 
-
+        //zapisanie jego przedmiotów
         gmdata.AmuletSlotItemID = idb.AmuletSlotItemID;
         gmdata.Main_WeaponSlotItemID = idb.Main_WeaponSlotItemID;
         gmdata.SecondWeaponSlotItemID = idb.SecondWeaponSlotItemID;
@@ -168,7 +157,6 @@ public class Saveing : MonoBehaviour
         gmdata.ArmorSlotItemID = idb.ArmorSlotItemID;
         gmdata.LegsSlotItemID = idb.LegsSlotItemID;
         gmdata.BootsSlotItemID = idb.BootsSlotItemID;
-
 
         //Posłuży do zapisywania danych do pliku.
         BinaryFormatter bf = new BinaryFormatter();
@@ -182,15 +170,12 @@ public class Saveing : MonoBehaviour
         gameMaster.saving = false;
     }
 
-    /**
-    * Metoda odczytuje stan gry z pliku.
-    */
+    //Odczytywanie danych z pliku
     public void Load()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
         gameMaster = gameObject.GetComponent<Game_Master>();
         idb = gameObject.GetComponent<itemDataBase>();
-
 
         Debug.Log("Loading..");
 
@@ -215,6 +200,7 @@ public class Saveing : MonoBehaviour
             //Ustawiamy dane;
             player.SetData(gmdata.Hp, gmdata.Mana, gmdata.Stamina);//Ustawiamy zdrowie mane i stamine trzeba zrobic funkcje w PlayerController  dane zmienic na data powyzej i gracz zmienic na Player.
 
+            //odczytywanie danych
             gameMaster.exp = gmdata.exp;
             gameMaster.PDPoint = gmdata.PDPoint;
             gameMaster.SkillPDPoint = gmdata.PDSkillPoint;
@@ -304,12 +290,8 @@ public class Saveing : MonoBehaviour
             idb.LegsSlotItemID = gmdata.LegsSlotItemID;
             idb.BootsSlotItemID = gmdata.BootsSlotItemID;
 
-
             idb.Instantiate();
         }
-
-
-
     }
 
 
@@ -318,12 +300,10 @@ public class Saveing : MonoBehaviour
 
         Debug.Log("Loading..");
 
-
         //Zanim odczytamy dane upewnijmy się, że jest co czytać.
         //Sprawdzamy czy plik zapisu istnieje.
         if (File.Exists(Application.persistentDataPath + "/Record.data"))
         {
-
             //Odczytujemy/pobieramy dane z pliku.
             FileStream file = File.Open(Application.persistentDataPath + "/Record.data", FileMode.Open);
 
@@ -341,9 +321,7 @@ public class Saveing : MonoBehaviour
             LastLevel = gmdata.LevelId;
         }
     }
-    /**
-    * Klasa zawiera informacje o graczu.
-*/
+    //Klasa zapisująca dane o skrzynie z poziomu
 
     public void ChestSave(int id)
     {
@@ -355,11 +333,8 @@ public class Saveing : MonoBehaviour
         Debug.Log("Saveing..Chest");
 
         //Posłuży do przesyłania danych do pliku.
-        //Unity ma własną konfigurację w tym wyspecyfikowane miejsce, w którym składuje takie pliki.
-        //Pod Windows jest to z reguły miejsce w katalogu użytkownika.
-        FileStream plik = File.Create(Application.persistentDataPath + "/ChestRecord" + id + ".data");
 
-        // Obiekt zawierający informacjie o stanie naszego gracza.
+        FileStream plik = File.Create(Application.persistentDataPath + "/ChestRecord" + id + ".data");
 
         ChestData chdata = new ChestData();
 
@@ -408,8 +383,7 @@ public class Saveing : MonoBehaviour
     }
     public void ChestLoad(int id)
     {
-
-        Debug.Log("Loading Chest..");
+        Debug.Log("Loading Chest.."); //ładowanie skrzyni
 
         idbch = gameObject.GetComponent<itemDataBaseChest>();
 
@@ -516,15 +490,10 @@ public class Saveing : MonoBehaviour
         idbch.Instantiate();
 
         Debug.Log("Loading Chest END");
-
-
     }
-
-
-
 }
 
-
+//Klasa odpowiadająca za dane gry do zapisu i wczytania
 [Serializable]
 class GameData
 {
@@ -600,7 +569,7 @@ class GameData
     public int[] notes = new int[9];
 }
 
-
+//dane skrzyni
 [Serializable]
 class ChestData
 {
@@ -613,17 +582,6 @@ class ChestData
     public int[] LegsCount = new int[2];
     public int[] ArmorsCount = new int[2];
 }
-/**
-* Klasa pomocnicza pozwalająca na zapisanie pozycji gracza.
-* Pozwala zapisać i odczytać obiekt Vector3.
-*/
 
-
-/**
-* Klasa pomocnicza pozwalająca na zapisanie obrotu gracza.
-* Pozwala zapisać i odczytać zwrot gracza.
-*/
-
-// All Rights Reserved!
-// Wszelkie Prawa Zastrzeżone!
-// Tylko do użytku niekomercyjnego.
+//na podstaiwe: kursu UNITY3D v5. mvire.com 
+ 
