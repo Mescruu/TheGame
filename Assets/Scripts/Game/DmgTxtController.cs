@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DmgTxtController : MonoBehaviour
 {
+    //Predefiniowane obiekty z odpowiednimi tekstami
     public DmgTxt dmgTxtPrefab;
     public DmgTxt CriticTxtPrefab;
     public DmgTxt PlayerdmgTxtPrefab;
@@ -13,6 +14,7 @@ public class DmgTxtController : MonoBehaviour
 
     private static GameObject canvas;
 
+    //licznik 
     public int Counter;
     public float Timer;
     private float TimerCD=1f;
@@ -42,7 +44,7 @@ public class DmgTxtController : MonoBehaviour
             Counter = 0;
         }
     }
-    public  void CreateDmgTxt(string txt, Transform location, DmgType dmgType, bool Critic, bool player)
+    public  void CreateDmgTxt(string txt, Transform location, DmgType dmgType, bool Critic, bool player) //Tworzenie napisów z randomową lokacją na ekranie niedaleko gracza
     {
         if (Critic)
         {
@@ -92,7 +94,7 @@ public class DmgTxtController : MonoBehaviour
 
         }
     }
-    public void CreateHealTxt(string txt, Transform location, Color color, bool Critic)
+    public void CreateHealTxt(string txt, Transform location, Color color, bool Critic) //Tworzenie napisów z randomową lokacją na ekranie niedaleko gracza - leczenie
     {
         txt = '+' + txt;
         if (Critic)
