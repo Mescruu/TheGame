@@ -15,35 +15,37 @@ public class DialogueTrigger : MonoBehaviour
     public bool StartDialogue;
     private bool activeOnce;
 
-    public Dialogue[] dialogue;
+    public Dialogue[] dialogue; //dialogi
 
-    private KeyMenager keyMenager;
     public GameObject BackPicInputText;
     public Text textToRead;
 
     private bool ExitDesk;
     public float ExitTimeCD;
     private float ExitTime;
+
+    private KeyMenager keyMenager;
     private DialogueManager dialogueManager;
 
     void Start()
     {
+        //poczatkowe wartosci
         activeOnce = true;
         StartDialogue = false;
-        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
         ExitTime = ExitTimeCD;
+
+        //dołaczenie komponentów
+        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
         dialogueManager = FindObjectOfType<DialogueManager>().GetComponent<DialogueManager>();
     }
     public void Update()
     {
-
-        if (StartDialogue && activeOnce)
+        if (StartDialogue && activeOnce) //rozpoczęcie dialogu
         {
-            dialogueManager.StartDialogue(dialogue,0);
+            dialogueManager.StartDialogue(dialogue,0); //wyslanie dialogów
             StartDialogue = false;
             activeOnce = false;
         }
-
         if (ExitDesk)
         {
             BackPicInputText.GetComponent<Animator>().SetBool("disappear", true);
@@ -59,14 +61,12 @@ public class DialogueTrigger : MonoBehaviour
         {
             ExitTime = 0;
         }
-
     }
-    public void TriggerDialogue()
+    public void TriggerDialogue() //wejscie w dialog
     {
         dialogueManager.StartDialogue(dialogue, 0);
-
     }
-    void OnTriggerEnter2D(Collider2D col)
+    void OnTriggerEnter2D(Collider2D col) //wejscie w trigger (zalezy czy należy kliknąć żeby porozmawiać, czy wystarczy wejść)
     {
         if (col.CompareTag("Player"))
         {
@@ -80,18 +80,15 @@ public class DialogueTrigger : MonoBehaviour
                 textToRead.text = "[" + keyMenager.keys["Action"] + "] To Talk";
                 ExitDesk = false;
             }
-     
         }
     }
 
-    void OnTriggerStay2D(Collider2D col)
+    void OnTriggerStay2D(Collider2D col) //jezeli jest gracz w kolizji
     {
         if(OnClick)
         {
             if (col.gameObject.tag == "Player")
             {
-
-
                 if (Input.GetKeyDown(keyMenager.keys["Action"]))
                 {
                     FindObjectOfType<DialogueManager>().player_in_trigger = true;
@@ -103,31 +100,23 @@ public class DialogueTrigger : MonoBehaviour
                         dialogueManager.tap = 0;
                         dialogueManager.StartDialogue(dialogue, 0);
                     }
-                   
-                 
                 }
                 BackPicInputText.SetActive(true);
             }
         }
-     
     }
-    void OnTriggerExit2D(Collider2D col)
+
+    void OnTriggerExit2D(Collider2D col) //jezeli wyjdzie z niej
     {
-
-
         if (col.gameObject.tag == "Player")
         {
             dialogueManager.player_in_trigger = false;
-
             if (OnClick)
             {
                 ExitTime = ExitTimeCD;
                 ExitDesk = true;
             }
-          
-
         }
-       
     }
 }
     
