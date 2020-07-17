@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class DmgTxt : MonoBehaviour {
+
     public Animator animator;
     public Text dmgTxt;
     public AudioSource audioSource;
     public AudioClip[] audioClip;
-    public Color[] dmgColor;
+    public Color[] dmgColor; //kolor tekstu w zależności od typu obrażeń
     public float SoundTime;
     
     void Start()
@@ -17,12 +18,11 @@ public class DmgTxt : MonoBehaviour {
         // Destroy(gameObject, clipInfo[0].clip.length);
         Destroy(gameObject, SoundTime);
     }
-    public void SetTxt(string txt, Color color,bool critic)
+    public void SetTxt(string txt, Color color,bool critic) //ustawienie wyswietlanego tekstu
     {
         if (critic)
         {
             dmgTxt.text = txt;
-
         }
         else
         {
@@ -31,13 +31,11 @@ public class DmgTxt : MonoBehaviour {
             dmgTxt.text = txt;
         }
     }
-    public void SetTxt(string txt, DmgType dmgType, bool critic)
+    public void SetTxt(string txt, DmgType dmgType, bool critic)   //ustawienie wyswietlanego tekstu ze względu na typ obrażeń
     {
         Color color = Color.white;
-   
-                color = dmgColor[(int)dmgType];
+        color = dmgColor[(int)dmgType];
          
-
         if (critic)
         {
             dmgTxt.color = color;
