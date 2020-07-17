@@ -4,13 +4,10 @@ using UnityEngine;
 
 [System.Serializable]
 
-public class Dialogue{
+public class Dialogue{ //klasa przechowywująca schemat danych
 
-    // Use this for initialization
     public string name;
     public Sprite Portrait;
     [TextArea(1,4)]
     public string[] sentences;
-	
-	
 }
