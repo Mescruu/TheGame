@@ -3,9 +3,6 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-
-
-
 public class InfoDesk_Skill : MonoBehaviour
 {
     public GameObject InfoDesk;
@@ -18,26 +15,21 @@ public class InfoDesk_Skill : MonoBehaviour
 
     private SkillUI skillUI;
 
+    //kolory odpowiadające żywiołom
     public Color32 FireColor;
     public Color32 ElectColor;
     public Color32 ChaosColor;
     public Color32 AnkhColor;
     public Color32 SwordColor;
-
     public Text text;
 
-    // Use this for initialization
     void Start () {
-     //   InfoDesk.SetActive(false);
        animator = InfoDesk.GetComponent<Animator>();
        InfoDesk.SetActive(false);
        skillUI = GameObject.Find("SkillUI").GetComponent<SkillUI>();
-
     }
     void Update()
     {
-
-
         if (isOver)
         {
             animator.SetBool("Show", true);
@@ -51,15 +43,12 @@ public class InfoDesk_Skill : MonoBehaviour
             Debug.Log("paterny wylaczone");
             InfoDesk.SetActive(false);
         }
-
-
-
     }
 
 
     // Update is called once per frame
 
-
+    //wyswietlanie informacji na temat poziomu zywiołów
     public void WhenMouseOver()
     {
         if (skillUI.fire)
@@ -91,7 +80,6 @@ public class InfoDesk_Skill : MonoBehaviour
             text.color = SwordColor;
 
         }
-
         Debug.Log("Mouse enter");
         isOver = true;
         if (!InfoDesk.activeSelf)
@@ -100,12 +88,9 @@ public class InfoDesk_Skill : MonoBehaviour
         }
         // InfoDesk.SetActive(true);
     }
-
     public void WhenMouseExit()
     {
         isOver = false;
         Debug.Log("Mouse exit");
     }
-
-
 }
