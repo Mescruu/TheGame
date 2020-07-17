@@ -79,13 +79,14 @@ public class CanvasEkwipunek : MonoBehaviour {
         StatsUI.SetActive(false);
         accept = false;
 
-        RefreshNotes();
 
-        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
         gm = GameObject.Find("gameMaster").GetComponent<Game_Master>();
         audioSource = gameObject.GetComponent<AudioSource>();
+        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
+
+        RefreshNotes();
     }
-   
+
     void Update ()
     {
 
@@ -106,9 +107,9 @@ public class CanvasEkwipunek : MonoBehaviour {
             accept = false;
         }
         if (Input.GetKeyDown(keyMenager.keys["Equipment"])&&gm.active_menu==0)
-        { //Jeżeli naciśnięto klawisz "I"
-        
-            if(ekwipunek.active==false)
+        { //Jeżeli naciśnięto klawisz "Equipment"
+
+            if (ekwipunek.active==false)
             {
                 ekwipunek.SetActive(true); //Ukrycie/pokazanie ekwipunku.		
                 gm.active_menu = 3;
