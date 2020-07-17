@@ -4,28 +4,31 @@ using UnityEngine;
 
 public class AudioData : MonoBehaviour {
 
+    //muzyka pod walkę
     public bool FightMusic;
     public AudioClip PreFightClip;
     public bool FightMusicRandom;
     private int fightid;
 
+    //przejście miedzy walką
     public AudioClip[] FightClip;
     public AudioClip AfterFightClip;
     public AudioClip[] NormalClip;
     public bool NormalMusicRandom;
     private int normalid;
 
+    //obiekt odtwarzający muzykę
     private SoundHolder soundHolder;
     private AudioSource soundHolderAudioSource;
     public bool canUse;
-    private Game_Master gm;
 
     private float timeToCheck;
     public AudioClip ChangeSound;
     public AudioSource HelpAudioSource;
 
-	// Use this for initialization
-    void Awake()
+    private Game_Master gm;
+
+    void Awake() //Na samym początku odszukiwany jest komponent SoundHolder i jego odtwarzacz
     {
         soundHolder = GameObject.Find("SoundHolder").GetComponent<SoundHolder>();
         soundHolderAudioSource = soundHolder.gameObject.GetComponent<AudioSource>();
@@ -33,81 +36,67 @@ public class AudioData : MonoBehaviour {
     }
     void Start () {
 
-        if(ChangeSound!=null)
+        gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
+
+        if (ChangeSound!=null) //ustalenie początkowego utworu
         {
             HelpAudioSource.clip = ChangeSound;
             HelpAudioSource.volume = soundHolder.volume;
-
         }
-        gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
-        if (soundHolder!=null)
+        if (soundHolder!=null) //może zostać użyty do walki
         {
             canUse = true;
-
             soundHolderAudioSource.loop = false;
         }
-        fightid = 69;
+        fightid = 100; //ustalenie poczatkowego id (liczba oznaczająca gotowość)
     }
 
-    // Update is called once per frame
     void Update ()
     {
         FightMusic = gm.PlayerFighting;
-
         if(canUse && gm!=null)
         {
             if (ChangeSound != null)
             {
                 HelpAudioSource.volume = soundHolder.volume*1.5f;
-
             }
-
             soundHolderAudioSource.loop = false;
-
             if (!soundHolderAudioSource.isPlaying)
             {
                 if(gm.PlayerFighting)
                 {
                     if(FightMusic)
                     {
-                        normalid = 69;
+                        normalid = 100; //normal jest gotowy
 
-                        if (fightid == 69)
+                        if (fightid == 100) //jeżeli fightid jest gotowy zmień na muzykę do walki
                         {
                             ChangeToFight();
-                         
                         }
                         else
                         {
-                            if (FightMusicRandom)
+                            if (FightMusicRandom) //przeskakuj między ścieżkami losowo
                             {
                                 if (ChangeSound != null)
                                 {
                                     HelpAudioSource.Play();
                                 }
-
                                 soundHolderAudioSource.clip = FightClip[Random.Range(0, FightClip.Length)];
                                 timeToCheck = soundHolderAudioSource.clip.length;
                                 soundHolderAudioSource.Play();
                                 fightid = 0;
-                            
-
                             }
                             else
                             {
-
                                 if (fightid == -1)
                                 {
                                     if (ChangeSound != null)
                                     {
                                         HelpAudioSource.Play();
                                     }
-
                                     soundHolderAudioSource.clip = FightClip[0];
                                     fightid = 0;
                                     soundHolderAudioSource.Play();
-                                 
                                 }
                                 else
                                 {
@@ -120,35 +109,26 @@ public class AudioData : MonoBehaviour {
                                     if (fightid == FightClip.Length)
                                     {
                                         fightid = 0;
-
                                     }
                                     soundHolderAudioSource.clip = FightClip[fightid];
                                     timeToCheck = soundHolderAudioSource.clip.length;
                                     soundHolderAudioSource.Play();
-                                 
                                 }
-
-
-
                             }
                         }
-                        
                     }
-                 
                 }
                 else
                 {
-                  
                     if(!FightMusic)
                     {
-                        if (normalid == 69)
+                        if (normalid == 100)
                         {
                             ChangeToNormal();
-                          
                         }
                         else
                         {
-                            fightid = 69;
+                            fightid = 100;
 
                             if (NormalMusicRandom)
                             {
@@ -159,7 +139,6 @@ public class AudioData : MonoBehaviour {
                                 soundHolderAudioSource.clip = NormalClip[Random.Range(0, FightClip.Length)];
                                 timeToCheck = soundHolderAudioSource.clip.length;
                                 soundHolderAudioSource.Play();
-                             
                             }
                             else
                             {
@@ -172,7 +151,6 @@ public class AudioData : MonoBehaviour {
                                     soundHolderAudioSource.clip = NormalClip[0];
                                     soundHolderAudioSource.Play();
                                     normalid = 0;
-                                 
                                 }
                                 else
                                 {
@@ -190,24 +168,18 @@ public class AudioData : MonoBehaviour {
                                     soundHolderAudioSource.clip = NormalClip[normalid];
                                     timeToCheck = soundHolderAudioSource.clip.length;
                                     soundHolderAudioSource.Play();
-                                  
-
                                 }
-
-
                             }
                         }
-                       
                     }
                 }
             }
-                else
+            else
             {
                 timeToCheck -= Time.deltaTime;
                 if(timeToCheck<=2f)
                 {
                     gm.CheckFighting();
-
                 }
             }
         }
@@ -215,10 +187,8 @@ public class AudioData : MonoBehaviour {
         {
             soundHolderAudioSource.loop = true;
         }
-      
-            
     }
-    void ChangeToFight()
+    void ChangeToFight() //zmień muzykę na tę do walki
     {
         if (canUse)
         {
@@ -231,10 +201,9 @@ public class AudioData : MonoBehaviour {
           FightMusic = true;
           fightid = -1;
             soundHolderAudioSource.Play();
-
         }
     }
-    void ChangeToNormal()
+    void ChangeToNormal() //zmień na normalną muzykę
     {
         if (canUse)
         {
@@ -246,7 +215,6 @@ public class AudioData : MonoBehaviour {
             soundHolderAudioSource.clip = AfterFightClip;
             FightMusic = false;
             soundHolderAudioSource.Play();
-
         }
     }
 }
