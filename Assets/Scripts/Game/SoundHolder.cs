@@ -17,7 +17,7 @@ public class SoundHolder : MonoBehaviour
     private GameObject gm;
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject); //nie usuwaj obiektu po zmianie sceny
         myAudio = gameObject.GetComponent<AudioSource>();
     }
     void Start()
@@ -26,13 +26,10 @@ public class SoundHolder : MonoBehaviour
         myAudio.Play();
         isloading = false;
         myAudio.volume = 0;
-
         myAudio.volume = myAudio.volume + (Time.deltaTime / (smoothTime / 4f + 1)); //zgłośnienie muzyki przy starcie
     }
     void Update()
 	{
-       
-
         if (isloading) // w przypadku gdy jest ładowana gra, podczas zmiany utworów następuje zciszanie itd
         {
             gm = GameObject.FindGameObjectWithTag("GameMaster");
@@ -46,11 +43,9 @@ public class SoundHolder : MonoBehaviour
             }
             if (changeSong)
             {
-
                 if (myAudio.volume > 0)
                 {                                                   //czas na podglosnienie
                     myAudio.volume = myAudio.volume - (Time.deltaTime / (smoothTime+ 1));
-
                 }
                 else
                 {
@@ -60,8 +55,6 @@ public class SoundHolder : MonoBehaviour
                     changeSong = false;
                     myAudio.volume = 0f;
                 }
-
-
             }
             else
             {
@@ -79,7 +72,6 @@ public class SoundHolder : MonoBehaviour
         else
         {
             myAudio.volume = volume;
-
         }
     }
 }
