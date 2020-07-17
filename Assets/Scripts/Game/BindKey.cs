@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-using System; //Serializable.
-using System.Runtime.Serialization.Formatters.Binary;//Serializes i deserializes obiektu lub cały wykres z połączonych obiektów w formacie binarnym.
-using System.IO;//Do operacji na plikach (czytanie, pisanie do pliku).
+using System;  //Serializable.
+using System.Runtime.Serialization.Formatters.Binary; //Serializes i deserializes obiektu lub cały wykres z połączonych obiektów w formacie binarnym.
+using System.IO; //Do operacji na plikach (czytanie, pisanie do pliku).
 
 
 public class BindKey : MonoBehaviour {
 
-    public Dictionary<string, KeyCode> keys = new Dictionary<string, KeyCode>();
+    public Dictionary<string, KeyCode> keys = new Dictionary<string, KeyCode>(); //teksty do wyświetlania
     public Text left, right, jump,sprint,backdash;
     public Text attack, specialAttack, throwing, releaseMagic, powerMagic;
     public Text pause, equipment, experience, action;
     public Text fire, electricity, darkness, ankh;
 
-    private GameObject currentKey;
+    private GameObject currentKey; //podczas zmiany przycisku
 
     public GameObject theSameUI;
     public Color32 normal;// = new Color32(39, 171, 249, 255);
@@ -27,13 +27,11 @@ public class BindKey : MonoBehaviour {
 
     public Text warning;
 
-    // Use this for initialization
     void Start()
     {
-
+        //Poczatkowe ustawienie przycisków ich nazw i odpowiadającemu mu przyciskowi
         settings = gameObject.GetComponent<Settings>();
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
-
 
         keys.Add("Left", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Left", "A")));
         keys.Add("Right", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Right", "D")));
@@ -41,13 +39,11 @@ public class BindKey : MonoBehaviour {
         keys.Add("Sprint", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Sprint", "LeftShift")));
         keys.Add("BackDash", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("BackDash", "Z")));
 
-
         keys.Add("Attack", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Attack", "K")));
         keys.Add("SpecialAttack", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("SpecialAttack", "S")));
         keys.Add("Throwing", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Throwing", "F")));
         keys.Add("ReleaseMagic", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("ReleaseMagic", "Tab")));
         keys.Add("PowerMagic", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("PowerMagic", "Q")));
-
 
         keys.Add("Pause", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Pause", "Escape")));
         keys.Add("Equipment", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Equipment", "R")));
@@ -58,7 +54,6 @@ public class BindKey : MonoBehaviour {
         keys.Add("Electricity", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Electricity", "Alpha2")));
         keys.Add("Darkness", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Darkness", "Alpha3")));
         keys.Add("Ankh", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Ankh", "Alpha4")));
-
 
         left.text = keys["Left"].ToString();
         right.text = keys["Right"].ToString();
@@ -82,12 +77,9 @@ public class BindKey : MonoBehaviour {
         darkness.text = keys["Darkness"].ToString();
         ankh.text = keys["Ankh"].ToString();
 
-        theSameUI.SetActive(false);
-
-
-
+        theSameUI.SetActive(false); //wyłączenie UI
     }
-    public void Refresh()
+    public void Refresh() //odświeża klucze - usuwa stare i dodaje nowe
     {
         keys.Clear();
         PlayerPrefs.DeleteKey("Left");
@@ -111,10 +103,6 @@ public class BindKey : MonoBehaviour {
         PlayerPrefs.DeleteKey("Electricity");
         PlayerPrefs.DeleteKey("Darkness");
         PlayerPrefs.DeleteKey("Ankh");
-
-       
-
-
 
         keys.Add("Left", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Left", "A")));
         keys.Add("Right", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Right", "D")));
@@ -165,45 +153,24 @@ public class BindKey : MonoBehaviour {
         keyMenager.Refresh();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-        /* Przyklad uzywania
-        if (Input.GetKeyDown(keys["Left"]))
-        {
-            Debug.Log("Goo leffft");
-        }
-        */
-
-    }
     public void OK()
     {
-        theSameUI.SetActive(false);
-
+        theSameUI.SetActive(false); //po zatwierdzeniu wyłączenie UI
     }
   
     void OnGUI()
     {
-
-
         if (currentKey!=null)
         {
             Event e = Event.current;
             if(e.isKey)
             {
-
-                checkRepeat(e);
-
-                currentKey.transform.GetChild(0).GetComponent<Text>().text = e.keyCode.ToString();
-                currentKey.GetComponent<Image>().color = normal;
-                
-                    keys[currentKey.name] = e.keyCode;
-               
-               
+                checkRepeat(e); //sprwadzenie powtórzeń
+                currentKey.transform.GetChild(0).GetComponent<Text>().text = e.keyCode.ToString(); //zamiana nazwy przycisku na aktualny przycisk
+                currentKey.GetComponent<Image>().color = normal; //wyłaczenie podświetlenia przycisku
+                keys[currentKey.name] = e.keyCode; //zmiana nazwy
                 currentKey = null;
-
-                Save();
+                Save(); //zapis
             }
         }
     }
@@ -217,10 +184,9 @@ public class BindKey : MonoBehaviour {
         currentKey.GetComponent<Image>().color = selected; 
     }
 
-    public void checkRepeat(Event e)
+    public void checkRepeat(Event e) //sprawdza czy są powtórzenia, jezeli tak wyświetla napis "warning.text"
     {
         Debug.Log("check");
-
         foreach (var key in keys)
         {
             if (e.keyCode == key.Value && currentKey.name != key.Key)
@@ -235,7 +201,7 @@ public class BindKey : MonoBehaviour {
         }
         PlayerPrefs.Save();
     }
-    public void Save()
+    public void Save() //zapisanie kluczy do PlayerPrefs
     {
        foreach(var key in keys)
         {
@@ -244,11 +210,5 @@ public class BindKey : MonoBehaviour {
         }
         PlayerPrefs.Save();
     }
-   
-    /**
-    * Metoda odczytuje stan gry z pliku.
-*/
-  
-
 }
 
