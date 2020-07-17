@@ -15,7 +15,7 @@ public class KeyMenager : MonoBehaviour {
     }
 
     void Start ()
-    {
+    {//początkowe wartości
         keys.Add("Left", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Left", "A")));
         keys.Add("Right", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Right", "D")));
         keys.Add("Jump", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Jump", "W")));
@@ -41,9 +41,8 @@ public class KeyMenager : MonoBehaviour {
         keys.Add("Ankh", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Ankh", "Alpha4")));
     }
 	
-	// Update is called once per frame
 	public void Refresh ()
-    {
+    {//odswieżenie wartości przypisanych przycisków
         keys.Clear();
 
         keys.Add("Left", (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Left", "A")));
