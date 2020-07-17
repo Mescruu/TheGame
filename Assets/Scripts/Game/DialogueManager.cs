@@ -4,36 +4,41 @@ using UnityEngine;
 using UnityEngine.UI;
 public class DialogueManager : MonoBehaviour {
 
-    private Queue<string> sentences;
-    private KeyMenager keyMenager;
+    private Queue<string> sentences; //kolejka tekstów do wyświetlenia
 
-    public Image PicFrame;
-    private Text DialogueText;
+    public Image PicFrame; //ramka
+    private Text DialogueText; //tekst
 
-    public Text PlayerDialogueText;
-    public Text OtherDialogueText;
+    public Text PlayerDialogueText; //dialog gracza 
+    public Text OtherDialogueText; //dialog drugiej osoby
+
     [Tooltip("0.1f is slow and ok")]
-    public float TypingDelay=0.01f;
-    private Animator anim;
+    public float TypingDelay=0.01f; //opóźnienie w wypisywaniu
+
+    private Animator anim; //animacje i wartości czasowe
     public GameObject AnimChild;
     private bool TimeToEnd;
     private float timeCd=1f;
     private float time = 1f;
     public int tap = 0;
 
-    public GameObject BackPicInputText;
-    public Text textToRead;
-    public bool player_in_trigger;
-    private bool makingConversation;
-    private Game_Master gm;
-    public AudioSource audioSource;
+    //Triggery, dźwięk i teksty
+    public GameObject BackPicInputText; //tło 
+    public Text textToRead; //tekst do wyswietlenia
+    public bool player_in_trigger; //gracz w kolizji 
+    private bool makingConversation; //trwa konwersacja
+    public AudioSource audioSource; //komponenty dźwięku
     public AudioClip[] speaking;
     public bool typing;
     private string sentence;
     private int Counter;
     private Dialogue[] dialogue;
-    // Use this for initialization
+
+    private Game_Master gm;
+    private KeyMenager keyMenager; //keyManager
+
     void Start() {
+        //początkowe uzupełnianie
         makingConversation = false;
         sentences = new Queue<string>();
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
@@ -44,22 +49,20 @@ public class DialogueManager : MonoBehaviour {
     }
     void Update()
     {
-        gm.makingConversation = makingConversation;
-        if (AnimChild.activeSelf==true && makingConversation)
+        gm.makingConversation = makingConversation; //do GM nalezy wysłać informację, że jest prowadzona rozmowa
+        if (AnimChild.activeSelf==true && makingConversation) //wyswietlenie podpowiedzi a propos rozpoczęcia czy zakończenia rozmowy
         {
             BackPicInputText.SetActive(true);
             if (sentences.Count == 0)
             {
                 textToRead.text = "[" + keyMenager.keys["Action"] + "] To end conversation";
-
             }
             else
             {
                 textToRead.text = "[" + keyMenager.keys["Action"] + "] To skip";
-
             }
         }
-        if (Input.GetKeyDown(keyMenager.keys["Action"]) && !TimeToEnd)
+        if (Input.GetKeyDown(keyMenager.keys["Action"]) && !TimeToEnd) //wyswietlenie rozmowy całej bądź przejście do następnej wypowiedzi
         {
             tap++;
             Debug.Log(tap);
@@ -77,13 +80,11 @@ public class DialogueManager : MonoBehaviour {
                     OtherDialogueText.text = " ";
                     DisplayNextSentence();
                 }
-                
             }
         }
        
-        if (TimeToEnd)
+        if (TimeToEnd) //wyłaczenie podpowiedzi o zakończeniu rozmowy
         {
-    
             audioSource.Pause();
             if (!player_in_trigger && makingConversation)
             {
@@ -108,7 +109,7 @@ public class DialogueManager : MonoBehaviour {
         }
     }
 
-    public void StartDialogue(Dialogue[] Dialogue, int i)
+    public void StartDialogue(Dialogue[] Dialogue, int i) //rozpoczęcie dialogu
     {
         Counter = i;
         dialogue = Dialogue;
@@ -147,15 +148,13 @@ public class DialogueManager : MonoBehaviour {
 
         DisplayNextSentence();
         AnimChild.SetActive(true);
-
     }
 
-    public void DisplayNextSentence()
+    public void DisplayNextSentence() //przejście do nastepnej wypowiedzi
     {
         if (sentences.Count == 0)
         {
             TimeToEnd = true;
-
             if(Counter == dialogue.Length-1)
             {
                 EndDialogue();
@@ -176,11 +175,9 @@ public class DialogueManager : MonoBehaviour {
         StartCoroutine(TypeSentence(sentence));
         Debug.Log(sentence);
     }
-    IEnumerator TypeSentence(string sentence)
+    IEnumerator TypeSentence(string sentence) //wyswietlanie wyrazów po znaku
     {
-        
         int i = 0;
-
         DialogueText.text = " ";
         foreach(char letter in sentence.ToCharArray())
         {
@@ -208,10 +205,9 @@ public class DialogueManager : MonoBehaviour {
             DialogueText.text += letter;
 
             yield return new WaitForSeconds(TypingDelay);
-            
         }
     }
-    public void EndDialogue()
+    public void EndDialogue() //zakonczenie dialogu
     {
         Debug.Log("end of conversation");
         anim.SetBool("disappear", true);
