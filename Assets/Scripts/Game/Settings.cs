@@ -7,15 +7,17 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-
+    //UI
     public GameObject BindSettings;
     public GameObject SettingUI;
 
+    //Przycisk odpowiadający za rozdzielczość
     public GameObject lightOn;
     public GameObject lightOff;
-    public int[] resolutionsX;
-    public int[] resolutionsY;
+    public int[] resolutionsX; //rozdzielczości X
+    public int[] resolutionsY; //rozdzielczosci Y
 
+    //Fullscreen i pasek głosności
     public bool fullScreen;
     public Slider volumeSlider;
     public bool ResolutionScroll;
@@ -58,16 +60,17 @@ public class Settings : MonoBehaviour
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
 
         gm = GameObject.FindGameObjectWithTag("GameMaster");
-
-        DefaultUI.SetActive(false);
         soundholder = GameObject.Find("SoundHolder").GetComponent<SoundHolder>();
         bindkey = gameObject.GetComponent<BindKey>();
+
+
+        DefaultUI.SetActive(false);
 
         bindkeyUI = false;
    
         ResolutionScroll = false;
         QualityScroll = false;
-
+        //kategorie poziomu trundości
         category[0].SetActive(true);
         category[1].SetActive(false);
         category[2].SetActive(false);
@@ -84,21 +87,23 @@ public class Settings : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(keyMenager.keys["Pause"]))
+        if (Input.GetKeyDown(keyMenager.keys["Pause"])) //wyłaczenie ustawień
         {
             load();
             SettingUI.SetActive(false);
         }
 
-            QualityScrollObj.SetActive(ScrollGOpen);
+                    QualityScrollObj.SetActive(ScrollGOpen);
             ResolutionScrollObj.SetActive(ScrollROpen);
             BindSettings.SetActive(bindkeyUI);
             soundholder.volume = volumeSlider.value;
     }
+    //właczenie/wyłaczenie UI ustawiania przycisków
     public void BindKeyButton()
     {
         bindkeyUI = !bindkeyUI;
     }
+    //Ustawienia rozdzielczości
     public void ResolutionButton()
     {
         ResolutionScroll = !ResolutionScroll;
@@ -141,6 +146,8 @@ public class Settings : MonoBehaviour
         ResolutionPoint[2].SetActive(true);
         ResolutionButtonText.text = resolutionsX[2] + "x" + resolutionsY[2];
     }
+
+    //Ustawienia jakości
     public void QualityButton()
     {
         QualityScroll = !QualityScroll;
@@ -197,6 +204,7 @@ public class Settings : MonoBehaviour
         QualityButtonText.text = "hell";
 
     }
+    //zapisanie ustawień
     public void Exit()
     {
         PlayerPrefs.SetFloat("Volume", volumeSlider.value);
@@ -224,10 +232,12 @@ public class Settings : MonoBehaviour
 
 
     }
+    //Wywołanie zapytania czy na pewno
     public void DefaultOptions()
     {
             DefaultUI.SetActive(true);
     }
+    //ustawienia domyślne
     public void Yes()
     {
      bindkey.keys.Clear();
@@ -258,6 +268,7 @@ public class Settings : MonoBehaviour
         ScrollGOpen = false;
 
     }
+    //rozdzielczości
     public void setResolutionTable()
     {
         resolutionsX[0] = 1366;
@@ -269,6 +280,7 @@ public class Settings : MonoBehaviour
         resolutionsX[2] = 1600;
         resolutionsY[2] = 900;
     }
+    //ustawienia jakości
     public void SetQuality(int index)
     {
      //   QualitySettings.SetQualityLevel(index);
@@ -278,7 +290,6 @@ public class Settings : MonoBehaviour
     {
         Screen.SetResolution((int)resolutionsX[index], (int)resolutionsY[index], fullScreen);
         ScrollROpen = false;
-
     }
     public void FullScreenButton()
     {
@@ -299,6 +310,8 @@ public class Settings : MonoBehaviour
 
 
     }
+
+    //ładowanie poprzednich ustawień
     public void load()
     {
         if(PlayerPrefs.HasKey("FullScreen"))
@@ -337,35 +350,8 @@ public class Settings : MonoBehaviour
         ScrollGOpen = false;
 
         CloseScrool();
-        /*
-        if (PlayerPrefs.HasKey("Quality"))
-        {
-            StartQuality = PlayerPrefs.GetInt("Quality");
-            if (StartQuality == 0)
-            {
-                Qulity1();
-            }
-            if (StartQuality == 1)
-            {
-                Qulity2();
-            }
-            if (StartQuality == 2)
-            {
-                Qulity3();
-            }
-            if (StartQuality == 3)
-            {
-                Qulity4();
-            }
-        }
-        else
-        {
-            Qulity3();
-        }
-        */
-        
 
-             if (PlayerPrefs.HasKey("difficultLevel"))
+        if (PlayerPrefs.HasKey("difficultLevel"))
         {
             StartQuality = PlayerPrefs.GetInt("difficultLevel");
             if (StartQuality == 1)
@@ -424,7 +410,7 @@ public class Settings : MonoBehaviour
         }
 
     }
-
+    //poziomy trudnosci
     public void Cat1()
     {
         category[0].SetActive(true);
