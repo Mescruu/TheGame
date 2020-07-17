@@ -7,18 +7,21 @@ public class SkillUI : MonoBehaviour {
 
     public GameObject SkillUIDesk;
 
+    //właczony żywioł w UI
     public bool fire;
     public bool chaos;
     public bool sword;
     public bool ankh;
     public bool elect;
 
+    //UI zywiołu
     public GameObject FireElement;
     public GameObject ChaosElement;
     public GameObject SwordElement;
     public GameObject AnkhElement;
     public GameObject ElectElement;
 
+    //Dźwięk żywiołu
     public AudioClip ElectSound;
     public AudioClip FireSound;
     public AudioClip SwordSound;
@@ -26,6 +29,7 @@ public class SkillUI : MonoBehaviour {
     public AudioClip ChaosSound;
     public AudioSource audioSource;
 
+    //Przyciski do żywiołów
     public GameObject[] FireLevelButtons;
     public GameObject[] ChaosLevelButtons;
     public GameObject[] SwordLevelButtons;
@@ -38,18 +42,21 @@ public class SkillUI : MonoBehaviour {
     public Button[] AnkhShowButtons;
     public Button[] ElectShowButtons;
 
+    //Kolory zywiołów
     public Color FireColor;
     public Color ChaosColor;
     public Color SwordColor;
     public Color AnkhColor;
     public Color ElectColor;
 
+    //Potrzebne punkty magii
     public Text[] FireNeededMana;
     public Text[] ChaosNeededMana;
     public Text[] SwordNeededStamina;
     public Text[] AnkhNeededMana;
     public Text[] ElectNeededMana;
 
+    //Pasek wskazujący % zdobytych punktów
     public Image Bar;
     public Slider slider;
     public GameObject SkillShit;
@@ -60,6 +67,7 @@ public class SkillUI : MonoBehaviour {
     public Text howManyDoyouNeedTxt;
     public Text HowManyDoYouUsed;
 
+    //Przyciski umożliwiające dodawanie punktów
     public GameObject addAttackButton;
     public GameObject addMagicButton;
     public GameObject addAgilityButton;
@@ -69,6 +77,7 @@ public class SkillUI : MonoBehaviour {
     private Game_Master gm;
     private KeyMenager keyMenager;
 
+    //Informacje o punktach i statystykach
     public Text AttackStatsText;
     public Text MagicStatsText;
     public Text AgilityStatsText;
@@ -84,7 +93,6 @@ public class SkillUI : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-
         SkillUIDesk.SetActive(false);
         fire = false;
         chaos = false;
@@ -92,31 +100,25 @@ public class SkillUI : MonoBehaviour {
         ankh = false;
         elect = false;
         SkillShit.SetActive(false);
-
-        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
-
         Disappear = true;
 
-
+        keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
 
         CheckPics();
     }
     void CheckPics()
     {
-    
+    //Który przycisk może być włączony (umożliwić dodanie punktu)
         for (int i = 0; i < FireNeededMana.Length; i++)
         {
             if (gm.PlayerFireLevel > i)
             {
                 FireShowButtons[i].interactable = true;
-          //      Debug.Log("eneblabled");
             }
             else
             {
-              //  Debug.Log("disabled");
                 FireShowButtons[i].interactable = false;
-
             }
             if (gm.PlayerDeathLevel > i)
             {
@@ -125,7 +127,6 @@ public class SkillUI : MonoBehaviour {
             else
             {
                 ChaosShowButtons[i].interactable = false;
-
             }
             if (gm.PlayerSwordLevel > i)
             {
@@ -134,7 +135,6 @@ public class SkillUI : MonoBehaviour {
             else
             {
                 SwordShowButtons[i].interactable = false;
-
             }
             if (gm.PlayerWhiteLevel > i)
             {
@@ -143,7 +143,6 @@ public class SkillUI : MonoBehaviour {
             else
             {
                 AnkhShowButtons[i].interactable = false;
-
             }
             if (gm.PlayerElectLevel > i)
             {
@@ -152,16 +151,15 @@ public class SkillUI : MonoBehaviour {
             else
             {
                 ElectShowButtons[i].interactable = false;
-
             }
         }
 
     }
     void Update()
     {
-      
         CheckPics();
-            
+        
+        //Włączenie odpowiedniego UI
         if (fire)
         {
             FireElement.SetActive(true);
@@ -170,46 +168,38 @@ public class SkillUI : MonoBehaviour {
         else
         {
             FireElement.SetActive(false);
-
         }
         if (ankh)
         {
             AnkhElement.SetActive(true);
             SkillLevel.text = gm.PlayerWhiteManaLevel.ToString();
-
         }
         else
         {
             AnkhElement.SetActive(false);
-
         }
         if (chaos)
         {
             ChaosElement.SetActive(true);
             SkillLevel.text = gm.PlayerDeathManaLevel.ToString();
-
         }
         else
         {
             ChaosElement.SetActive(false);
-
         }
         if (elect)
         {
             ElectElement.SetActive(true);
             SkillLevel.text = gm.PlayerElectManaLevel.ToString();
-
         }
         else
         {
             ElectElement.SetActive(false);
-
         }
         if (sword)
         {
             SwordElement.SetActive(true);
             SkillLevel.text = gm.PlayerSwordStaminaLevel.ToString();
-
         }
         else
         {
@@ -260,6 +250,7 @@ public class SkillUI : MonoBehaviour {
             SkillShit.SetActive(true);
         }
 
+        //Właczenie UI
         if (SkillUIDesk.activeSelf == false)
         {
             if (Input.GetKeyDown(keyMenager.keys["Experience"])&&gm.active_menu==0)
@@ -267,8 +258,8 @@ public class SkillUI : MonoBehaviour {
                 Open();
                
             }
-
         }
+        //Wyłaczenie UI
         if(SkillUIDesk.activeSelf == true)
         {
             if (Input.GetKeyDown(keyMenager.keys["Pause"]))
@@ -276,12 +267,11 @@ public class SkillUI : MonoBehaviour {
                 Close();
             }
         }
-
+        //Właczenie/Wyłaczenie przycisków umożliwiających dodanie punktów
         if (gm.SkillPDPoint > 0)
         {
            for(int i=0;i<FireLevelButtons.Length;i++)
             {
-
                
                 if (gm.PlayerFireLevel == i)
                 {
@@ -324,9 +314,7 @@ public class SkillUI : MonoBehaviour {
                 {
                     AnkhLevelButtons[i].GetComponent<Animator>().SetBool("disappear", true);
                 }
-
             }
-
         }
         else
         {
@@ -361,19 +349,14 @@ public class SkillUI : MonoBehaviour {
             }
            
         }
-
+        //wyświetlenie statystyk
         AgilityStatsText.text = gm.PlayerStatsAgility.ToString();
         AttackStatsText.text = gm.PlayerStatsAttack.ToString();
         MagicStatsText.text = gm.PlayerStatsMagic.ToString();
-
-     
-
-
     }
+    //Wyświetlenie progów
     public void Open()
     {
-  
-
         for (int i = 0; i < FireNeededMana.Length; i++)
         {
 
@@ -389,6 +372,7 @@ public class SkillUI : MonoBehaviour {
         SkillUIDesk.SetActive(true);
         gm.active_menu = 2;
     }
+    //Zakminięcie UI
     public void Close()
     {
         SkillUIDesk.SetActive(false);
@@ -401,15 +385,10 @@ public class SkillUI : MonoBehaviour {
         gm.RefreshEqStats();
         gm.ChangeToZero = true;
 
-
     }
-    // Update is called once per frame
 
     public void Back()
     {
-     
-
-
         howManyDoyouNeedTxt.text = " ";
         howManyLeftTxt.text = " ";
         HowManyDoYouUsed.text = " ";
@@ -421,6 +400,7 @@ public class SkillUI : MonoBehaviour {
         SkillShit.SetActive(false);
     }
 
+    //Dodanie poziomu
     public void AddAttack()
     {
         gm.PDPoint -= 1;
@@ -456,15 +436,12 @@ public class SkillUI : MonoBehaviour {
             addAttackButton.GetComponent<Animator>().SetBool("disappear", true);
         }
         Open();
-
     }
-
+    //Dodanie poziomu do umiejętności
     public void AddSkillLevel()
     {
 
         CheckPics();
-
-
         if (fire)
         {
             gm.PlayerFireLevel += 1;
@@ -501,19 +478,16 @@ public class SkillUI : MonoBehaviour {
         }
         audioSource.Play();
     }
-    
+
+    //Poszczególne żywioły - UI
     public void Fire()
     {
         CheckPics();
-
-
         for (int i = 0; i < FireShowButtons.Length; i++)
         {
             FireShowButtons[i].interactable = false;
 
         }
-
-
 
         Bar.color = FireColor;
         slider.value = 100f * gm.FireUsedMana / HowManyManaHaveToUse;
@@ -537,8 +511,6 @@ public class SkillUI : MonoBehaviour {
 
         }
         CheckPics();
-
-
         Bar.color = ChaosColor;
         slider.value = 100f * gm.ChaosUsedMana / HowManyManaHaveToUse;
         percentTxt.text = (100f * gm.ChaosUsedMana / HowManyManaHaveToUse).ToString("0") + "%";
@@ -560,7 +532,6 @@ public class SkillUI : MonoBehaviour {
         }
 
         CheckPics();
-
 
         Bar.color = SwordColor;
         slider.value = 100f * gm.SwordUsedStamina / HowManyManaHaveToUse;
