@@ -5,6 +5,7 @@ using UnityEngine.UI; //można używać UI w skryptach
 
 public class Effects : MonoBehaviour {
 
+    //Pojawiające się efekty
     public bool SwordStun;
     public bool Burn;
     public bool Poisoned;
@@ -12,27 +13,22 @@ public class Effects : MonoBehaviour {
     public bool DeathMode;
     public Image Bar;
 
+    //komponenty
     private Game_Master gm;
     private Player_Controller player;
     private PlayerAttack playerAtck;
     private Animator anim;
 
-    // Use this for initialization
     void Start () {
-
+        //komponenty
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
         playerAtck = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
         anim = gameObject.GetComponent<Animator>();
-
-
-
-
     }
 
-    // Update is called once per frame
     void Update () {
-
+        //efekty pojawiające się na graczu (wyświetlane pod HUD - hp bar itd)
         if (SwordStun)
         {
             Bar.fillAmount = (playerAtck.attackBreakTime / playerAtck.attackBreakTimeCD);
@@ -76,7 +72,7 @@ public class Effects : MonoBehaviour {
         }
 
     }
-    void End()
+    void End() //zniknięcie kwadracików
     {
         anim.SetBool("disappear", true);
         Destroy(gameObject, 0.5f);
