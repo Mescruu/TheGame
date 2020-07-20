@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class LevelUp : MonoBehaviour {
 
-	// Use this for initialization
 
-    public float TimeToDestroy;
+    public float TimeToDestroy; //czas po którym efekt znika
    
-
-    // Use this for initialization
     private ParticleSystem particle;
     private Rigidbody2D rgb2d;
     private Transform Player;
@@ -24,10 +21,9 @@ public class LevelUp : MonoBehaviour {
         rgb2d = gameObject.GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed);
+        transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed); //obiekt leci w stronę gracza
 
         TimeToDestroy -= Time.deltaTime;
         if (TimeToDestroy <= 0)
@@ -35,27 +31,21 @@ public class LevelUp : MonoBehaviour {
             DestroyObj();
         }
     }
-
-        void DestroyObj()
+    void DestroyObj() //zniszczenie obiektu i rzeczy z nim związanych
     {
         if (particle != null)
         {
-
             float timetoDestroy = particle.startLifetime;
             particle.enableEmission = false;
             Destroy(gameObject, timetoDestroy);
-
             if (rgb2d != null)
             {
                 rgb2d.isKinematic = true;
-
             }
-        
         }
         else
         {
             Destroy(gameObject);
         }
     }
-
 }
