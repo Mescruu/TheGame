@@ -8,6 +8,9 @@ public class DialogueManager : MonoBehaviour {
 
     public Image PicFrame; //ramka
     private Text DialogueText; //tekst
+    private int countOfSentences;//ilosc sentencji 
+    public int counterOfSentences;//która z kolei sentencja
+    public bool DialogueEnded;
 
     public Text PlayerDialogueText; //dialog gracza 
     public Text OtherDialogueText; //dialog drugiej osoby
@@ -46,6 +49,9 @@ public class DialogueManager : MonoBehaviour {
         anim = AnimChild.GetComponent<Animator>();
         time = timeCd;
         audioSource = AnimChild.GetComponent<AudioSource>();
+        counterOfSentences = 0; //pierwsza sentencja
+        DialogueEnded = true;
+
     }
     void Update()
     {
@@ -53,7 +59,8 @@ public class DialogueManager : MonoBehaviour {
         if (AnimChild.activeSelf==true && makingConversation) //wyswietlenie podpowiedzi a propos rozpoczęcia czy zakończenia rozmowy
         {
             BackPicInputText.SetActive(true);
-            if (sentences.Count == 0)
+
+            if (counterOfSentences == countOfSentences && !typing)
             {
                 textToRead.text = "[" + keyMenager.keys["Action"] + "] To end conversation";
             }
@@ -61,8 +68,14 @@ public class DialogueManager : MonoBehaviour {
             {
                 textToRead.text = "[" + keyMenager.keys["Action"] + "] To skip";
             }
+
         }
-        if (Input.GetKeyDown(keyMenager.keys["Action"]) && !TimeToEnd) //wyswietlenie rozmowy całej bądź przejście do następnej wypowiedzi
+        if (DialogueEnded == false)
+        {
+            BackPicInputText.SetActive(true);
+        }
+
+        if (Input.GetKeyDown(keyMenager.keys["Action"]) && !TimeToEnd && DialogueEnded==false) //wyswietlenie rozmowy całej bądź przejście do następnej wypowiedzi
         {
             tap++;
             Debug.Log(tap);
@@ -90,10 +103,7 @@ public class DialogueManager : MonoBehaviour {
             {
                 BackPicInputText.GetComponent<Animator>().SetBool("disappear", true);
             }
-            else
-            {
-                textToRead.text = "[" + keyMenager.keys["Action"] + "] To Talk";
-            }
+
             if (time > 0)
             {
                 time -= Time.deltaTime;
@@ -111,6 +121,13 @@ public class DialogueManager : MonoBehaviour {
 
     public void StartDialogue(Dialogue[] Dialogue, int i) //rozpoczęcie dialogu
     {
+        DialogueEnded = false;
+
+        countOfSentences = 0;
+        for (int j = 0; j < Dialogue.Length; j++)
+            countOfSentences += Dialogue[j].sentences.Length;
+
+
         Counter = i;
         dialogue = Dialogue;
         makingConversation = true;
@@ -152,6 +169,7 @@ public class DialogueManager : MonoBehaviour {
 
     public void DisplayNextSentence() //przejście do nastepnej wypowiedzi
     {
+        counterOfSentences++; //+1 sentencja
         if (sentences.Count == 0)
         {
             TimeToEnd = true;
@@ -167,6 +185,7 @@ public class DialogueManager : MonoBehaviour {
                 StopAllCoroutines();
                 sentence = null;
                 StartDialogue(dialogue, Counter);
+                counterOfSentences--; //-1 sentencja, ponieważ przy starcie nowego dialogu jest liczony podwójnie
                 return;
             }
         }
@@ -211,5 +230,6 @@ public class DialogueManager : MonoBehaviour {
     {
         Debug.Log("end of conversation");
         anim.SetBool("disappear", true);
+        DialogueEnded = true;
     }
 }
