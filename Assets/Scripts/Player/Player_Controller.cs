@@ -4,7 +4,6 @@ using System.Collections;
 public class Player_Controller : MonoBehaviour {
 
     public bool blockMove;
-
     public float wsp=0.05f;   //jako private
 
     public bool facingRight = true;
@@ -12,12 +11,12 @@ public class Player_Controller : MonoBehaviour {
     public bool grounded = false;
     public bool UsingStamina=false;
 
-    //how big the circle is going to be when wwe check disstance to the ground;
     //Sprint
     public bool canSprint;
     public bool sprint;
     public float sprintSpeed;
     public float basicSprintSpeed= 250f; //jako private
+
     //Wall Sliding
     public Transform wallCheckPoint;
     public LayerMask wallLayerMask;
@@ -30,6 +29,7 @@ public class Player_Controller : MonoBehaviour {
     private bool wallJumping;
     public float wallJumpingTimeCD;
     private float wallJumpingTime;
+
     //skakanie
     public float jumpForce;
     public float basicJumpForce = 150f;  //jako private
@@ -41,18 +41,21 @@ public class Player_Controller : MonoBehaviour {
     public bool JumpfromSprint;
     public GameObject DustJump;
     public Transform DustPos;
+
     //bieganie
     public float moveSpeed;
     public float runSpeed;
     public float basicRunSpeed= 175f; //jako private
     public float currentSpeed;
     public float acceleration;
-    //Leader
+
+    //Leader - wspinaczka
     public bool onLadder;
     public float leaderSpeed;
     private float climbVelocity;
     public float climbSpeed;
     public GameObject cape;
+
     //BackDash
     public bool backDash;
     public float DashSpeed;
@@ -61,13 +64,15 @@ public class Player_Controller : MonoBehaviour {
     public Transform dashPoint;
     public GameObject DashPrefab;
     public GameObject ParticleDust;
-    //odwolania
+
+    //Regeneracja staminy
     public float timeToStaminaRegeneration;
     public float timeToStaminaRegenerationCD;
     private float timeToStaminaRegenerationCDBasic = 2f;
     public float SpeedStaminaRegeneration;
     private float SpeedStaminaRegenerationBasic = 10f;
 
+    //Regeneracja mp
     public float timeToManaRegeneration;
     public float timeToManaRegenerationCD;
     private float timeToManaRegenerationCDBasic=5f;
@@ -84,6 +89,7 @@ public class Player_Controller : MonoBehaviour {
     public float curSTM;
     public bool Defend;
 
+    //odwolania
     private KeyMenager keyMenager;
     private Game_Master gm;
     private Rigidbody2D rgb2d;
@@ -96,7 +102,7 @@ public class Player_Controller : MonoBehaviour {
     private AudioSource audioSource;
     public AudioClip newLevelSound;
 
-
+    //Obrażenia i ich efekty
     public int CriticRange;
     public DmgType[] dmgTypeSensitive;
     public DmgType[] dmgTypeHardness;
@@ -107,14 +113,17 @@ public class Player_Controller : MonoBehaviour {
     private bool DeadFacingRight;
     private bool knockbacking;
 
+    private bool getHurt;
+    public Color DmgTxtColor;
+    public Color CriticTxtColor;
 
-    public bool onKnee;
-
+    //Płonięcie
     public GameObject BurnParticle;
     public float BurnTime;
     public float BurnTimeCD;
     public float BurnTimeCDBasic;
 
+    //Zatrucie
     public GameObject AcidParticle;
     public float PoisonTime;
     public float PoisonTimeCD;
@@ -122,24 +131,28 @@ public class Player_Controller : MonoBehaviour {
 
     public float DefendTimeCD;
     public float DefendTime;
-    //Altar
-    private int seconds;
-    private bool invulnerable;
+
+    //Altar - Ołtarz
+    public bool onKnee; //kleczenie przed ołtarzem
+    
+    private int seconds; //dźwięk
+    private bool invulnerable; //nietykalność
     private float invulnerableTimeBasic = 0.5f;
     private float invulnerableTimeCD;
     private float invulnerableTime;
-    private bool getHurt;
-    public Color DmgTxtColor;
-    public Color CriticTxtColor;
+
+
     void Start () {
+        //oznaczenie booleanów na false
         getHurt = false;
         onKnee = false;
         knockbacking = false;
         Defend = false;
-        rgb2d = gameObject.GetComponent<Rigidbody2D>();
 		dead = false;
         cape.SetActive(false);
 
+        //załączenie komponentów
+        rgb2d = gameObject.GetComponent<Rigidbody2D>();
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
         anim = gameObject.GetComponent<Animator>();
@@ -147,11 +160,8 @@ public class Player_Controller : MonoBehaviour {
         audioPlayer = gameObject.GetComponent<AudioPlayer>();
         audioSource = gameObject.GetComponent<AudioSource>();
 
-        //atck = gameObject.GetComponent<PlayerAttack> ();
-
         curHP = maxHP;
         curMana = MaxMana;
-
 
         //skakanie
         isJumping = false;
@@ -160,7 +170,7 @@ public class Player_Controller : MonoBehaviour {
 
     void Update()
     {
-
+        //
         invulnerableTimeCD = invulnerableTimeBasic - gm.difficultLevel*0.1f;
         PoisonTimeCD = PoisonTimeCDBasic * gm.difficultLevel;
         BurnTimeCD= BurnTimeCDBasic + BurnTimeCDBasic * gm.difficultLevel/2;
@@ -174,96 +184,37 @@ public class Player_Controller : MonoBehaviour {
             curMana = MaxMana;
         }
 
-        if (curSTM >= 100)
-            {
-                curStamina = 10;
-            }
-         
+        curStamina = (int) Mathf.Floor(curSTM/10f); //podzielić wartość % na 10 z funkcją podłoga (by były jednostki ) z określeniem zmiennej jako int
 
-            if (curSTM > 90 && curSTM < 100)
-            {
-                curStamina = 9;
+        //Regeneracja Staminy
+        if (curSTM < 100 && !UsingStamina)
+        {
+            if (timeToStaminaRegeneration <= 0)
+             {
+                curSTM = curSTM + Time.deltaTime * SpeedStaminaRegeneration;
+             }else
+             {
+                timeToStaminaRegeneration -= Time.deltaTime;
+             }
+        }else
+        {
+             timeToStaminaRegeneration = timeToStaminaRegenerationCD;
+        }
 
-            }
-            if (curSTM > 80 && curSTM < 90)
-            {
-                curStamina = 8;
-
-            }
-            if (curSTM > 70 && curSTM < 80)
-            {
-                curStamina = 7;
-
-            }
-            if (curSTM > 60 && curSTM < 70)
-            {
-                curStamina = 6;
-
-            }
-            if (curSTM > 50 && curSTM < 60)
-            {
-                curStamina = 5;
-
-            }
-            if (curSTM > 40 && curSTM < 50)
-            {
-                curStamina = 4;
-
-            }
-            if (curSTM > 30 && curSTM < 40)
-            {
-                curStamina = 3;
-
-            }
-            if (curSTM > 20 && curSTM < 30)
-            {
-                curStamina = 2;
-
-            }
-            if (curSTM > 10 && curSTM < 20)
-            {
-                curStamina = 1;
-
-            }
-            if (curSTM < 10)
-            {
-                curStamina = 0;
-
-            }
-
-
-            if (curSTM < 100 && !UsingStamina)
-            {
-                if (timeToStaminaRegeneration <= 0)
-                {
-                    curSTM = curSTM + Time.deltaTime * SpeedStaminaRegeneration;
-                }
-                else
-                {
-                    timeToStaminaRegeneration -= Time.deltaTime;
-                }
-            }
-            else
-            {
-                timeToStaminaRegeneration = timeToStaminaRegenerationCD;
-            }
-
-
-            if (!UsingMana && curMana < MaxMana)
-            {
-                if (timeToManaRegeneration <= 0)
-                {
-                    curMana = curMana + Time.deltaTime * SpeedManaRegeneration;
-                }
-                else
-                {
-                    timeToManaRegeneration -= Time.deltaTime;
-                }
-            }
-            else
-            {
-                timeToManaRegeneration = timeToManaRegenerationCD;
-            }
+        //Regeneracja punktów magii
+        if (!UsingMana && curMana < MaxMana)
+        {
+             if (timeToManaRegeneration <= 0)
+             {
+                curMana = curMana + Time.deltaTime * SpeedManaRegeneration;
+             }else
+             {
+                timeToManaRegeneration -= Time.deltaTime;
+             }
+        }else
+        {
+            timeToManaRegeneration = timeToManaRegenerationCD;
+        }
 
 
         //BackDash
@@ -271,8 +222,6 @@ public class Player_Controller : MonoBehaviour {
         {
             if (Input.GetKeyDown(keyMenager.keys["BackDash"]) && grounded && !backDash && curSTM >= gm.BackDashCost && !pLayerAttack.SpecialAttacking)
             {
-              //  Instantiate(DustDash, DustPos.position, transform.rotation);
-
                 ParticleDust.GetComponent<ParticleSystem>().enableEmission = true;
                 ParticleDust.transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y,1f);
 
@@ -283,16 +232,11 @@ public class Player_Controller : MonoBehaviour {
                     Instantiate(DashPrefab, transform.position, transform.rotation);
 
                 }
-                //	anim.SetBool ("BackDash", true);
-
             }
         }
          
-
             if (backDash && grounded)
             {
-
-
                 UsingStamina = true;
                 backDashTime -= Time.deltaTime;
                 if (backDashTime < backDashTimeCD - 0.05f)
@@ -319,21 +263,16 @@ public class Player_Controller : MonoBehaviour {
                 {
                     backDash = false;
                 }
-
             }
             else
             {
                 backDashTime = backDashTimeCD;
                 anim.SetBool("BackDash", false);
-           
                 ParticleDust.GetComponent<ParticleSystem>().enableEmission = false;
-           
                 backDash = false;
-
-
             }
-            //
-            // Leader
+            
+            // Wspinaczka
             if (onLadder && !dead && !grounded && !pLayerAttack.SpecialAttacking)
             {
                 sprint = false;
@@ -345,30 +284,22 @@ public class Player_Controller : MonoBehaviour {
                 rgb2d.velocity = new Vector2(rgb2d.velocity.x * 0.85f, climbVelocity);
                 anim.SetBool("Climbing", true);
                 cape.SetActive(true);
-
             }
             if (!onLadder)
             {
                 cape.SetActive(false);
                 anim.SetBool("Climbing", false);
-
             }
             if (!onLadder && !sprint)
             {
-
                 moveSpeed = runSpeed;
                 rgb2d.gravityScale = 1f;
-
-
             }
 
-            //LEadaer end
-
-            //Wall Handle
+            //Ślizganie się po ścianie
             if (!grounded && !onLadder && !pLayerAttack.SpecialAttacking)
             {
                 wallCheck = Physics2D.OverlapCircle(wallCheckPoint.position, 0.1f, wallLayerMask);
-
                 if (facingRight && Input.GetAxis("Horizontal") > 0.1f || !facingRight && Input.GetAxis("Horizontal") < 0.1f)
                 {
                     if (wallCheck)
@@ -378,85 +309,63 @@ public class Player_Controller : MonoBehaviour {
                 }
             }
 
-            if (!wallSliding)
-            {
-                //	anim.SetBool ("WallSliding", wallSliding  && !dead);
-
-            }
             if (sliding)
             {
                 rgb2d.velocity = new Vector2(rgb2d.velocity.x, -1f);
             }
             else
             {
-
                 rgb2d.velocity = new Vector2(rgb2d.velocity.x, rgb2d.velocity.y);
             }
             if (wallCheck == false || grounded)
             {
                 wallSliding = false;
             }
-            /////////////
 
             //Sprintowanie
             if (Input.GetKey(keyMenager.keys["Sprint"]) && grounded && Mathf.Abs(currentSpeed) > 2f && curSTM > 0f && canSprint)
             {
                 sprint = true;
                 UsingStamina = true;
-
-                //		anim.SetBool ("Sprint", true);
             }
             if (!grounded || Mathf.Abs(currentSpeed) < 2f || curSTM <= 0f || Input.GetKeyUp(keyMenager.keys["Sprint"]))
             {
                 sprint = false;
-                //	anim.SetBool ("Sprint", false); 
             }
 
+            //Ograniczenia sprintowania
             if (curSTM <= 30)
             {
                 canSprint = false;
             }
-            ////////////////////////
             if (curSTM > 30)
             {
                 canSprint = true;
             }
 
-
-
         if (!blockMove)
         {
-
             if (Input.GetKeyDown(keyMenager.keys["Jump"]) && grounded && sprint && !backDash)
             {
-               // curSTM -= gm.JumpCost;
                 UsingStamina = true;
-
-                // rgb2d.velocity = new Vector2(rgb2d.velocity.x, jumpForce);
                 JumpfromSprint = true;
                 rgb2d.velocity = Vector2.up * jumpForce;
                 endJumping = true;
-                Debug.Log("is holded");
+                Debug.Log("Jump is holded");
                 Instantiate(DustJump, DustPos.position, transform.rotation);
             }
             if (Input.GetKeyDown(keyMenager.keys["Jump"]) && grounded && !sprint && !backDash)
             {
-               // curSTM -= gm.JumpCost;
                 UsingStamina = true;
-
-                // rgb2d.velocity = new Vector2(rgb2d.velocity.x, jumpForce);
                 JumpfromSprint = false;
                 rgb2d.velocity = Vector2.up * jumpForce;
                 endJumping = true;
-                Debug.Log("is holded");
+                Debug.Log("Jump is holded");
                 Instantiate(DustJump, DustPos.position, transform.rotation);
-
             }
             if (Input.GetKeyDown(keyMenager.keys["Jump"]) && grounded && !sprint && backDash)
             {
-            //    curSTM -= gm.JumpCost;
                 UsingStamina = true;
-
                 JumpfromSprint = false;
                 if (facingRight)
                 {
@@ -469,8 +378,7 @@ public class Player_Controller : MonoBehaviour {
                     Instantiate(DustJump, DustPos.position, transform.rotation);
                 }
                 endJumping = false;
-                Debug.Log("is holded");
-
+                Debug.Log("Jump is holded");
             }
       
             if (JumpingTime > 0 && Input.GetKey(keyMenager.keys["Jump"]) && !grounded && endJumping)
@@ -478,7 +386,6 @@ public class Player_Controller : MonoBehaviour {
                 JumpingTime -= Time.deltaTime;
                 curSTM -= Time.deltaTime*gm.JumpCost;
                 rgb2d.velocity = Vector2.up * jumpForce;
-
             }
             if (Input.GetKeyUp(keyMenager.keys["Jump"]))
             {
@@ -492,18 +399,14 @@ public class Player_Controller : MonoBehaviour {
             else
             {
                 sprint = false;
-
-
-
             }
 
         if (!blockMove)
         {
-
+            //Poruszanie się
             if (Input.GetKey(keyMenager.keys["Left"]) || Input.GetKey(keyMenager.keys["Right"]))
             {
                 backDash = false;
-
                 if (pLayerAttack.attacking && grounded)
                 {
                     if (pLayerAttack.attackTimer > pLayerAttack.attackTimerCD * 0.7f)
@@ -548,7 +451,6 @@ public class Player_Controller : MonoBehaviour {
                         moveSpeed = runSpeed;
                     }
                 }
-             
             }
             else
             {
@@ -558,6 +460,7 @@ public class Player_Controller : MonoBehaviour {
 
         if (!blockMove)
         {
+            //Skakanie w bok ze sciany
             if (wallJumping && Input.GetKey(keyMenager.keys["Jump"]) && wallJumpingTime > 0 && !grounded && !pLayerAttack.SpecialAttacking && !pLayerAttack.Throwing && !pLayerAttack.Rune)
             {
                 wallJumpingTime -= Time.deltaTime;
@@ -587,14 +490,12 @@ public class Player_Controller : MonoBehaviour {
                 wallJumping = false;
             }
         }
-
             currentSpeed = rgb2d.velocity.x;
             if (!backDash && !sprint && !pLayerAttack.attacking)
             {
                 UsingStamina = false;
 
             }
-
             if (audioSource.isPlaying == false || audioSource.clip == null)
             {
                 if (anim.GetCurrentAnimatorStateInfo(0).IsName("Player_Run"))
@@ -616,11 +517,7 @@ public class Player_Controller : MonoBehaviour {
             }
 
 
-
-
-
-
-        anim.SetBool ("Sprint", sprint);
+       anim.SetBool ("Sprint", sprint);
        anim.SetBool("WallSliding", wallSliding);
        anim.SetFloat ("Jumping",  rgb2d.velocity.y);
        anim.SetFloat("JumpingModule", Mathf.Abs(rgb2d.velocity.y));
@@ -628,16 +525,15 @@ public class Player_Controller : MonoBehaviour {
         anim.SetBool("Grounded", grounded);
        anim.SetFloat("Speed", Mathf.Abs(rgb2d.velocity.x));
 
+        //Modlitwa przed ołtarzem
         if(onKnee && !pLayerAttack.attacking && !pLayerAttack.Throwing && !pLayerAttack.Rune &&! pLayerAttack.SpecialAttacking && Mathf.Abs(rgb2d.velocity.x)<3f&&grounded)
         {
             anim.SetBool("OnKnee", true);
-
         }
         else
         {
             onKnee = false;
             anim.SetBool("OnKnee", false);
-
         }
 
 
@@ -652,6 +548,7 @@ public class Player_Controller : MonoBehaviour {
         }
         else
         {
+            //Płonięcie
             if (gm.Player_Burn)
             {
                 BurnTime -= Time.deltaTime;
@@ -675,6 +572,7 @@ public class Player_Controller : MonoBehaviour {
                 }
             }
 
+            //zatrucie
             if (gm.Player_Poisoned)
             {
                 PoisonTime -= Time.deltaTime;
@@ -698,6 +596,7 @@ public class Player_Controller : MonoBehaviour {
                     AcidParticle.transform.GetChild(i).GetComponent<ParticleSystem>().enableEmission = false;
                 }
             }
+            //Otrzymywanie obrażeń
             if (getHurt)
             {
                 if (invulnerableTime > 0)
@@ -712,13 +611,12 @@ public class Player_Controller : MonoBehaviour {
         }
 
     }
+    //Ślizganie się po ścianie
     void HandleWallSliding()
     {
 
         rgb2d.velocity = new Vector2(rgb2d.velocity.x, -0.7f);
         wallSliding = true;
-
-
 
         if (!blockMove)
         {
@@ -727,18 +625,13 @@ public class Player_Controller : MonoBehaviour {
                 wallJumping = true;
                 wallJumpTarget.transform.position = wallJumpTargetBasic.transform.position;
                 wallJumpingTime = wallJumpingTimeCD;
-
             }
         }
     }
   
     void FixedUpdate()
     {
-       
-
-    
         //moving the player
-       
         if(dead)
         {
             float h = 1;
@@ -748,21 +641,15 @@ public class Player_Controller : MonoBehaviour {
             }
             if (Input.GetKeyDown(keyMenager.keys["Right"]))
             {
-
                 h = 1;
-
             }
         }
-           
-
             Vector3 easeVeloity = rgb2d.velocity;
             //   easeVeloity.y = rgb2d.velocity.y;
             easeVeloity.z = 0.0f;
             easeVeloity.x *= 0.75f;
 
-            //fake fricition
-
-
+            //Udawany opór żeby postać gracza się nie ślizgała
             if (grounded)
             {
                 rgb2d.velocity = easeVeloity;
@@ -770,28 +657,22 @@ public class Player_Controller : MonoBehaviour {
         if(!blockMove)
         {
 
-       
-        if (!knockbacking && curHP>0)
-        {
-
-            if (grounded)
+            if (!knockbacking && curHP>0)
             {
-                if (sprint)
+                if (grounded)
                 {
-
-
-                    curSTM -= (Time.deltaTime * 25);
-                    if (Input.GetKey(keyMenager.keys["Left"]))
+                    if (sprint)
                     {
-                        rgb2d.velocity = new Vector2(-moveSpeed, rgb2d.velocity.y);
-
-                        transform.localScale = new Vector3(-1, 1, 1);
-                        if (!dead)
-                        {
-                            facingRight = false;
-
+                    curSTM -= (Time.deltaTime * 25);
+                          if (Input.GetKey(keyMenager.keys["Left"]))
+                          {
+                              rgb2d.velocity = new Vector2(-moveSpeed, rgb2d.velocity.y);
+                              transform.localScale = new Vector3(-1, 1, 1);
+                           if (!dead)
+                           {
+                               facingRight = false;
+                            }
                         }
-                    }
                     if (Input.GetKey(keyMenager.keys["Right"]))
                     {
                         rgb2d.velocity = new Vector2(moveSpeed, rgb2d.velocity.y);
@@ -799,26 +680,19 @@ public class Player_Controller : MonoBehaviour {
                         if (!dead)
                         {
                             facingRight = true;
-
                         }
                     }
-
-
                 }
                 else
                 {
                     if (Input.GetKey(keyMenager.keys["Left"]))
                     {
                         rgb2d.velocity = new Vector2(-moveSpeed, rgb2d.velocity.y);
-
                         transform.localScale = new Vector3(-1, 1, 1);
                         if (!dead)
                         {
                             facingRight = false;
-
                         }
-
-
                     }
                     else
                     {
@@ -829,14 +703,9 @@ public class Player_Controller : MonoBehaviour {
                             if (!dead)
                             {
                                 facingRight = true;
-
                             }
-
                         }
-
                     }
-
-
                 }
                 if (Mathf.Abs(rgb2d.velocity.x) < 2f)
                 {
@@ -849,8 +718,6 @@ public class Player_Controller : MonoBehaviour {
             }
             else if (!wallJumping)
             {
-
-
                 if (facingRight)
                 {
                     if (Input.GetKey(keyMenager.keys["Left"]))
@@ -860,9 +727,7 @@ public class Player_Controller : MonoBehaviour {
                         if (!dead)
                         {
                             facingRight = false;
-
                         }
-
                     }
                     if (firstTime)
                     {
@@ -873,7 +738,6 @@ public class Player_Controller : MonoBehaviour {
                             if (!dead)
                             {
                                 facingRight = true;
-
                             }
                         }
                         if (Input.GetKeyUp(keyMenager.keys["Right"]))
@@ -891,11 +755,9 @@ public class Player_Controller : MonoBehaviour {
                             if (!dead)
                             {
                                 facingRight = true;
-
                             }
                         }
                     }
-
                 }
                 else
                 {
@@ -906,7 +768,6 @@ public class Player_Controller : MonoBehaviour {
                         if (!dead)
                         {
                             facingRight = true;
-
                         }
                     }
 
@@ -919,14 +780,12 @@ public class Player_Controller : MonoBehaviour {
                             if (!dead)
                             {
                                 facingRight = false;
-
                             }
                         }
                         if (Input.GetKeyUp(keyMenager.keys["Left"]))
                         {
                             firstTime = false;
                             JumpfromSprint = false;
-
                         }
                     }
                     else
@@ -942,25 +801,15 @@ public class Player_Controller : MonoBehaviour {
                             }
                         }
                     }
-
-
-
-
                 }
-
-
             }
-
-            //Sprint
-
-        }
-
+            }
         }
     }
 
-        public void getDmg(float Dmg, DmgType[] dmgType, float[] percentageDistribution,Vector3 point, Transform attackPos)
+    //Otrzymywanie obrażeń
+    public void getDmg(float Dmg, DmgType[] dmgType, float[] percentageDistribution,Vector3 point, Transform attackPos)
     {
-
         if (!getHurt)
         {
 
@@ -1015,7 +864,6 @@ public class Player_Controller : MonoBehaviour {
                     }
                 }
             }
-
 
             for (int i = 0; i < dmgType.Length; i++)
             {
@@ -1127,13 +975,10 @@ public class Player_Controller : MonoBehaviour {
                         }
                     }
                 }
-
             }
-
             if (attackPos.position.y < feet.position.y)
             {
                 Instantiate(BloodDown, point, attackPos.transform.rotation);
-
             }
             else
             {
@@ -1146,14 +991,9 @@ public class Player_Controller : MonoBehaviour {
                     Instantiate(BloodBack, point, attackPos.transform.rotation);
                 }
             }
-
             invulnerableTime = invulnerableTimeCD;
             getHurt =true;
         }
-     
-
-
-
     }
 
     public void SetData(float Hp,float Mana,float Stamina)//Ustawiamy zdrowie mane i stamine trzeba zrobic funkcje w PlayerController  dane zmienic na data powyzej i gracz zmienic na Player.    {
@@ -1172,7 +1012,6 @@ public class Player_Controller : MonoBehaviour {
         {
             AcidParticle.transform.GetChild(k).GetComponent<ParticleSystem>().enableEmission = false;
         }
-
         curHP = 0f;
         runSpeed = 0f;
         sprintSpeed = 0f;
@@ -1190,11 +1029,8 @@ public class Player_Controller : MonoBehaviour {
             transform.localScale = new Vector3(-1, 1, 1);
 
         }
-
-        //Restart
-
-
     }
+    //Podczas cutsceny
     public void CutScene(GameObject cutScene)
     {
         Destroy(cutScene);
@@ -1203,8 +1039,9 @@ public class Player_Controller : MonoBehaviour {
         anim.applyRootMotion = false;
         Debug.Log("false");
         anim.ApplyBuiltinRootMotion();
-
     }
+
+    //Ustawienie wartości - kosztów itd
     public void SetNumbers(int PlayerSpeed, int PlayerMagic,int PlayerArmor)
     {
         
@@ -1222,6 +1059,7 @@ public class Player_Controller : MonoBehaviour {
 
 
     }
+    //Rysowanie okręgów
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0.5f, 0.1f, 0.5f, 0.5f);
@@ -1229,9 +1067,5 @@ public class Player_Controller : MonoBehaviour {
 
         Gizmos.color = new Color(0.1f, 0.3f, 0.5f, 0.5f);
         Gizmos.DrawSphere(wallCheckPoint.transform.position, 1f);//rysowanie kolka
-
     }
-
-
-
 }
