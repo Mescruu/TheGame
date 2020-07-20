@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerPhysics : MonoBehaviour {
 
-    // Use this for initialization
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
     private Rigidbody2D rgb2d;
@@ -27,7 +26,6 @@ public class PlayerPhysics : MonoBehaviour {
                 rgb2d.gravityScale = lowJumpMultiplier;
 
             }
-
             if (rgb2d.velocity.y < 0)
             {
                 rgb2d.gravityScale = fallMultiplier + rgb2d.velocity.y * -FallingRatio;
