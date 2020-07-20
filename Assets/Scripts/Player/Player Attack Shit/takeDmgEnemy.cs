@@ -5,37 +5,33 @@ using UnityEngine;
 public class takeDmgEnemy : MonoBehaviour
 {
 
-    public DmgType[] dmgType;
-    public float dmg;
+    public DmgType[] dmgType; //typ dmg
+    public float dmg; //obrazenia
     public float[] percentageDistribution;  //rozklad obrazen
+    //konponenty
     private Player_Controller player;
     private Game_Master gm;
 
     void Start()
     {
+        //załączenie obiektów
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
+        //odwrócenie obiektu
         if (!player.facingRight)
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
     }
 
-    // Use this for initialization
-
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Enemy Atack");
+        Debug.Log("Enemy Atack"); //otrzymywanie obrażeń 
         if (other.tag == "Enemy")
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (!enemy.Dead)
             {
-
-
-
-
                 Vector3 point;
 
                 point = other.gameObject.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
@@ -73,14 +69,8 @@ public class takeDmgEnemy : MonoBehaviour
                 }
 
                 enemy.getDmg(dmg, dmgType, percentageDistribution);
-
-
-
             }
-
         }
-        // Update is called once per frame
-
     }
 }
 
