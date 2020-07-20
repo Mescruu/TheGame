@@ -23,38 +23,34 @@ public class AttackTrigger : MonoBehaviour
     void Start()
     {
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
         DeathMode = false;
-
         SetBasicDmg();
-       
         Wsp = 1;
     }
     void Update()
     {
         if (DeathMode)
         {
-            Wsp = DeathModeWsp;
+            Wsp = DeathModeWsp; //w zależności czy normalnie się atakuje, czy po użyciu DeathMode
         }
         else
         {
             Wsp = 1;
         }
     }
-    public void SetBasicDmg()
+    public void SetBasicDmg() //obliczanie wartości zadawanych obrażeń
     {
         dmg = (gm.PlayerAttack * basicDmg * 0.1f + basicDmg);
         dmg += gm.PlayerSwordLevel * dmg;
         dmg = dmg * Wsp;
-
     }
-    public void SetDmg(float Dmg)
+    public void SetDmg(float Dmg) //Ustawienie obrażeń w zależności od DMG
     {
         dmg = (gm.PlayerAttack * Dmg * 0.1f + Dmg);
         dmg += gm.PlayerSwordLevel * dmg;
         dmg = dmg * Wsp;
     }
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other) //Po wejściu w kolizję z przeciwnikiem zadaj mu obrażenia
     {
         if (other.tag == "Enemy")
         {
@@ -69,9 +65,7 @@ public class AttackTrigger : MonoBehaviour
                 {
                     enemy.getDmg(dmg, DmgTypeSwordAndDeath, percentageDistributionWitchDeath);
                 }
-
                 Vector3 point;
-
                 point = other.gameObject.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
                 if(transform.position.x>enemy.transform.position.x)
                 {
@@ -81,7 +75,6 @@ public class AttackTrigger : MonoBehaviour
                 {
                     Instantiate(enemy.bloodBack, point, enemy.transform.rotation);
                 }
-
             }
         }
     }
