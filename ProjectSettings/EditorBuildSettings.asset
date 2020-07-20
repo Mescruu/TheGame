@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/mainmenu.unity
     guid: 4cab47318dada2a48a5b2a05b64e2299
   - enabled: 1
-    path: Assets/Scenes/try.unity
-    guid: dada6dc16387a3541bb8ac97c191e31e
+    path: Assets/Scenes/Prolog.unity
+    guid: e00458af4f53e2542b109d4e1eff9366
   - enabled: 1
     path: Assets/Scenes/LoadingScene.unity
     guid: 59761e2027ccd0049b5d114918c57f91
