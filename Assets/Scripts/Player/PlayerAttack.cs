@@ -4,10 +4,7 @@ using System.Collections;
 public class PlayerAttack : MonoBehaviour {
 
 
-
-
-    //shooting
-    
+    //Rzucanie nożami i używanie run
     public Transform firePoint;
     public GameObject[] knife;
     public bool Throwing;
@@ -21,7 +18,6 @@ public class PlayerAttack : MonoBehaviour {
     public float RuneTimerCD = 0.7f;
     public int countOfRune;
 
-    private KeyMenager keyMenager;
     public bool ShowDesk;
     public float neededMana;
 
@@ -31,32 +27,22 @@ public class PlayerAttack : MonoBehaviour {
     public Transform BigFireBallPoint;
     public GameObject BigFlame;
     public Transform BigFlameFront;
-
     //FIRE//	//FIRE//	//FIRE//	//FIRE//
-
 
     //ELECT//	//ELECT// 	//ELECT// 	//ELECT// 
     public GameObject Thunder;
     public Transform ThunderPoint;
-
     public GameObject Discharge;
-
     public GameObject SwwordElect;
     public Transform SwwordElectPoint;
-
     //ELECT//	//ELECT// 	//ELECT// 	//ELECT// 
-
-
-
 
     //DEATH//    	//DEATH//    	//DEATH//    
     public GameObject DeathBomb;
     public float basicCurseTime=10f;
-
     public GameObject DeathChop;
     public Transform DeathChopPoint;
     public float basicHpStealth=20f;
-
     public float DeathModeTimeCDBasic;
     public float DeathModeTimeCD;
     public float DeathModeTime;
@@ -64,10 +50,7 @@ public class PlayerAttack : MonoBehaviour {
     public Transform DeathMaskPoint;
     public GameObject DeathMask;
     public AudioClip DeathModeSound;
-
     //DEATH//    	//DEATH//    	//DEATH//    
-
-
 
     //WHITE//  		//WHITE//  		//WHITE//  
     public GameObject Healing;
@@ -76,11 +59,8 @@ public class PlayerAttack : MonoBehaviour {
     public GameObject StunGameObj;
     public Transform StunGamePoint;
     public float basicStunTime;
-
     public GameObject Shield;
     public Transform ShieldPoint;
-
-
     //WHITE//  		//WHITE//  		//WHITE//  
 
     //DASH SPECIAL ATTACK// 
@@ -113,7 +93,7 @@ public class PlayerAttack : MonoBehaviour {
     public bool SpecialAttacking;
 
     public float attackTimer;
-    public float attackTimerCD;  //calm down ;>
+    public float attackTimerCD;  //calm down //przerwa w ataku itd
     public float attackBreakTime;
     public float attackBreakTimeCD;
     public float AttackBreakTimeBasic;
@@ -121,7 +101,7 @@ public class PlayerAttack : MonoBehaviour {
     private bool addSwordEffect;
 
 
-
+    //Komponenty
     private Animator anim;
     private Game_Master gm;
     private InvertMaterial invMat;
@@ -141,13 +121,12 @@ public class PlayerAttack : MonoBehaviour {
     public AudioClip BigFireBallSound;
     public AudioClip DeathBombSound;
     public AudioClip StunBulletStart;
+    private KeyMenager keyMenager;
 
     void Awake()
     {
-
         audioPlayer = gameObject.GetComponent<AudioPlayer>();
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
         invMat = gameObject.GetComponent<InvertMaterial>();
         player = gameObject.GetComponent<Player_Controller>();
         anim = gameObject.GetComponent<Animator>();
@@ -155,9 +134,6 @@ public class PlayerAttack : MonoBehaviour {
         attackTrigger = AttackObj.GetComponent<BoxCollider2D>();
         attackTrigger.enabled = false;
         atckTrig = AttackObj.GetComponent<AttackTrigger>();
-        
-        
-
     }
 
     void Start()
@@ -165,15 +141,14 @@ public class PlayerAttack : MonoBehaviour {
         DashSpecialAttack = false;
         TimeDashAttack = TimeDashAttackCD;
         rb2d = gameObject.GetComponent<Rigidbody2D>();
-
         SpecialJumpAttackTime = SpecialJumpAttackTimeCd;
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
-
         DeathModeTimeCD = (DeathModeTimeCDBasic*gm.PlayerMagic*0.1f+DeathModeTimeCDBasic);
         CountOFAttack = 0;
     }
     void Update()
     {
+        //Koszty
         countOfRune = gm.runes;
         if (gm.usedWeaponType == 0)
         {
@@ -194,9 +169,8 @@ public class PlayerAttack : MonoBehaviour {
         }
         attackBreakTimeCD = (AttackBreakTimeBasic - (gm.PlayerSpeed * gm.PlayerSwordLevel)/100f+gm.usedWeaponType/10);
 
+        //Używanie run
         //// RUNE /////      		//// RUNE /////      		//// RUNE /////      		//// RUNE /////      		//// RUNE /////      		//// RUNE /////   
-
-
         if (Input.GetKeyDown(keyMenager.keys["ReleaseMagic"]) && !player.dead && !Throwing && !player.onLadder && !player.wallSliding && countOfRune > 0 && !player.blockMove)
         {
             if (firePoint.position.x > transform.position.x)
@@ -209,10 +183,8 @@ public class PlayerAttack : MonoBehaviour {
             }
             if (player.curMana > neededMana && gm.Element>0)
                 {
-
                     if (gm.Element == 1)
                     {
-
                         if (gm.powerLevel == 1)
                         {
                         if(gm.PlayerFireLevel >= 1)
@@ -224,28 +196,20 @@ public class PlayerAttack : MonoBehaviour {
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
-                     
-
-                        }
-                        
+                    }
                     if (gm.powerLevel == 2)
-                        {
+                    {
                         if(gm.PlayerFireLevel >= 2)
                         {
                             Instantiate(BigFireBall, BigFireBallPoint.position, BigFireBallPoint.rotation);
                             audioPlayer.Play(BigFireBallSound);
-
                             ReduceRuneAndMana(1);
                         }
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
-
-
                     }
                   
                     if (gm.powerLevel == 3)
@@ -258,16 +222,11 @@ public class PlayerAttack : MonoBehaviour {
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
-                    
-
-                        }
-                 
+                    }
                 }
                 if (gm.Element == 2)
                 {
-
                     if (gm.powerLevel == 1)
                     {
                         if(gm.PlayerElectLevel >= 1)
@@ -278,10 +237,7 @@ public class PlayerAttack : MonoBehaviour {
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
-                      
-
                     }
                   
                     if (gm.powerLevel == 2)
@@ -294,38 +250,28 @@ public class PlayerAttack : MonoBehaviour {
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
-
-                      
-
                     }
                     else
                     {
                         gm.ShowInfo(2f, "You can't pronounce that spell");
-
                     }
                     if (gm.powerLevel == 3)
                     {
-                      
                         if(gm.PlayerElectLevel>=3)
                         {
                             Instantiate(SwwordElect, SwwordElectPoint.position, SwwordElectPoint.rotation);
                             ReduceRuneAndMana(3);
                             audioPlayer.Play(SwordElectSound);
-
                         }
                         else
-                          {
+                        {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
                     }
-                  
                 }
                 if (gm.Element == 3)
                 {
-
                     if (gm.powerLevel == 1)
                     {
                         if(gm.PlayerDeathLevel >= 1)
@@ -339,7 +285,6 @@ public class PlayerAttack : MonoBehaviour {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
 
                         }
-
                     }
                   
                     if (gm.powerLevel == 2)
@@ -352,7 +297,6 @@ public class PlayerAttack : MonoBehaviour {
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
 
                     }
@@ -362,7 +306,6 @@ public class PlayerAttack : MonoBehaviour {
                         if(gm.PlayerDeathLevel >= 3 && !DeathMode)
                         {
                             DeathModeTime = DeathModeTimeCD;
-
                             Instantiate(DeathMask, firePoint.position, firePoint.rotation);
                             invMat.InvertTime = DeathModeTime;
                             invMat.playOnce = true;
@@ -380,15 +323,12 @@ public class PlayerAttack : MonoBehaviour {
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
-
                     }
-                  
                 }
+
                 if (gm.Element == 4)
                 {
-
                     if (gm.powerLevel == 1)
                     {
                        if(gm.PlayerWhiteLevel>=1)
@@ -409,88 +349,66 @@ public class PlayerAttack : MonoBehaviour {
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
-
-
                     }
-                   
                     if (gm.powerLevel == 2)
                     {
                         if(gm.PlayerWhiteLevel>=2)
                         {
                             Instantiate(Shield, ShieldPoint.position, ShieldPoint.rotation,transform);
-                           
                             ReduceRuneAndMana(4);
                         }
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
-                  
-
                     }
                    
                     if (gm.powerLevel == 3)
                     {
                         if (gm.PlayerWhiteLevel >= 3)
                         {
-
                             Instantiate(StunGameObj, StunGamePoint.position, StunGamePoint.rotation);
                             ReduceRuneAndMana(4);
                             audioPlayer.Play(StunBulletStart);
-
                         }
                         else
                         {
                             gm.ShowInfo(2f, "You can't pronounce that spell");
-
                         }
                     }
-                   
                 }
             }
-                if(gm.Element==0)
+
+            if(gm.Element==0) //w razie braku wybranego elementu
             {
-             
                     gm.ShowInfo(2f, "focus on one of the elements");
-            
-                
             }
-
-                
-
         }
         else
         {
             anim.SetBool("Running", false);
-
         }
 
+        //Wejście w deathmode
     if(DeathMode&&DeathModeTime>0)
-        {
-            DeathModeTime -= Time.deltaTime;
-            atckTrig.DeathMode = true;
-
-            if (DeathModeTime<=0)
-            {
-                DeathMode = false;
-            }
-        }
+     {
+         DeathModeTime -= Time.deltaTime;
+         atckTrig.DeathMode = true;
+         if (DeathModeTime<=0)
+         {
+            DeathMode = false;
+         }
+     }
     if(!DeathMode)
-        {
+     {
             gm.Player_DeathMode = false;
-
             atckTrig.DeathMode = false;
-        }
+     }
 
-   
-
-   
-
-        if (gm.Element == 1)
-        {
+    //ustawienie kosztów many
+    if (gm.Element == 1) 
+    {
             if (gm.powerLevel == 1)
             {
                 neededMana = gm.NeededManaFire[0];
@@ -503,8 +421,7 @@ public class PlayerAttack : MonoBehaviour {
             {
                 neededMana = gm.NeededManaFire[2];
             }
-        }
-
+    }
 
         if (gm.Element == 2)
         {
@@ -554,57 +471,21 @@ public class PlayerAttack : MonoBehaviour {
             }
         }
 
-/*
-        if (DeathMode)
-        {
-            gameObject.GetComponent<Animation>().Play("DeathModeStart");
-
-
-            DeathModeTime -= Time.deltaTime;
-
-            if (DeathModeTime <= 0)
-            {
-                gameObject.GetComponent<Animation>().Stop("DeathModeStart");
-
-
-                gameObject.GetComponent<Animation>().Play("DeathModeEnd");
-
-                DeathModeTime = DeathModeTimeCD;
-
-                AttackTrigger.dmg = 2;
-
-
-                DeathMode = false;
-
-            }
-
-
-        } */
-   
-
-
-
+        //Rzucanie noży
         /////////knifethrowing//////////         			/////////knifethrowing//////////         			/////////knifethrowing//////////   
         if(!player.blockMove)
         {
-
             if (Input.GetKeyDown(keyMenager.keys["SpecialAttack"]) && !player.dead && player.grounded && !DashSpecialAttack && player.curSTM > gm.RunSpecialAttackCost && !Throwing && !Rune && player.sprint && !SpecialAttacking && !attacking && !player.onLadder && !player.wallSliding && gm.PlayerSwordLevel >= 3)
             {
-
-
                 anim.SetBool("SpecialRunAttack", true);
-
-
                 player.curSTM -= gm.RunSpecialAttackCost;
                 gm.SwordUsedStamina -= gm.RunSpecialAttackCost;
-
                 audioPlayer.Play(DashAttackSound);
                 DashSpecialAttack = true;
                 TimeDashAttack = TimeDashAttackCD;
                 faceingRight = player.facingRight;
                 atckTrig.SetDmg(DashSpeciAttackDmg);
                 player.UsingStamina = true;
-
             }
             if (Input.GetKeyDown(keyMenager.keys["SpecialAttack"]) && !player.dead && player.grounded && player.sprint)
             {
@@ -618,17 +499,12 @@ public class PlayerAttack : MonoBehaviour {
                 }
             }
 
-
             if (DashSpecialAttack)
             {
-
                 if (TimeDashAttack > 0)
                 {
                     TimeDashAttack -= Time.deltaTime;
-
                     transform.position = Vector3.MoveTowards(transform.position, DashSpecialAttackPoint.transform.position, dashSpeed * Time.deltaTime);
-
-
                 }
                 else
                 {
@@ -641,20 +517,16 @@ public class PlayerAttack : MonoBehaviour {
                 anim.SetBool("SpecialRunAttack", false);
             }
 
+            //Ataki gracza
 
             if (Input.GetKeyDown(keyMenager.keys["SpecialAttack"]) && !player.dead && !player.grounded && player.curSTM > gm.JumpDownSpecialAttackCost && !attacking && !SpecialAttacking && !Throwing && !Rune && !player.onLadder && !player.wallSliding && gm.PlayerSwordLevel >= 2)
             {
-
                 DownSpecialAttack = true;
                 atckTrig.SetDmg(DownSpecialAttackDmg);
                 anim.SetBool("SpecialJumpAttack", true);
                 player.curSTM -= gm.JumpDownSpecialAttackCost;
                 gm.SwordUsedStamina -= gm.JumpDownSpecialAttackCost;
-                //audioPlayer.Play(Falling);
-
                 player.UsingStamina = true;
-
-
             }
             if (Input.GetKeyDown(keyMenager.keys["SpecialAttack"]) && !player.dead && !player.grounded)
             {
@@ -669,14 +541,10 @@ public class PlayerAttack : MonoBehaviour {
             }
             if (DownSpecialAttack)
             {
-
-
                 if (DownSpecialAttackTimer < 0)
                 {
                     if (!player.grounded)
                     {
-
-
                         if (rb2d.velocity.y < 40f)
                         {
                             transform.position = Vector3.MoveTowards(transform.position, DownSpecialAttackPoint.transform.position, DownSpecialAttackSpeed + Time.deltaTime * 10);
@@ -696,31 +564,25 @@ public class PlayerAttack : MonoBehaviour {
                 else
                 {
                     DownSpecialAttackTimer -= Time.deltaTime;
-
                 }
-
             }
             else
             {
                 anim.SetBool("SpecialJumpAttack", false);
             }
 
-
+            //Dash
             if (Input.GetKeyDown(keyMenager.keys["BackDash"]) && !player.dead && !SpecialAttacking && !player.grounded && player.curSTM > gm.JumpDownSpecialAttackCost && !attacking && !Throwing && !Rune && !player.onLadder && !player.wallSliding && gm.PlayerSwordLevel >= 2)
             {
-
                 SpecialJumpAttackInAir = true;
                 atckTrig.SetDmg(SpecialJumpAttackInAirDmg);
-
                 audioSource.clip = InAirSwordSound;
                 audioSource.Play();
-
                 player.curSTM -= gm.JumpSpecialAttackCost;
                 gm.SwordUsedStamina -= gm.JumpSpecialAttackCost;
                 SpecialJumpAttackTime = SpecialJumpAttackTimeCd;
                 anim.SetBool("SpecialJumpAttackInAir", true);
                 player.UsingStamina = true;
-
             }
             if (Input.GetKeyDown(keyMenager.keys["BackDash"]) && !player.grounded && !player.dead)
             {
@@ -744,15 +606,13 @@ public class PlayerAttack : MonoBehaviour {
                 {
                     SpecialJumpAttackTime -= Time.deltaTime;
                 }
-
             }
             else
             {
                 anim.SetBool("SpecialJumpAttackInAir", false);
             }
 
-
-
+            //Atakowanie
             if (Input.GetKeyDown(keyMenager.keys["Attack"]) && !player.dead && CountOFAttack <= gm.PlayerSwordLevel && !Throwing && !attacking && !player.backDash && !SpecialAttacking && !player.onLadder && !player.wallSliding && !SpecialAttacking && !player.sprint)
             {
                 bool attack = false;
@@ -767,9 +627,7 @@ public class PlayerAttack : MonoBehaviour {
                         attack = true;
                         player.curSTM -= gm.AttackRunCost;
                         player.UsingStamina = true;
-
                     }
-
                 }
                 else
                 {
@@ -782,7 +640,6 @@ public class PlayerAttack : MonoBehaviour {
                         attack = true;
                         player.curSTM -= gm.AttackCost;
                         player.UsingStamina = true;
-
                     }
                 }
                 if(attack)
@@ -793,7 +650,6 @@ public class PlayerAttack : MonoBehaviour {
                     audioPlayer.Play(SwordSound[(int)Random.Range(0, SwordSound.Length)]);
                     CountOFAttack += 1;
                 }
-
             }
 
             if (attacking)
@@ -808,9 +664,7 @@ public class PlayerAttack : MonoBehaviour {
                     attacking = false;
                     attackTrigger.enabled = false;
                 }
-
             }
-
 
             if (attackBreakTime <= 0)
             {
@@ -831,7 +685,6 @@ public class PlayerAttack : MonoBehaviour {
             }
 
             anim.SetBool("Attacking", attacking);
-
             countOfKnife = gm.knifeCount;
             if (Input.GetKeyDown(keyMenager.keys["Throwing"]) && !player.dead && !SpecialAttacking && !player.backDash &&!Throwing && !player.sprint && !player.onLadder && !player.wallSliding && countOfKnife > 0)
             {
@@ -845,7 +698,6 @@ public class PlayerAttack : MonoBehaviour {
                 }
 
                 anim.SetBool("Throwing", true);
-
                 Throwing = true;
                 ThrowingTimer = ThrowingCd;
                 Instantiate(knife[gm.knifeId], firePoint.position, firePoint.rotation);
@@ -854,7 +706,6 @@ public class PlayerAttack : MonoBehaviour {
             else
             {
                 anim.SetBool("Throwing", false);
-
             }
             if (Input.GetKeyDown(keyMenager.keys["Throwing"]) && countOfKnife <= 0)
             {
@@ -870,11 +721,7 @@ public class PlayerAttack : MonoBehaviour {
                 {
                     Throwing = false;
                 }
-
             }
-
-
-
 
             if (Input.GetKeyDown(keyMenager.keys["PowerMagic"]) && countOfRune <= 0 && !player.sprint)
             {
@@ -896,13 +743,11 @@ public class PlayerAttack : MonoBehaviour {
                 {
                     Rune = false;
                 }
-
             }
             else
             {
                 player.UsingMana = false;
             }
-
 
             if (!SpecialJumpAttackInAir && !DownSpecialAttack && !DashSpecialAttack)
             {
@@ -912,15 +757,10 @@ public class PlayerAttack : MonoBehaviour {
             {
                 SpecialAttacking = true;
             }
-
-
         }
-
-
-
-        //	anim.SetBool ("Running", Run);
-
     }
+
+    //Redukcja punktów magii i run
     void ReduceRuneAndMana(int element)
     {
         gm.runes -= 1;
@@ -945,6 +785,5 @@ public class PlayerAttack : MonoBehaviour {
             gm.ChaosUsedMana += neededMana;
         }
     }
-		//////////mele attacking////////           			//////////mele attacking////////           			//////////mele attacking////////           
-	}
+}
 	
