@@ -4,43 +4,45 @@ using System.Collections;
 public class DeathBite : MonoBehaviour
 {
 
-    static public float dmg;
-    private Player_Controller player;
-    public float TimeToDestroy = 2;
-    private KeyMenager keyMenager;
+    static public float dmg; //zadawany dmg
+    public float TimeToDestroy = 2; //jak długo trwa
 
-    private bool can;
-    static public int hp;
-    private Animator anim;
-    public float Speed;
+    private bool can; //czy można zakończyc
+    static public int hp; //pozyskane hp
+    private Animator anim; //animacja
+    public float Speed; //prędkość
     public Transform forward;
     public LayerMask Layer;
     public AudioClip startClip;
     public AudioClip EndClip;
+
+    //Komponenty
     private AudioSource audioSource;
     private Game_Master gm;
     private PlayerAttack playerAttack;
+    private Player_Controller player;
+    private KeyMenager keyMenager;
 
-    // Use this for initiazization
     void Start()
     {
+        //ustawienia dźwięku
         audioSource = gameObject.GetComponent<AudioSource>();
         audioSource.loop = true;
         audioSource.clip = startClip;
         audioSource.Play();
 
+        can = true;//Możliwość zamknięcia
+
+        //Komponenty
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
-
-        can = true;
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
-
-        hp = Random.Range(2, 5);
-
         anim = gameObject.GetComponent<Animator>();
-
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
         playerAttack = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
 
+        hp = Random.Range(2, 5); //ilość pozyskanego hp
+
+        //Odwrócenie obiektu
         if (player.facingRight)
         {
             transform.localScale = new Vector3(1, 1, 1);
@@ -48,17 +50,14 @@ public class DeathBite : MonoBehaviour
         else
         {
             transform.localScale = new Vector3(-1, 1, 1);
-
         }
-        anim.SetBool("End", false);
 
+        anim.SetBool("End", false);
     }
 
-    // Update is called once per frame
     void Update()
-
     {
-
+        //koło
         if(Physics2D.OverlapCircle(transform.position, 0.3f, Layer) && can)
         {
             anim.SetBool("End", true);
@@ -66,6 +65,7 @@ public class DeathBite : MonoBehaviour
             can = false;
         }
 
+        //Zamknięcie czaru
         if (Input.GetKeyDown(keyMenager.keys["ReleaseMagic"]) && can)
         {
             anim.SetBool("Release", true);
@@ -76,7 +76,7 @@ public class DeathBite : MonoBehaviour
             audioSource.Play();
         }
 
-
+        //Czas do zniszczenia obiektu
         TimeToDestroy -= Time.deltaTime;
         if (TimeToDestroy <= 4f)
         {
@@ -84,7 +84,6 @@ public class DeathBite : MonoBehaviour
             if (TimeToDestroy <= 0)
             {
                 Destroy(gameObject);
-
             }
         }
         else
@@ -95,7 +94,7 @@ public class DeathBite : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-
+        //pobranie hp
         if (other.tag == "Enemy")
         {
             Enemy enemy = other.GetComponent<Enemy>();
@@ -105,20 +104,19 @@ public class DeathBite : MonoBehaviour
             }
         }
 
-
-                if (other.tag == "Walls")
+        //niszczenie obiektu
+        if (other.tag == "Walls")
         {
             anim.SetBool("End", true);
             TimeToDestroy = 0.2f;
         }
 
-
+        //niszczenie obiektu
         if (other.tag == "Ground")
         {
             anim.SetBool("End", true);
             TimeToDestroy = 0.2f;
         }
-
     }
 }
 
