@@ -57,6 +57,8 @@ public class Enemy : MonoBehaviour
     public Color NormalColor;
     public Color BurnColor;
     public AudioSource audioSource;
+    private float volume;
+    private float timeToFadeOut = 0.4f;
 
     //Wspolczynnik odporności
     public float MeeleDefendFactor;
@@ -99,6 +101,7 @@ public class Enemy : MonoBehaviour
         getHurt = false;
         timeToDieCD = TimeToDead;
         noticePlayer = false;
+        volume = audioSource.volume; //głośność odtwarzacza
 
         if (audioSource == null)
         {
@@ -188,6 +191,12 @@ public class Enemy : MonoBehaviour
             StunEnemy = false;
             CurseEnemy = false;
             Dead = true;
+
+            if (timeToFadeOut > 0)
+            {
+                timeToFadeOut -= Time.deltaTime;
+                audioSource.volume = timeToFadeOut;
+            } 
 
             if (BurnEnemy)
             {
