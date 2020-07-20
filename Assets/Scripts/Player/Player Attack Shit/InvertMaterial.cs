@@ -9,44 +9,41 @@ public class InvertMaterial : MonoBehaviour {
     public bool invert;
     public float timetoinvert =0;
 
+    //shadery i materiał umożliwiający zmiane koloru
     public Shader shader;
     public Material _mat;
+    //czas trwania zmiany
     public float InvertTime=1f;
     public float InvertTimeCD=1f;
+    //dodatkowe obiekty
     public GameObject Cape;
     public GameObject Particle;
+    //Dźwięk
     public AudioClip EndSound;
-
     public AudioClip MiddleSound;
+    //Odtwarzacz
     public AudioSource audioSource;
     public bool playOnce;
     public bool playOnceMiddle;
 
-    // Use this for initialization
     void Start()    
-{
-        playOnce = true;
+    {
+    playOnce = true;
     sprite = gameObject.GetComponent<SpriteRenderer>();
-     shader = Shader.Find("Custom/2dInvert");
-        invert = false;
-        Particle.SetActive(false);
-    
-
+    shader = Shader.Find("Custom/2dInvert");
+    invert = false;
+    Particle.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
-{
-        if(InvertTime>0)
+    {
+        if(InvertTime>0) //odwracanie
         {
             InvertTime -= Time.deltaTime;
-
         }
         else
         {
-          
             invert = false;
-         
         }
         if (invert)
         {
@@ -62,19 +59,14 @@ public class InvertMaterial : MonoBehaviour {
             {
                 Cape.GetComponent<SpriteRenderer>().material = _mat;
                 Particle.SetActive(true);
-
             }
             if (timetoinvert<1)
             {
                 timetoinvert += Time.deltaTime*4;
-
-                    _mat.SetFloat("_Threshold", timetoinvert);
-
+                _mat.SetFloat("_Threshold", timetoinvert);
             }
-            
-          
         }
-    else
+        else
         {
             if(playOnce)
             {
@@ -82,14 +74,11 @@ public class InvertMaterial : MonoBehaviour {
                 audioSource.clip = EndSound;
                 audioSource.Play();
                 playOnce = false;
-
             }
             if (timetoinvert > 0)
             {
                 timetoinvert -= Time.deltaTime * 4;
-
                 _mat.SetFloat("_Threshold", timetoinvert);
-
             }
             else
             {
@@ -100,9 +89,7 @@ public class InvertMaterial : MonoBehaviour {
                     Cape.GetComponent<SpriteRenderer>().material = material1;
                     Particle.SetActive(false);
                 }
-
             }
-
         }
-}
+    }
 }
