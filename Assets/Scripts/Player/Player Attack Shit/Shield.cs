@@ -4,27 +4,34 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour {
 
+    //typy obrażeń
     public DmgType[] dmgTypeSensitive;
     public DmgType[] dmgTypeHardness;
 
-    private Player_Controller playerController;
-    private PlayerAttack playerAttack;
+    //czas trwania czaru
     public float TimeToDestroy;
     public float TimetoDestroyCD;
+    //odporność obiektu
     public float Hp;
     public float HpBasic;
-    public GameObject ParticleObj;
-    private Game_Master gm;
+    public GameObject ParticleObj; //cząsteczki
 
-    private Animator anim;
-
+    //czas trwania animacji
     private float animTime;
     private float animTimeCd = 0.1f;
+
+    //dźwięki
     public AudioClip ShieldStart;
     public AudioClip[] ShieldDmg;
     public AudioClip ShieldEnd;
+    private bool PlayOnce; //
+
+    //komponenty
     private AudioSource audios;
-    private bool PlayOnce;
+    private Player_Controller playerController;
+    private PlayerAttack playerAttack;
+    private Animator anim;
+    private Game_Master gm;
 
     // Use this for initialization
     void Start () {
@@ -33,6 +40,7 @@ public class Shield : MonoBehaviour {
         playerAttack = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
 
         PlayOnce = true;
+
         TimeToDestroy = TimetoDestroyCD;
         Hp = HpBasic * gm.PlayerWhiteLevel + HpBasic * 0.1f* gm.PlayerMagic;
         anim = gameObject.GetComponent<Animator>();
@@ -41,19 +49,16 @@ public class Shield : MonoBehaviour {
         audios.clip = ShieldStart;
         audios.Play();
 
-
-        if (!gm.Player_Defend)
+        if (!gm.Player_Defend) //dodanie efektu w HUD
         {
             gm.Player_Defend = true;
             gm.AddEffect(3);
         }
-
     }
 
-    // Update is called once per frame
     void Update () {
 
-        if(animTime>0)
+        if(animTime>0) //czas trwania animacji
         {
             animTime -= Time.deltaTime;
             anim.SetBool("Defend", true);
@@ -79,19 +84,18 @@ public class Shield : MonoBehaviour {
             playerController.Defend = false;
             Debug.Log("Player Defend False");
             playerController.DefendTime = 0;
-
         }
         else
         { 
             anim.SetBool("End", false);
             gm.Player_Defend = true;
-
             playerController.Defend = true;
             playerController.DefendTimeCD = TimetoDestroyCD;
             playerController.DefendTime = TimeToDestroy;
             TimeToDestroy -= Time.deltaTime;
         }
     }
+    //Otrzymywanie obrażeń
     public void getDmg(float Dmg, DmgType[] dmgType, float[] percentageDistribution, Vector3 point, Transform attackPos)
     {
         anim.SetBool("Defend", false);
@@ -105,7 +109,6 @@ public class Shield : MonoBehaviour {
         for (int i = 0; i < dmgType.Length; i++)
         {
             dmgTaken = false;
-
             for (int j = 0; j < dmgTypeSensitive.Length; j++)
             {
                 if (dmgType[i] == dmgTypeSensitive[j])
@@ -135,10 +138,7 @@ public class Shield : MonoBehaviour {
             }
 
         }
-
             Instantiate(ParticleObj, point, attackPos.transform.rotation);
-
-
     }
 }
 
