@@ -10,18 +10,13 @@ public class Sword_Bomb : MonoBehaviour {
     public LayerMask layerMask;
     public float TimeToRelease=0.2f;
     public GameObject ElectBomb;
-    // Use this for initialization
-    void Start () {
 
+    void Start () { 
         CanRelease = true;
-
         CanRelease = Physics2D.OverlapArea(CheckPoint1.position, CheckPoint2.position, layerMask);
-
     }
 
-    // Update is called once per frame
-    void Update () {
-
+    void Update () { //Sword bomb
 
         if (!CanRelease)
         {
@@ -29,7 +24,6 @@ public class Sword_Bomb : MonoBehaviour {
             {
                 Instantiate(ElectBomb, transform.position, transform.rotation);
                 CanRelease = true;
-
             }
             else
             {
