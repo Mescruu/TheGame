@@ -125,9 +125,12 @@ public class Read : MonoBehaviour {
 	{
 		if (col.CompareTag ("Player"))
         {
-			if (!Reading)
+            BackPicInputText.SetActive(true);
+            textToRead.text = "[" + keyMenager.keys["Action"] + "] To Read";
+
+            if (!Reading)
              {
-			BackPicInputText.SetActive (true);									
+			    BackPicInputText.SetActive (true);									
 				if (Input.GetKeyDown(keyMenager.keys["Action"])&&gm.dead==false) 
 				{
 				   if (gm.active_menu == 0)
