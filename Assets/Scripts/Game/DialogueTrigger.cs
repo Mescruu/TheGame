@@ -70,11 +70,15 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            if(OnEnter)
+            BackPicInputText.SetActive(true);
+            ExitDesk = false;
+
+            if (OnEnter)
             {
                 dialogueManager.StartDialogue(dialogue, 0);
+                dialogueManager.counterOfSentences = 0; //wyzerowanie liczonych sentencji
             }
-            if(OnClick)
+            if (OnClick)
             {
                 BackPicInputText.SetActive(true);
                 textToRead.text = "[" + keyMenager.keys["Action"] + "] To Talk";
@@ -87,6 +91,8 @@ public class DialogueTrigger : MonoBehaviour
     {
         if(OnClick)
         {
+            textToRead.text = "[" + keyMenager.keys["Action"] + "] To Talk";
+
             if (col.gameObject.tag == "Player")
             {
                 if (Input.GetKeyDown(keyMenager.keys["Action"]))
@@ -99,6 +105,7 @@ public class DialogueTrigger : MonoBehaviour
                     {
                         dialogueManager.tap = 0;
                         dialogueManager.StartDialogue(dialogue, 0);
+                        dialogueManager.counterOfSentences = 1; //wyzerowanie liczonych sentencji
                     }
                 }
                 BackPicInputText.SetActive(true);
