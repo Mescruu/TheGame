@@ -57,8 +57,6 @@ public class Enemy : MonoBehaviour
     public Color NormalColor;
     public Color BurnColor;
     public AudioSource audioSource;
-    private float volume;
-    private float timeToFadeOut = 0.4f;
 
     //Wspolczynnik odporności
     public float MeeleDefendFactor;
@@ -101,7 +99,6 @@ public class Enemy : MonoBehaviour
         getHurt = false;
         timeToDieCD = TimeToDead;
         noticePlayer = false;
-        volume = audioSource.volume; //głośność odtwarzacza
 
         if (audioSource == null)
         {
@@ -111,6 +108,7 @@ public class Enemy : MonoBehaviour
         rgb2 = gameObject.GetComponent<Rigidbody2D>();
         playertck = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
 
         defend = false;
         StunEnemy = false;
@@ -192,11 +190,8 @@ public class Enemy : MonoBehaviour
             CurseEnemy = false;
             Dead = true;
 
-            if (timeToFadeOut > 0)
-            {
-                timeToFadeOut -= Time.deltaTime;
-                audioSource.volume = timeToFadeOut;
-            } 
+            audioSource.Stop(); //zakończ odtwarzać dźwięk obiektu
+            Debug.Log("stop playing"); 
 
             if (BurnEnemy)
             {
