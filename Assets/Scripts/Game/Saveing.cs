@@ -387,6 +387,9 @@ public class Saveing : MonoBehaviour
 
         idbch = gameObject.GetComponent<itemDataBaseChest>();
 
+        if (GameObject.FindGameObjectWithTag("chest")==null){ //jeżeli znajduje się taki przedmiot na mapie
+            return;
+        }
         ChestTrigger chest = GameObject.FindGameObjectWithTag("chest").GetComponent<ChestTrigger>();
 
 
@@ -581,7 +584,7 @@ class ChestData
     public int[] BootsCount = new int[2];
     public int[] LegsCount = new int[2];
     public int[] ArmorsCount = new int[2];
+        //na podstaiwe: kursu UNITY3D v5. mvire.com 
 }
 
-//na podstaiwe: kursu UNITY3D v5. mvire.com 
  
