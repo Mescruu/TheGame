@@ -598,8 +598,12 @@ public class Game_Master : MonoBehaviour {
     {
         for (int i = 0; i < Enters.Length; i++)
         {
-            if (Enters[i].GetComponent<Door>().DoorID == DoorID) //sprawdzenie które drzwi posiadają DoorID równy DoorId przez które przeszedł gracz
+            Debug.Log("Doors:" + Enters[i].GetComponent<Door>().DoorID);
+            Debug.Log("Count of Doors:" + Enters[i]);
+
+            if (Enters[i].gameObject.GetComponent<Door>().DoorID == DoorID) //sprawdzenie które drzwi posiadają DoorID równy DoorId przez które przeszedł gracz
             {
+                Debug.Log("Old door id" + DoorID);
                player.transform.position = Enters[i].position;
             }
         }
@@ -621,7 +625,7 @@ public class Game_Master : MonoBehaviour {
     //zakończenie gry
     public void GameEnd()
     {
-        deadTime -= Time.deltaTime;
+            deadTime -= Time.deltaTime;
             Time.timeScale = 0.5f;
 
             if (deadTime < 0)
@@ -629,9 +633,11 @@ public class Game_Master : MonoBehaviour {
 
                 DeadScreenImage.SetActive(true);
     
-                if (Input.GetKeyDown("e"))
+                if (Input.GetKeyDown(keyMenager.keys["Action"]))
                 {
-                    Application.LoadLevel(Application.loadedLevel);
+                ChangeToZero = true;
+                loadScene = true;
+                SceneIdToLoad=LevelId;
                 }
             }
     }
