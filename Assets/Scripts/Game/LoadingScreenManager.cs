@@ -39,7 +39,7 @@ public class LoadingScreenManager : MonoBehaviour
     public KeyMenager KeyMenager;
     public static int sceneToLoad = -1;
     //Indeks sceny ładowania. 
-    static int loadingSceneIndex = 2;
+    static int loadingSceneIndex = 1; //pierwsza scena po menu to scena ładowania
     public int[] StageBorders;
     public GameObject[] LoadingPics;
     public static int FromSceneIndex;
