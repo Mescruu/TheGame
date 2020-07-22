@@ -20,6 +20,7 @@ public class AudioPlayer : MonoBehaviour
 
     private float OncePlayTime;
     public bool CanPlay;
+    private float distance;
 
     // Use this for initialization
     void Start()
@@ -38,7 +39,23 @@ public class AudioPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(TimeAnimation)
+        //Głośność zależna od odległości na ekranie
+        distance = Vector3.Distance( GameObject.FindGameObjectWithTag("Player").transform.position, transform.position);
+        if (distance < 500)
+        {
+            audioSource.volume = 1;
+
+        }
+        if (distance >= 500 && distance < 1500)
+        {
+            audioSource.volume = 1/((distance-500)/1000);
+        }
+        if (distance >= 1500)
+        {
+            audioSource.volume = 0;
+        }
+
+        if (TimeAnimation)
         {
             if(SoundTime>0)
             {
@@ -67,9 +84,7 @@ public class AudioPlayer : MonoBehaviour
                 else
                 {
                     timeToStop = 0;
-                    audioSource.volume = 1;
                     audioSource.clip = null;
-
                 }
 
             }
