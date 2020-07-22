@@ -598,9 +598,9 @@ public class Game_Master : MonoBehaviour {
     {
         for (int i = 0; i < Enters.Length; i++)
         {
-            if (Enters[i].name == DoorID.ToString())
+            if (Enters[i].GetComponent<Door>().DoorID == DoorID) //sprawdzenie które drzwi posiadają DoorID równy DoorId przez które przeszedł gracz
             {
-                player.transform.position = Enters[i].position;
+               player.transform.position = Enters[i].position;
             }
         }
     }
