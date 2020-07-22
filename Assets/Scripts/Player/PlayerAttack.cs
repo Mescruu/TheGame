@@ -152,15 +152,15 @@ public class PlayerAttack : MonoBehaviour {
         countOfRune = gm.runes;
         if (gm.usedWeaponType == 0)
         {
-            attackTimerCD = 0.5f;
+            attackTimerCD = 0.3f;
         }
         if (gm.usedWeaponType == 1)
         {
-            attackTimerCD = 0.5f-gm.usedWeaponType/5;
+            attackTimerCD = 0.3f-gm.usedWeaponType/5;
         }
         if (gm.usedWeaponType == 2)
         {
-            attackTimerCD = 0.5f + gm.usedWeaponType / 10;
+            attackTimerCD = 0.3f + gm.usedWeaponType / 10;
         }
 
         if (attackBreakTimeCD < 0.1f)
@@ -572,7 +572,7 @@ public class PlayerAttack : MonoBehaviour {
             }
 
             //Dash
-            if (Input.GetKeyDown(keyMenager.keys["BackDash"]) && !player.dead && !SpecialAttacking && !player.grounded && player.curSTM > gm.JumpDownSpecialAttackCost && !attacking && !Throwing && !Rune && !player.onLadder && !player.wallSliding && gm.PlayerSwordLevel >= 2)
+            if (Input.GetKeyDown(keyMenager.keys["BackDash"]) && !player.dead && !SpecialAttacking && !player.grounded && player.curSTM > gm.JumpDownSpecialAttackCost && !attacking && !Throwing && !Rune && !player.onLadder && !player.wallSliding && gm.PlayerSwordLevel >= 1)
             {
                 SpecialJumpAttackInAir = true;
                 atckTrig.SetDmg(SpecialJumpAttackInAirDmg);
