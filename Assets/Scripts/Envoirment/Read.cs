@@ -31,7 +31,7 @@ public class Read : MonoBehaviour {
 		BackPicInputText.SetActive (false);
 		BookUI.SetActive (false);
 		Reading = false;
-        OpenedPage = 1;
+        OpenedPage = 0;
         refresh = true;
 
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
@@ -57,7 +57,7 @@ public class Read : MonoBehaviour {
         }
 
         //odpowiednie przyciski
-        if (OpenedPage==Pages.Length)
+        if (OpenedPage==Pages.Length-1)
         {
             NextButton.SetActive(false);
         }
@@ -66,7 +66,7 @@ public class Read : MonoBehaviour {
             NextButton.SetActive(true);
         }
 
-        if (OpenedPage == 1)
+        if (OpenedPage == 0)
         {
             PrevButton.SetActive(false);
         }
