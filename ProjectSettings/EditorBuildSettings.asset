@@ -9,8 +9,17 @@ EditorBuildSettings:
     path: Assets/Scenes/mainmenu.unity
     guid: 4cab47318dada2a48a5b2a05b64e2299
   - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 59761e2027ccd0049b5d114918c57f91
+  - enabled: 1
     path: Assets/Scenes/Prolog.unity
     guid: e00458af4f53e2542b109d4e1eff9366
   - enabled: 1
-    path: Assets/Scenes/LoadingScene.unity
-    guid: 59761e2027ccd0049b5d114918c57f91
+    path: Assets/Scenes/Forest-1.unity
+    guid: 3e9f4e82d91c878458871ba343363374
+  - enabled: 1
+    path: Assets/Scenes/Forest-0.unity
+    guid: cd6fe161ba9ea4c46abe185a3ca4558e
+  - enabled: 1
+    path: Assets/Scenes/Forest.unity
+    guid: 4c9faff04bf8ff547b7ef4267d827a9a
