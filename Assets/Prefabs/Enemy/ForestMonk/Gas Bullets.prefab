@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dmgType: 01000000
-  dmg: 1
+  dmg: 10
   percentageDistribution:
   - 1
   target: {fileID: 4729142153633188}

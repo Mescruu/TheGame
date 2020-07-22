@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dmgType: 01000000
-  dmg: 1
+  dmg: 10
   percentageDistribution:
   - 1
   targetPos: {x: 0, y: 0, z: 0}

@@ -308,19 +308,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e182c2abd1e43748a14107546da5a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RandomLoot: 0
+  RandomLoot: 1
   MinRunes: 1
-  MaxRunes: 0
-  Rune: 0
-  Money: 0
+  MaxRunes: 10
+  Rune: 1
+  Money: 1
   MoneyMin: 1
-  MoneyMax: 0
+  MoneyMax: 10
   gold: 0
   Knife: 1
-  MinKnife: 10
+  MinKnife: 2
   MaxKnife: 10
   knifeObj: {fileID: 1737775414688204, guid: ad5cc5fd08344c641bea57bb9c689cf2, type: 2}
-  countOfKnife: 30
+  countOfKnife: 10
   timeToDestroy: 3
   sprite: {fileID: 0}
   col: {fileID: 0}
