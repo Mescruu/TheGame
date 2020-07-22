@@ -55,26 +55,30 @@ public class Door : MonoBehaviour {
 	{
         if (col.gameObject.tag == "Player") //Atywowwanie podpowiedzi
         {
+          //  desk.SetActive(true);
+           // text.text = "[" +keyMenager.keys["Action"] + "] To enter";
+          //  Exit = false;
+
+            //Przejście do następnego levela po samym wejściu w pole:
+            gm.DoorID = DoorID;
+            gm.SceneIdToLoad = LevelToLoad;
+            gm.saving = true;
+            gm.loadScene = true;
             desk.SetActive(true);
-            text.text = "[" +keyMenager.keys["Action"] + "] To enter";
-            Exit = false;
-		}
+        }
 	}
 
 	void OnTriggerStay2D(Collider2D col)
 	{
-        if (col.gameObject.tag=="Player" && player.curHP>0)
+        if (col.gameObject.tag=="Player" && !player.dead)
 		{
 			if(Input.GetKeyDown(keyMenager.keys["Action"]) || loadLev) //PRzejście do nastepnego poziomu
 			{
-                if(player.curHP>0)
-                {
                     gm.DoorID = DoorID;
                     gm.SceneIdToLoad = LevelToLoad;
                     gm.saving = true;
                     gm.loadScene = true;
                     desk.SetActive(true);
-                }
             }
         }
 	}
