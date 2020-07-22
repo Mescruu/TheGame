@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; //działanie na scenach
+
 public class DialogueTrigger : MonoBehaviour
 {
-
+    public int DialogueID=0;
     [Tooltip("use when player have to go inside some area")]
     public bool OnEnter;
 
     [Tooltip("use when player have to click something to interact")]
     public bool OnClick;
+
+    [Tooltip("use when player can only once read that dialogue")]
+    public bool OnlyOnce;
 
     [Tooltip("use in animation")]
     public bool StartDialogue;
@@ -70,16 +75,35 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            BackPicInputText.SetActive(true);
-            ExitDesk = false;
-
             if (OnEnter)
             {
-                dialogueManager.StartDialogue(dialogue, 0);
-                dialogueManager.counterOfSentences = 0; //wyzerowanie liczonych sentencji
+                if (OnlyOnce) //jezeli ma się to odpalić tylko raz
+                {
+                    Debug.Log("Dialog trigger name:"+ gameObject.GetInstanceID());
+                    if(PlayerPrefs.HasKey("Dialogue" + SceneManager.GetActiveScene().buildIndex + DialogueID) ==false)//jeżeli nie gracz nie odbył tej rozmowy
+                    {
+                        BackPicInputText.SetActive(true);
+                        ExitDesk = false;
+
+                        dialogueManager.StartDialogue(dialogue, 0);
+                        dialogueManager.counterOfSentences = 0; //wyzerowanie liczonych sentencji
+                        PlayerPrefs.SetString("Dialogue" + SceneManager.GetActiveScene().buildIndex+DialogueID, "visited"); //zaznacz, że rozmowa się odbyła
+                    }
+                }
+                else
+                {
+                    BackPicInputText.SetActive(true);
+                    ExitDesk = false;
+
+                    dialogueManager.StartDialogue(dialogue, 0);
+                    dialogueManager.counterOfSentences = 0; //wyzerowanie liczonych sentencji
+                }
             }
             if (OnClick)
             {
+                BackPicInputText.SetActive(true);
+                ExitDesk = false;
+
                 BackPicInputText.SetActive(true);
                 textToRead.text = "[" + keyMenager.keys["Action"] + "] To Talk";
                 ExitDesk = false;
