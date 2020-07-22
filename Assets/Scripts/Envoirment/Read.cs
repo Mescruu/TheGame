@@ -24,6 +24,7 @@ public class Read : MonoBehaviour {
     private bool ExitDesk;
     private float ExitTimeCd = 1f;
     private float ExitTime;
+    private bool playerStay;
 
     void Start () 
 	{
@@ -33,7 +34,7 @@ public class Read : MonoBehaviour {
 		Reading = false;
         OpenedPage = 0;
         refresh = true;
-
+        playerStay = false;
         gm = GameObject.FindGameObjectWithTag("GameMaster").GetComponent<Game_Master>();
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
     }
@@ -96,7 +97,23 @@ public class Read : MonoBehaviour {
            gm.ChangeToZero = true;
            Reading = !Reading;
         }
-        
+
+        if (playerStay) //jest to dodatkowe zabezpieczenie w razie jakby OnTriggerStary2D nie zadziałał
+        {
+            if (!Reading)
+            {
+                BackPicInputText.SetActive(true);
+                if (Input.GetKeyDown(keyMenager.keys["Action"]) && gm.dead == false)
+                {
+                    if (gm.active_menu == 0)
+                    {
+                        BookUI.SetActive(true);
+                        gm.active_menu = 6;
+                        Reading = !Reading;
+                    }
+                }
+            }
+        }
 
     }
     //przeskakiwanie miedzy stronami
@@ -118,8 +135,9 @@ public class Read : MonoBehaviour {
             BackPicInputText.SetActive(true);
             textToRead.text = "[" + keyMenager.keys["Action"] + "] To Read";
             ExitDesk = false;
+            playerStay = true;
         }
-	}
+    }
 	
 	void OnTriggerStay2D(Collider2D col) //gracz zaczyna czytać
 	{
@@ -152,9 +170,10 @@ public class Read : MonoBehaviour {
             //   textToRead.text = " ";
             ExitDesk = true;
             ExitTime = ExitTimeCd;
+
+            playerStay = false;
         }
-		
-	}
+    }
 	
 	public void Exit() //wyłaczenie UI książki
 	{
