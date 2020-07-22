@@ -13,6 +13,7 @@ public class LoadTargetScript : MonoBehaviour {
             return;
         }
             LoadingScreenManager.LoadScene(num, fromScene); //wywołanie skryptu umożliwiającego ładowanie sceny
+        Debug.Log("Load Scene: " + num);
     }
 }
 
