@@ -598,12 +598,8 @@ public class Game_Master : MonoBehaviour {
     {
         for (int i = 0; i < Enters.Length; i++)
         {
-            Debug.Log("Doors:" + Enters[i].GetComponent<Door>().DoorID);
-            Debug.Log("Count of Doors:" + Enters[i]);
-
             if (Enters[i].gameObject.GetComponent<Door>().DoorID == DoorID) //sprawdzenie które drzwi posiadają DoorID równy DoorId przez które przeszedł gracz
             {
-                Debug.Log("Old door id" + DoorID);
                player.transform.position = Enters[i].position;
             }
         }
