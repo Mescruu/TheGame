@@ -31,13 +31,14 @@ public class DialogueTrigger : MonoBehaviour
 
     private KeyMenager keyMenager;
     private DialogueManager dialogueManager;
-
+    private bool playerStay;
     void Start()
     {
         //poczatkowe wartosci
         activeOnce = true;
         StartDialogue = false;
         ExitTime = ExitTimeCD;
+        playerStay = false;
 
         //dołaczenie komponentów
         keyMenager = GameObject.Find("KeyMenager").GetComponent<KeyMenager>();
@@ -66,6 +67,24 @@ public class DialogueTrigger : MonoBehaviour
         {
             ExitTime = 0;
         }
+
+        if (playerStay)
+        {
+            if (Input.GetKeyDown(keyMenager.keys["Action"]))
+            {
+                FindObjectOfType<DialogueManager>().player_in_trigger = true;
+
+                Debug.Log("Player-Input-Action");
+
+                if (FindObjectOfType<DialogueManager>().AnimChild.active == false)
+                {
+                    dialogueManager.tap = 0;
+                    dialogueManager.StartDialogue(dialogue, 0);
+                    dialogueManager.counterOfSentences = 1; //wyzerowanie liczonych sentencji
+                }
+            }
+            BackPicInputText.SetActive(true);
+        }
     }
     public void TriggerDialogue() //wejscie w dialog
     {
@@ -75,6 +94,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
+            playerStay = true;
             if (OnEnter)
             {
                 if (OnlyOnce) //jezeli ma się to odpalić tylko raz
@@ -141,6 +161,8 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (col.gameObject.tag == "Player")
         {
+            playerStay = false;
+
             dialogueManager.player_in_trigger = false;
             if (OnClick)
             {
