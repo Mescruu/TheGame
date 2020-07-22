@@ -24,6 +24,7 @@ public class ChestTrigger : MonoBehaviour {
     private float ExitTimeCd = 1f;
     private float ExitTime;
 
+    private bool playerStay;
     void Start () {
         //Początkowe ustawienia
         anim = gameObject.GetComponent<Animator>();
@@ -36,6 +37,8 @@ public class ChestTrigger : MonoBehaviour {
         {
             anim.SetBool("NoVisited", false);
         }
+
+        playerStay = false;
     }
 
     // Update is called once per frame
@@ -54,6 +57,20 @@ public class ChestTrigger : MonoBehaviour {
         {
             ExitTime = 0;
         }
+
+        if (playerStay) //jest to dodatkowe zabezpieczenie w razie jakby OnTriggerStary2D nie zadziałał
+        {
+            if (Input.GetKeyDown(keyMenager.keys["Action"]))
+            {
+                chestUI.OpenChest();
+                visited = true;
+                anim.SetBool("NoVisited", false);
+                if (particle.active)
+                {
+                    particle.SetActive(false);
+                }
+            }
+        }
     }
   
     void OnTriggerEnter2D(Collider2D col)
@@ -63,6 +80,7 @@ public class ChestTrigger : MonoBehaviour {
             audioSource.clip = audio[0];
             audioSource.Play();
             Exit = false;
+            playerStay = true; //jest to dodatkowe zabezpieczenie w razie jakby OnTriggerStary2D nie zadziałał
         }
     }
         void OnTriggerStay2D(Collider2D col)
@@ -80,9 +98,8 @@ public class ChestTrigger : MonoBehaviour {
                 particle.SetActive(true);
             }
             anim.SetBool("Open", true);
-        }
-        if (col.CompareTag("Player"))
-        {
+        
+
             if (Input.GetKeyDown(keyMenager.keys["Action"]))
             {
                 chestUI.OpenChest();
@@ -109,6 +126,8 @@ public class ChestTrigger : MonoBehaviour {
             }
             audioSource.clip = audio[1];
             audioSource.Play();
+            playerStay = false;
+
         }
     }
 }
