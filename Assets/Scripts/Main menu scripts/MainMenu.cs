@@ -83,7 +83,7 @@ public class MainMenu : MonoBehaviour {
             }
         }
 
-        if(levels < 2)
+        if(LastLevel < 2)
              {
             continueGameUI.SetActive(false);
              }
@@ -108,7 +108,7 @@ public class MainMenu : MonoBehaviour {
 		}
         else
         {
-            gotolevel = 1;
+            gotolevel = 2; //pierwszy level po main menu i ładowaniu
             fade = true;
             Debug.Log("new game");
 		}
@@ -177,9 +177,10 @@ public class MainMenu : MonoBehaviour {
 	public void StartNewGame()
 	{
         Debug.Log("Start new game");
-        gotolevel = 1;
+        gotolevel = 2; //pierwszy level po main menu i ładowaniu
         fade = true;
         Debug.Log("new game");
+        Reset();
     }
 
     public void QuitGame()
