@@ -4,6 +4,7 @@ using System.Collections;
 using System; //Serializable.
 using System.Runtime.Serialization.Formatters.Binary;//Serializes i deserializes obiektu lub cały wykres z połączonych obiektów w formacie binarnym.
 using System.IO;//Do operacji na plikach (czytanie, pisanie do pliku).
+using UnityEngine.SceneManagement; //działanie na scenach
 
 public class Saveing : MonoBehaviour
 {
@@ -14,20 +15,28 @@ public class Saveing : MonoBehaviour
     public itemDataBase idb;
     public itemDataBaseChest idbch;
 
-    public bool notmenu = true;
+    public bool notmenu;
     public int LastLevel;
 
     void Start() //pobierz komponenty, bądź załaduj menu
     {
-        if (notmenu)
+        Debug.Log(notmenu);
+
+        if (SceneManager.GetActiveScene().buildIndex > 1)
         {
             gameMaster = gameObject.GetComponent<Game_Master>();
             idb = gameObject.GetComponent<itemDataBase>();
+
         }
         else
         {
+            Debug.Log("Ładuje menu");
+
             LoadMenu();
         }
+
+        Debug.Log("Start skrypty - saveing");
+
     }
 
     void Update()
@@ -65,7 +74,6 @@ public class Saveing : MonoBehaviour
         GameData gmdata = new GameData();
 
         gmdata.SceneId = Application.loadedLevel; //Pobieram id poziomu
-
         //zapisanie odpowiednich danych o graczu
         gmdata.exp = gameMaster.exp;
         gmdata.PDPoint = gameMaster.PDPoint;
@@ -113,6 +121,7 @@ public class Saveing : MonoBehaviour
         gmdata.Hp = player.curHP;
         gmdata.Mana = player.curMana;
         gmdata.Stamina = player.curStamina;
+
         //zapisanie notatek gracza
         for (int i = 0; i < gameMaster.note.Length; i++)
         {
@@ -184,6 +193,7 @@ public class Saveing : MonoBehaviour
         //Sprawdzamy czy plik zapisu istnieje.
         if (File.Exists(Application.persistentDataPath + "/Record.data"))
         {
+            Debug.Log("Posiada zz tyłu te dane - zwykłe");
 
             //Odczytujemy/pobieramy dane z pliku.
             FileStream file = File.Open(Application.persistentDataPath + "/Record.data", FileMode.Open);
@@ -192,6 +202,7 @@ public class Saveing : MonoBehaviour
             BinaryFormatter bf = new BinaryFormatter();
 
             // Deserializujemy dane z pliku i przekształcamy je na obiekt GraczData.
+
 
             GameData gmdata = (GameData)bf.Deserialize(file);
 
@@ -291,6 +302,9 @@ public class Saveing : MonoBehaviour
             idb.BootsSlotItemID = gmdata.BootsSlotItemID;
 
             idb.Instantiate();
+
+            Debug.Log("Zostaje zapisany id sceny: " + SceneManager.GetActiveScene().buildIndex);
+            SaveLavelId(SceneManager.GetActiveScene().buildIndex, gmdata);
         }
     }
 
@@ -298,12 +312,14 @@ public class Saveing : MonoBehaviour
     public void LoadMenu()
     {
 
-        Debug.Log("Loading..");
+        Debug.Log("Loading menu..");
 
         //Zanim odczytamy dane upewnijmy się, że jest co czytać.
         //Sprawdzamy czy plik zapisu istnieje.
         if (File.Exists(Application.persistentDataPath + "/Record.data"))
         {
+            Debug.Log("Posiada zz tyłu te dane - menu");
+
             //Odczytujemy/pobieramy dane z pliku.
             FileStream file = File.Open(Application.persistentDataPath + "/Record.data", FileMode.Open);
 
@@ -318,7 +334,7 @@ public class Saveing : MonoBehaviour
 
             //Ustawiamy dane;
 
-            LastLevel = gmdata.LevelId;
+            LastLevel = gmdata.SceneId;
         }
     }
     //Klasa zapisująca dane o skrzynie z poziomu
@@ -327,6 +343,10 @@ public class Saveing : MonoBehaviour
     {
         gameMaster.saving = true;
 
+        if (GameObject.FindGameObjectWithTag("chest") == null)
+        { //jeżeli znajduje się taki przedmiot na mapie
+            return;
+        }
         ChestTrigger chest = GameObject.FindGameObjectWithTag("chest").GetComponent<ChestTrigger>();
 
         idbch = gameObject.GetComponent<itemDataBaseChest>();
@@ -494,14 +514,47 @@ public class Saveing : MonoBehaviour
 
         Debug.Log("Loading Chest END");
     }
+
+    public void SaveLavelId(int id, GameData gmdata) //służy do zapisania id sceny do której się właśnie weszło
+    {
+        gameMaster.saving = true; //gra jest zapisywana
+
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Controller>();
+        idb = gameObject.GetComponent<itemDataBase>();
+
+        Debug.Log("Saveing level id");
+
+        //Posłuży do przesyłania danych do pliku.
+        //Unity ma własną konfigurację w tym wyspecyfikowane miejsce, w którym składuje takie pliki.
+        //Pod Windows jest to z reguły miejsce w katalogu użytkownika.
+        FileStream plik = File.Create(Application.persistentDataPath + "/Record.data");
+
+        // Obiekt zawierający informacjie o stanie naszego gracza.
+
+        gmdata.SceneId = Application.loadedLevel; //Pobieram id poziomu
+
+        //Posłuży do zapisywania danych do pliku.
+        BinaryFormatter bf = new BinaryFormatter();
+
+        //Serializujemy/zapisujemy dane do pliku
+        bf.Serialize(plik, gmdata);
+        plik.Close();//Zamykamy plik (kończymy operacje na pliku).
+
+        Debug.Log("Saveing - save level id = "+SceneManager.GetActiveScene().buildIndex);
+
+        gameMaster.saving = false;
+    }
 }
+
+
 
 //Klasa odpowiadająca za dane gry do zapisu i wczytania
 [Serializable]
-class GameData
+public class GameData //żeby można było przesłać obiekt tej klasy
 {
     //GameMaster
     public int SceneId;
+
     public int exp;
     public int PDPoint;
     public int PDSkillPoint;
